@@ -1,6 +1,57 @@
-.body{
-    margin:2px;
-    padding:2px;
-    background-color:lightblue;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+:root {
+  --light: #f6f6f9;
+  --primary: #1976D2;
+  --light-primary: #CFE8FF;
+  --grey: #eee;
+  --dark-grey: #AAAAAA;
+  --dark: #363949;
+  --darks: black;
+  --outline: black;
+  --outback:white;
+  --danger: #D32F2F;
+  --light-danger: #FECDD3;
+  --warning: #FBC02D;
+  --light-warning: #FFF2C6;
+  --success: #388E3C;
+  --light-success: #BBF7D0;
+  --drop:white;
+  --drops:white;
+  --border:#ced4da;
+  --border2:#dee2e6;
+  --borderopp:#888a8c;
+  --table-stripes-odd:#ffffff;
+  --table-stripes-even:#f2f9ff;
+  --table-header:rgba(0, 0, 0, 0.03);
+  --darkdanger:darkred;
+  --buttonback:white;
+  --shadow:rgb(255, 255, 255,0.4);
+  --shadowopp:rgba(0,0,0,1);
+  --bordermargin:rgb(116, 123, 134);
+}
+
+body {
+  background: var(--grey);
+  overflow-x: hidden;
+}
+
+body.dark {
+  --light: #25252c;
+  --grey: #181a1e;
+  --dark: #fbfbfb;
+  --darks: white;
+  --drop: #181a1e;
+  --drops: #272a30b6;
+  --border:#424446;
+  --border2:#424446;
+  --borderopp:rgb(152, 152, 152);
+  --outline:#424446;
+  --outback:grey;
+  --table-stripes-odd:#1e1b1b;
+  --table-stripes-even:#3b4044;
+  --table-header:#3b4044;
+  --darkdanger: #D32F2F;
+  --buttonback:#3b4044;
+  --shadow:rgba(0,0,0,0.4);
+  --shadowopp:rgb(255, 255, 255,0.4);
+  --bordermargin:#3b4044;
 }
