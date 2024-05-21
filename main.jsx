@@ -1,2 +1,2 @@
-This file is created for trying the cherrypick function in Git.
-I will try to cherrypick this commit from work branch to the main branch.
+i am trying the git stash command , so i have creasted a new branch to test it
+
