@@ -1,0 +1,315 @@
+Git:    
+        Git is basically a version control system designed to track changes in source code during software development. 
+        It is designed to handle everything from small to very large projects with speed and efficiency.
+
+Git Advantages:
+        We can commit changes frequently to repositories. In case of a system crash, the amount of lost work is minimized as the repository holds recent changes.
+        We can work on separate branches, reducing the risk of corrupting the main codebase.
+        We can create branches for new features, bug fixes, or experiments.
+
+Git Commands:
+        1) $ git init -->   
+        This command initializes a new repository, setting up the necessary files and directories to start tracking changes in your project.
+        USAGE :  mkdir Training
+                 cd Training
+                 git init
+        OUTPUT : Initialized empty Git repository in /Documents/Training/.git/
+
+        2) $ git config --global user.name "your-name" -->
+        This command is used to set your Git username, which will be associated with your commits. 
+        USAGE : git config --global user.name "Nishchay"
+        OUTPUT : git config --global user.name 
+                 Nishchay
+
+        3) $ git config --global user.email "your-email" -->
+        This command is used to set your Git email, which will be associated with your commits. 
+        USAGE : git config --global user.email "nishchay.gupta@berylsystems.com"
+        OUTPUT : git config --global user.email
+                 nishchay.gupta@berylsystems.com
+
+        4) $ git status -->
+        This is the command used to check the status of the repository. It shows information such as which files are staged, unstaged, or untracked.
+        USAGE : git status
+        OUTPUT : On branch main
+                  Your branch is up to date with 'origin/main'.
+
+        5) $ git status -s -->
+        This command is a shortened form of the git status --short command.
+        USAGE : git status -s
+        OUTPUT : M    README.md
+                  A   newfile.txt
+                   ?? untrackedfile.txt
+
+        6) $ git add <file-name> -->
+        This command is used to stage changes in a specific file for the next commit.
+        USAGE : touch git-commands.txt
+                git add git-commands.txt
+
+        7) $ git rm <file-name> -->
+        This command is used to remove a file from both the working directory and the staging area.
+        USAGE : touch app.js
+                git rm app.js
+
+        8) $ git rm --cached <file-name> -->
+        The git rm --cached <file-name> command is used to remove a file from the staging area while preserving it in the working directory.
+        USAGE : git rm --cached style.css
+
+        9) $ git add -A  -->
+        This command is used to stage changes in all the files for the next commit.
+        USAGE : touch index.html
+                touch gitignore
+                touch style.css
+                git add -A
+
+        10) $ git log -->
+        This command is used to display the commit history of a Git repository. 
+        USAGE : git log
+        OUTPUT : commit 705ce95247d14da2397d24dea7ecc094cf291ba5 (HEAD -> main, origin/main)
+                 Author: Nishchay <nishchay.gupta@berylsystems.com>
+                 Date:   Mon May 20 15:24:25 2024 +0530
+               Added commands(git status, git add -A, git add <file-name>
+
+                commit 54320c64a8275c1e273514696131a4b259fc0105
+                Author: Nishchay <nishchay.gupta@berylsystems.com>
+                Date:   Mon May 20 15:04:08 2024 +0530
+               Added git-commands.txt and removed the unnecessary files.
+
+        11) $ git log -p -<number> -->
+        This is used to display the commit history with the actual changes (patch) introduced in each commit. Replace <number> with the desired number of commits you want to display. 
+        USAGE : git log -p -2
+        
+        12) $ git show -->
+        This command is used to display detailed information about a last commit.
+        USAGE : git show
+
+        13) $ git branch -->
+        This command is used to list branches in a Git repository.
+        USAGE : git branch
+        OUTPUT :   edits
+                 * main             
+
+        14) $ git branch -d <branch-name> -->
+        This command is used to delete branch in a Git repository.
+        USAGE : git branch -d edits
+        OUTPUT : Deleted branch edits (was 64fefaa).
+
+        15) $ git branch <branch-name> -->
+        This command is used to create branch in a Git repository.
+        USAGE : git branch commands-edit
+
+        16) $ git checkout <branch-name> -->
+        This command is used to switch to a different branch in a Git repository. 
+        USAGE : git checkout commands-edit
+        OUTPUT : M	Git/git-commands.txt
+                 Switched to branch 'commands-edit'
+
+        17) $ git merge <branch-name> -->
+        This command is used to integrate changes from one branch into another. 
+        USAGE : git merge commands-edit
+        OUTPUT : Updating e1455a1..64fefaa
+                    Fast-forward
+                    .DS_Store  | Bin 6148 -> 6148 bytes
+                    .gitignore |   0
+                    git-commands.txt |   25 ++++++
+                3 files changed, 25 insertions(+)
+                create mode 100644 .gitignore
+
+        18) $ git remote add <remote-name> <url> -->
+        This command is used to add a new remote repository to your local Git repository. This allows you to interact with remote repositories, such as fetching changes from them or pushing your changes to them.
+        USAGE : git remote add origin git@github.com:nishchay-16/Training.git
+
+        19) $ git remote -v -->
+        This command is used to view the list of remote repositories associated with your local Git repository along with their URLs. 
+        USAGE : git remote -v
+        OUTPUT : origin	git@github.com:nishchay-16/Training.git (fetch)
+                 origin	git@github.com:nishchay-16/Training.git (push)
+
+        20) $ git commit -m "<commit-message>" -->
+        This command is used to create a new commit in your Git repository with a specified commit message.
+        USAGE : git commit -m "Inserted a new branch"
+        OUTPUT : [main c205a6b] Inserted a new branch
+                  1 file changed, 44 insertions(+), 8 deletions(-)
+
+        21) $ git commit -a -m "<commit-message>" -->
+        The command is used to stage all modified files and commit them in one step with a commit message.
+        USAGE: git commit -a -m "Inserted a new branch"
+        OUTPUT: [main 3c8c379] Inserted a new branch
+                1 file changed, 21 insertions(+), 2 deletions(-)
+        
+        22) $ git diff --staged -->
+        This command is used to view the changes that are staged but not yet committed. 
+        USAGE : git diff --staged
+        OUTPUT : [main 3c8c379] Inserted a new branch
+                 1 file changed, 21 insertions(+), 2 deletions(-)
+                     +        $ git diff --staged -->
+                     +        This command is used to view the changes that are staged but not yet committed. 
+                     +        USAGE : git diff --staged
+
+        23) $ git push -u origin <branch name> -->
+        This command is used to push commits from a local branch to a remote repository while setting up tracking.
+        USAGE : git push -u origin main 
+        OUTPUT: Enumerating objects: 14, done.
+                Counting objects: 100% (14/14), done.
+                Delta compression using up to 8 threads
+                Compressing objects: 100% (10/10), done.
+                Writing objects: 100% (14/14), 1.59 KiB | 1.59 MiB/s, done.
+                Total 14 (delta 2), reused 0 (delta 0), pack-reused 0
+                remote: Resolving deltas: 100% (2/2), done.
+
+        24) $ git push --> 
+        This command is used to push local commits to a remote repository. When executed without additional arguments, it typically pushes changes from the current local branch to the corresponding branch on the remote repository.
+        USAGE : git push
+        OUTPUT : Enumerating objects: 7, done.
+                 Counting objects: 100% (7/7), done.
+                 Delta compression using up to 8 threads
+                 Compressing objects: 100% (4/4), done.
+                 Writing objects: 100% (4/4), 1.10 KiB | 1.10 MiB/s, done.
+                 Total 4 (delta 1), reused 0 (delta 0), pack-reused 0
+                 remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+
+        25) $ git clone <repository-url> -->
+        This is used to create a copy of a remote Git repository on your local machine. 
+        USAGE : cd path/to/destination/directory
+                git clone https://github.com/nishchay-16/Training.git
+        OUTPUT : Cloning into 'Training'...
+                 remote: Enumerating objects: 100, done.
+                 remote: Counting objects: 100% (100/100), done.
+                 remote: Compressing objects: 100% (80/80), done.
+                 remote: Total 100 (delta 20), reused 80 (delta 10), pack-reused 0
+                 Receiving objects: 100% (100/100), 10.00 KiB | 2.50 MiB/s, done.
+                 Resolving deltas: 100% (20/20), done.
+
+        26) $ git pull -->
+        This command is used to fetch the latest changes from a remote repository and merge them into the current branch. 
+        USAGE : git pull
+        OUTPUT : remote: Enumerating objects: 2, done.
+                 remote: Counting objects: 100% (2/2), done.
+                 remote: Compressing objects: 100% (2/2), done.
+                 remote: Total 2 (delta 0), reused 0 (delta 0), pack-reused 0
+                 Unpacking objects: 100% (2/2), 1.77 KiB | 605.00 KiB/s, done.
+                 From github.com:nishchay-16/Training
+                    3c8c379..f3162d8  commands-edit -> origin/commands-edit
+                    9693fb2..3603900  main          -> origin/main
+                 Updating 3c8c379..f3162d8
+                 Fast-forward
+                  Git/.gitignore       |   0
+                  Git/git-commands.txt | 125 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+                  2 files changed, 117 insertions(+), 8 deletions(-)
+                  delete mode 100644 Git/.gitignore
+
+        27) $ git mv <source> <destination> -->
+        This command is used to move or rename a file or directory.
+        USAGE : git mv git-commands.txt commands-git.txt
+
+        28) $ git reset --soft HEAD~1 -->
+        This command allow us to remove last commit from history but keep the changes in working directory.
+        We can use this ton change the commit message text.
+        USAGE : git reset --soft HEAD~1
+
+        29) $ git reset --hard HEAD~1 --> 
+        This command allow us to remove the last commit and discard its changes.
+        USAGE : git reset --hard HEAD~1
+        OUTPUT : HEAD is now at 9330dff modified app.js
+
+        30) $ git push --force       or         $ git push origin +<branch-name>  -->
+        These commands is used to force-push the changes and overwrite the remote branch.
+        USAGE : git push origin +work
+        OUTPUT : Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+                 To github.com:nishchay-16/Nishchay.git
+                 + 6020afd...0a181ae work -> work (forced update)
+
+        31) $ git revert HEAD
+        This command is used to reverse a previous commit by creating a new commit that undoes all the changes made in the specified commit & we have to write the revert message.
+        USAGE : git revert HEAD
+        OUTPUT : [work 0c308e6] Reverting the previous reverted commit
+                 4 files changed, 30 insertions(+), 12 deletions(-)
+                 rename appstyel.css => style.css (100%)
+
+        32) $ git fetch <remote> <branch>
+        This command used to retrieve the latest changes from a remote repository without merging them into our local branches.
+        USAGE : git fetch origin work
+        OUTPUT : From github.com:nishchay-16/Nishchay
+                 * branch            work       -> FETCH_HEAD
+
+        33) $ git stash 
+        This command will stash your changes, leaving our working directory clean.
+        USAGE : git stash
+        OUTPUT : Saved working directory and index state WIP on localtest: 774dd3e Cherrypicked this commit from work branch & renamed it
+
+        34) $ git stash list
+        This command lists all the stashes you've made.
+        USAGE : git stash list
+        OUTPUT: stash@{0}: WIP on localtest: 774dd3e Cherrypicked this commit from work branch & renamed it
+                stash@{1}: WIP on localtest: 774dd3e Cherrypicked this commit from work branch & renamed it
+                stash@{2}: WIP on localtest: 774dd3e Cherrypicked this commit from work branch & renamed it
+
+        
+        35) $ git stash apply
+        This command applies the most recent stash to our working directory without removing it from the stash list.
+        USAGE: git stash apply
+        OUTPUT : On branch localtest
+                 Your branch is up to date with 'origin/localtest'.
+                 Changes not staged for commit:
+                 (use "git add <file>..." to update what will be committed)
+                 (use "git restore <file>..." to discard changes in working directory)
+	         modified:   index.html
+
+        36) $ git stash apply stash@{<stash-index>}
+        This command allows us to apply the specific stash to our working directory without removing it from the stash list.
+        USAGE : git stash apply stash@{2}
+        OUTPUT : On branch localtest
+                 Your branch is up to date with 'origin/localtest'.
+                 Changes not staged for commit:
+                   (use "git add <file>..." to update what will be committed)
+                   (use "git restore <file>..." to discard changes in working directory)
+                 	modified:   index.html
+                 	modified:   main.jsx
+                 no changes added to commit (use "git add" and/or "git commit -a")
+
+        37) $ git stash pop
+        This command applies the most recent stash to our working directory and removes it from the stash list.
+        USAGE : git stash pop
+
+        38) $ git stash clear
+        This command removes all stashes from the stash list.
+        USAGE : git stash clear
+
+        39) $ git blame <file>
+        This command used to display information about who last modified each line of a file, along with the commit hash and the date of the last modification.
+        MORE COMMANDS :  $ git blame -L 10,20 index.html    --> Allows you to specify a range of lines to display blame information for
+                         $ git blame --date=short main.jsx  -->  Shows the date of each commit.
+                         $ git blame -C index.html          --> Detects copies and renames and tries to follow them to find similarities between files.
+        USAGE : git blame main.jsx
+        OUTPUT : c2a28aea (Nishchay 2024-05-21 12:11:49 +0530 1) // I am trying the git stash command , so i have creasted a new branch to test it
+                 c2a28aea (Nishchay 2024-05-21 14:23:35 +0530 2) <Okay></Okay>
+                 c2a28aea (Nishchay 2024-05-21 14:45:34 +0530 3) // Now i am modifiying the content to check the git blame command and see the output.
+
+        40) $ git commit --amend
+        This command is used to amend the most recent commit with new changes. It allows us to modify the content of the last commit, as well as its commit message.
+        MORE COMMANDS : $ git commit --amend --no-edit --> Allow us to add changes to the last commit without modifying its commit message.
+        USAGE : git commit --amend
+        OUTPUT : [localtest aa77f02] modified style.css to test (git amend)
+                  Date: Tue May 21 14:58:59 2024 +0530
+                  1 file changed, 57 insertions(+)
+
+
+        41) $ git grep <pattern>
+        This command in Git that allows you to search for patterns in your codebase.
+        MORE COMMANDS : $ git grep -i <pattern>        --> Perform case-insensitive matching.
+                        $ git grep -n <pattern>        --> Prefix each line of output with the 1-based line number within its file.
+                        $ git grep -n <pattern>        --> Match the pattern as a word (i.e., surrounded by word boundaries).
+        USAGE : git grep "th"
+        OUTPUT : app.js:        <thead>
+                 app.js:              <th key={index}>{column}</th>
+                 app.js:        </thead>
+                 main.jsx:// I am trying the git stash command , so i have creasted a new branch to test it
+                 main.jsx:// Now i am modifiying the content to check the git blame command and see the output.
+
+        42) $ git rebase <branch-name>
+        This command re-applies commits from the current branch onto the <base> branch.
+        USAGE  : git rebase work
+        OUTPUT : warning: skipped previously applied commit 774dd3e
+                hint: use --reapply-cherry-picks to include skipped commits
+                hint: Disable this message with "git config advice.skippedCherryPicks false"
+                Successfully rebased and updated refs/heads/localtest. 
+                                        
