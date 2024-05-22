@@ -312,4 +312,19 @@ Git Commands:
                 hint: use --reapply-cherry-picks to include skipped commits
                 hint: Disable this message with "git config advice.skippedCherryPicks false"
                 Successfully rebased and updated refs/heads/localtest. 
-                                        
+
+Git LFS:
+Git Large File Storage is an extension to Git that allows you to manage and version large files efficiently. 
+Instead of storing the actual large file content, It stores pointers to the large files in your repository while keeping the large file content in a separate storage.
+How to use -->
+                git lfs install
+                git lfs track "<file-extension>
+                git add .gitattributes
+                git commit -m "commit message>
+                git push
+Implementation -->
+                git lfs install
+                git lfs track "*.png" 
+                git add .gitattributes
+                git commit -m "Track large png files using Git LFS"
+                git push
