@@ -328,3 +328,19 @@ Implementation -->
                 git add .gitattributes
                 git commit -m "Track large png files using Git LFS"
                 git push
+
+
+SSH key Generation:
+SSH keys is essential for secure authentication with remote servers, Git repositories, and other services.
+How to use -->
+                cd ~/.ssh
+                ssh-keygen -t rsa -b 4096 -C "your_email@example.com"     (with Email)
+                ssh-keygen                                                (without Email)
+
+                nano config
+					Host github.com
+    				HostName github.com
+    				User git
+    				IdentityFile ~/.ssh/<filename>
+                
+                cat <file-name>
