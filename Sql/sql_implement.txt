@@ -1,0 +1,264 @@
+CREATING A RAILWAY DATABASE MANAGEMENT SYSTEM USING POSTGRESQL.
+
+
+!-----------------CREATION OF DATABASE----------------!
+
+create database railway;
+
+
+!-----------------CREATION OF TABLES------------------!
+
+CREATE TABLE users (
+    user_id INT primary key,
+    first_name varchar(50),
+    last_name varchar(20),
+    gender CHAR,
+    age INT,
+    mobile_no varchar(50));
+
+CREATE TABLE train (
+    train_no INT primary key,
+    train_name varchar(50),
+    arrival_time TIME, 
+    departure_time TIME,
+    total_seats CHAR,
+    date date);
+
+CREATE TABLE station (
+    station_no INT,
+    station_name varchar(20),
+    hault int,arrival_time TIME,
+    train_no INT,
+    primary key(station_no,train_no), 
+    constraint fk_train FOREIGN KEY(train_no) REFERENCES train(train_no));
+
+CREATE TABLE ticket (
+    ticket_id INT primary key, 
+    user_id INT,
+    status CHAR,
+    no_of_passengers INT,
+    train_no INT, 
+    constraint fk_user FOREIGN KEY(user_id) REFERENCES users(user_id), 
+    constraint fk_train FOREIGN KEY(train_no) REFERENCES train(train_no));
+
+CREATE TABLE passenger (
+    passenger_id int primary key, 
+    age INT,
+    gender CHAR,
+    user_id INT,
+    reservation_status char,
+    seat_number varchar(5),
+    name varchar(25),
+    ticket_id INT, 
+    constraint fk_user FOREIGN KEY(user_id) REFERENCES users(user_id), 
+    constraint fk_ticket FOREIGN KEY(ticket_id) REFERENCES ticket(ticket_id));
+
+CREATE TABLE starts (
+    train_no INT,
+    station_no INT,
+    PRIMARY KEY (train_no, station_no),
+    CONSTRAINT fk_station FOREIGN KEY (station_no, train_no) REFERENCES station(station_no, train_no)
+);
+
+CREATE TABLE stops (
+    train_no INT,
+    station_no INT, 
+    time TIME, 
+    constraint fk_train FOREIGN KEY(train_no) REFERENCES train(train_no), 
+    constraint fk_station FOREIGN KEY (station_no) REFERENCES station(station_no));
+
+CREATE TABLE booking (
+    user_id INT , 
+    ticket_id INT, 
+    constraint fk_user FOREIGN KEY(user_id) REFERENCES users(user_id),
+    constraint fk_ticket FOREIGN KEY (ticket_id) REFERENCES ticket(ticket_id));
+
+CREATE TABLE cancel (
+    user_id INT, 
+    ticket_id INT, 
+    passenger_id INT, 
+    constraint fk_ticket FOREIGN KEY(ticket_id) REFERENCES ticket(ticket_id), 
+    constraint fk_user FOREIGN KEY(user_id) REFERENCES users(user_id), 
+    constraint fk_passenger FOREIGN KEY(passenger_id) REFERENCES passenger(passenger_id));
+
+
+!-----------------INSERTING DATA INTO TABLES------------------!
+
+INSERT INTO users (user_id,first_name,last_name,gender,age,mobile_no) 
+VALUES 
+    (1801,'nishchay','gupta','M',21,'9588169118'),
+    (1802,'naman','dua','M',18,'7206558277'),
+    (1803,'ananya','talukdar','F',20,'7620986150'),
+    (1804,'deepin','mittal','M',23,'9541121339'),
+    (1805,'jahanvi','bhatnagar','F',15,'2535354343');
+
+INSERT INTO train (train_no, train_name, arrival_time, departure_time, total_seats, date)
+VALUES 
+    (12711, 'jammu mail', '11:30:00', '11:40:00', 100, TO_DATE('20240410', 'YYYYMMDD')),
+    (12315, 'shatabdi', '12:45:00', '12:50:00', 120, '2024-05-20'),
+    (35471, 'chennai exp', '06:20:00', '10:56:00', 60, TO_DATE('20240611', 'YYYYMMDD'));
+
+INSERT INTO ticket (ticket_id,user_id,status,no_of_passengers,train_no) 
+VALUES 
+    (4001,1801,'Y',1,12711),
+    (4002,1804,'N',3,35471),
+    (4003,1802,'Y',7,12711),
+    (1404,1805,'N',2,12315);
+
+INSERT INTO station (station_no,station_name,hault,arrival_time,train_no) 
+VALUES  
+    (111,'karnal',7,'11:20:00',12711),
+    (222,'delhi',10,'11:45:00',12315),
+    (333,'jammu',5,'07:20:00',35471);
+
+INSERT INTO passenger (passenger_id,age,gender,user_id,reservation_status,seat_number,name,ticket_id) 
+VALUES  
+    (5001,45,'M',1801,'Y','B6-23','nishchay',4001),
+    (5002,18,'F',1804,'N','C1-03','ananya',4002),
+    (5003,42,'M',1804,'N','C1-04','ramesh',4002),
+    (5004,39,'F',1804,'N','C1-05','pinki',4002);
+
+
+!-----------------DIFFERENT QUERIES PRACTICED---------------------!
+
+Q1 show all the data in the table passenger?
+    command: 
+        SELECT * FROM passenger;
+
+    output:
+        passenger_id | age | gender | user_id | reservation_status | seat_number |   name   | ticket_id 
+        --------------+-----+--------+---------+--------------------+-------------+----------+-----------
+                 5001 |  45 | M      |    1801 | Y                  | B6-23       | nishchay |      4001
+                 5002 |  18 | F      |    1804 | N                  | C1-03       | ananya   |      4002
+                 5003 |  42 | M      |    1804 | N                  | C1-04       | ramesh   |      4002
+                 5004 |  39 | F      |    1804 | N                  | C1-05       | pinki    |      4002
+                 5005 |  15 | F      |    1805 | N                  | D1-69       | jahanvi  |      4004
+                 5006 |  21 | M      |    1805 | N                  | D1-70       | arindham |      4004
+                 5007 |  21 | M      |    1802 | Y                  | A1-01       | naman    |      4003
+                 5008 |  20 | F      |    1802 | Y                  | A1-02       | shristi  |      4003
+                 5009 |  22 | F      |    1802 | Y                  | A1-03       | nancy    |      4003
+                 5010 |  21 | F      |    1802 | Y                  | A1-04       | vaishali |      4003
+                 5011 |  21 | F      |    1802 | Y                  | A1-05       | payal    |      4003
+                 5012 |  22 | F      |    1802 | Y                  | A1-06       | vrinda   |      4003
+                 5013 |  21 | M      |    1802 | Y                  | A1-07       | nishchay |      4003
+
+
+Q2 find all the details of train which start from karnal and stop at delhi?
+    command:  SELECT DISTINCT t.*
+              FROM train t
+              JOIN station s ON t.train_no = s.train_no
+              JOIN starts st ON st.train_no = t.train_no
+              JOIN stops sp ON sp.train_no = t.train_no
+              WHERE st.station_no = (SELECT station_no FROM station WHERE station_name = 'karnal')
+                AND sp.station_no = (SELECT station_no FROM station WHERE station_name = 'delhi');
+    
+    output: 
+     train_no | train_name | arrival_time | departure_time | total_seats |    date    
+    ----------+------------+--------------+----------------+-------------+------------
+        12711 | jammu mail | 11:30:00     | 11:40:00       |         100 | 2024-04-10
+
+
+Q3 find the passengers details whose train will arrive at 11:30:00 ?
+    command: select p.* from passenger p , ticket t , train tr , stops s 
+             where p.ticket_id = t.ticket_id and t.train_no = tr.train_no and tr.train_no = s.train_no and s.time='11:30:00';
+
+    output:  passenger_id | age | gender | user_id | reservation_status | seat_number |   name   | ticket_id 
+            --------------+-----+--------+---------+--------------------+-------------+----------+-----------
+                     5001 |  45 | M      |    1801 | Y                  | B6-23       | nishchay |      4001
+                     5007 |  21 | M      |    1802 | Y                  | A1-01       | naman    |      4003
+                     5008 |  20 | F      |    1802 | Y                  | A1-02       | shristi  |      4003
+                     5009 |  22 | F      |    1802 | Y                  | A1-03       | nancy    |      4003
+                     5010 |  21 | F      |    1802 | Y                  | A1-04       | vaishali |      4003
+                     5011 |  21 | F      |    1802 | Y                  | A1-05       | payal    |      4003
+                     5012 |  22 | F      |    1802 | Y                  | A1-06       | vrinda   |      4003
+                     5013 |  21 | M      |    1802 | Y                  | A1-07       | nishchay |      4003
+
+
+Q4 write a query to find the name of passenger ending with letter y?
+    command: SELECT name 
+             FROM PASSENGER 
+             WHERE name LIKE '%y';
+
+    output:    name   
+            ----------
+             nishchay
+             nancy
+             nishchay
+
+
+Q5 write a query to find the name of passenger stating with alphabet n?
+    command: SELECT name 
+             FROM PASSENGER 
+             WHERE name LIKE 'n%';
+
+    output:    name   
+            ----------
+             nishchay
+             naman
+             nancy
+             nishchay
+
+
+Q6 Give the count of users who are travelling between 2 specific dates?
+    command: SELECT u.(user_id)
+             FROM users u
+             JOIN ticket t ON u.user_id = t.user_id
+             WHERE t.train_no IN (
+                SELECT train_no
+                FROM train
+                WHERE date > '2024-05-10' AND date < '2024-05-30'
+            );
+    
+    output: 1
+
+
+Q7 update the gender of passenger having id 5013?
+   command:  UPDATE passenger
+             SET gender = 'M'
+             WHERE passenger_id = 5013;    
+
+    output: UPDATE 1
+
+
+Q8 write a query to give the total no of seats available on 2024-06-11?
+    command: SELECT SUM(total_seats) 
+             FROM train 
+             GROUP BY date 
+             HAVING date = '2024-06-11';
+
+    output:  sum 
+           -----
+             60
+
+
+Q9 sort the table passenger in decreasing order by age?
+    command: SELECT * 
+             FROM passenger 
+             ORDER BY age DESC;
+
+    output:  passenger_id | age | gender | user_id | reservation_status | seat_number |   name   | ticket_id 
+            --------------+-----+--------+---------+--------------------+-------------+----------+-----------
+                     5001 |  45 | M      |    1801 | Y                  | B6-23       | nishchay |      4001
+                     5003 |  42 | M      |    1804 | N                  | C1-04       | ramesh   |      4002
+                     5004 |  39 | F      |    1804 | N                  | C1-05       | pinki    |      4002
+                     5009 |  22 | F      |    1802 | Y                  | A1-03       | nancy    |      4003
+                     5012 |  22 | F      |    1802 | Y                  | A1-06       | vrinda   |      4003
+                     5013 |  21 | M      |    1802 | Y                  | A1-07       | nishchay |      4003
+                     5006 |  21 | M      |    1805 | N                  | D1-70       | arindham |      4004
+                     5007 |  21 | M      |    1802 | Y                  | A1-01       | naman    |      4003
+                     5010 |  21 | F      |    1802 | Y                  | A1-04       | vaishali |      4003
+                     5011 |  21 | F      |    1802 | Y                  | A1-05       | payal    |      4003
+                     5008 |  20 | F      |    1802 | Y                  | A1-02       | shristi  |      4003
+                     5002 |  18 | F      |    1804 | N                  | C1-03       | ananya   |      4002
+                     5005 |  15 | F      |    1805 | N                  | D1-69       | jahanvi  |      4004
+
+Q10 write a query to give name of passenger having age greater than 25?
+    command: SELECT name , age 
+             FROM passenger 
+             WHERE age>25;
+
+    output:    name   | age 
+            ----------+-----
+             nishchay |  45
+             ramesh   |  42
+             pinki    |  39

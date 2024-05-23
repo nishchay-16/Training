@@ -1,0 +1,67 @@
+PostgreSQL :-->
+It is a powerful, open-source object-relational database management system (ORDBMS).
+It has a strong reputation for reliability, feature robustness, and performance. 
+
+How to enter postgres terminal in terminal:- 
+   command:  psql -U postgres
+
+
+1)Creating and Managing Databases ---->
+
+    Create a new database:-
+        command: CREATE DATABASE <database_name>;
+
+    List all databases:-
+        command:  \l
+
+    Connect to a database:-
+        command: \c <database_name>
+
+    DROP DATABASE mydatabase;
+        command: DROP DATABASE <database_name>;
+
+
+2)Creating and Managing Tables ---->
+
+    Create a new table:-
+        CREATE TABLE <table_name> (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(100),
+          email VARCHAR(100) UNIQUE
+        );
+
+    List all tables:-
+        command: \dt
+
+    Describe a table (show table schema):-
+        command: \d <table_name>
+
+    Drop a table:-
+        command: DROP TABLE <table_name>;
+
+
+3)Inserting, Updating & Deleting Data ---->
+
+    Insert data into a table:-
+        command: INSERT INTO <table_name> (name, email) 
+                 VALUES ('Nishchay', 'nishchay.gupta@berylsystems.com'),
+                        ('Naman', 'naman.dua@berylsystems.com');
+    
+    Update data in a table:- 
+        command: UPDATE <table_name> 
+                 SET email = 'nishugupta123gupta@gmail.com' 
+                 WHERE name = 'Nishchay';
+
+    Delete data from a table:-
+        command: DELETE FROM <table_name> 
+                 WHERE name = 'Nishchay';
+
+
+
+
+
+
+
+
+
+
