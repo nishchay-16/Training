@@ -1,0 +1,59 @@
+INSTALLATION OF POSTRESQL IN TERMINAL
+
+Step 1: Install Homebrew
+
+        command:-
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+
+Step 2: Install PostgreSQL using Homebrew:
+        Once Homebrew is installed, you can use it to install PostgreSQL. 
+
+        command:-
+            brew install postgresql
+
+
+Step 3: Start PostgreSQL service:
+        After installation, we can start the PostgreSQL service.
+
+        command:-
+            brew services start postgresql
+
+
+Step 4: Verify installation:
+        To ensure PostgreSQL was installed correctly, you can check its version.
+
+        command:-
+            postgres --version
+
+        output:-
+            postgres (PostgreSQL) 14.12 (Homebrew)
+
+
+Step 5: Access PostgreSQL:
+        By default, PostgreSQL creates a user named "postgres" with an empty password. 
+        To access PostgreSQL, you can switch to the "postgres" user and enter the PostgreSQL command line interface (psql). 
+
+        command:- 
+            sudo -u postgres psql
+
+
+Step 6: Open PostgreSQL:
+        This commmand is used to access the PostgreSQL database server using the specified username (-U option) "postgres"
+
+        command:-
+            psql -U postgres
+        
+        Here,
+        psql: This command is the PostgreSQL interactive terminal.
+        -U postgres: This specifies the username to connect to the PostgreSQL server. 
+                     In this case, we are connecting as the user "postgres". 
+                     The -U option is followed by the username.
+
+
+Step 7: Create database to work and run queries:
+
+        command:-
+            CREATE DATABASE <database_name>
+
+            
