@@ -57,6 +57,134 @@ How to enter postgres terminal in terminal:-
                  WHERE name = 'Nishchay';
 
 
+4)Constraints ----->
+
+    UNIQUE:- It ensures that all values in a column are unique.
+        command: CREATE TABLE <table_name> (
+                    user_id INT PRIMARY KEY,
+                    email VARCHAR(100) UNIQUE
+                 );
+
+    NOT NULL:- It ensures that a column cannot have a NULL value.
+        command: CREATE TABLE <table_name> (
+                    id INT NOT NULL,
+                    first_name VARCHAR(50) NOT NULL,
+                    last_name VARCHAR(50) NOT NULL
+                 );
+
+    DEFAULT:- It provides a default value for a column when none is specified.
+        command: CREATE TABLE <table_name> (
+                    id INT PRIMARY KEY,
+                    name VARCHAR(100),
+                    price DECIMAL(10, 2) DEFAULT 0.00
+                 );
+
+    PRIMARY KEY:- It uniquely identifies each record in a table. A primary key column cannot have NULL values and must contain unique values.
+        command: CREATE TABLE <table_name> (
+                    id INT PRIMARY KEY,
+                    date DATE NOT NULL
+                 );
+
+    FOREIGN KEY:- It ensures the referential integrity of the data in one table to match values in another table.
+        command: CREATE TABLE booking (
+                    user_id INT , 
+                    ticket_id INT, 
+                    constraint fk_user FOREIGN KEY(user_id) REFERENCES users(user_id),
+                    constraint fk_ticket FOREIGN KEY (ticket_id) REFERENCES ticket(ticket_id)
+                 );
+
+    CHECK:- It ensures that all values in a column satisfy a specific condition.
+        command: CREATE TABLE users (
+                    id INT PRIMARY KEY,
+                    age INT CHECK (age >= 18)
+                );
+
+
+5)Alter Tables ---->
+
+    Add a new column:-
+        command: ALTER TABLE <table_name>
+                 ADD <column_name> <datatype> <constraint>;
+
+    Drop a column:- 
+        command: ALTER TABLE <table_name>
+                 DROP COLUMN <column_name>;
+
+    Modify a column:-
+        command: ALTER TABLE <table_name>
+                 MODIFY COLUMN <column_name> <datatype> <constraint>;
+
+    Rename a column:- 
+        command: ALTER TABLE <table_name>
+                 RENAME COLUMN <old_column_name> TO <new_column_name>;
+
+    Rename a table:- 
+        command: ALTER TABLE <old_table_name>
+                 RENAME TO <new_table_name>;
+
+    Adding constraint to table:-
+        command: ALTER TABLE <table_name>
+                 ADD CONSTRAINT <constraint_name> <constraint_type> <column_name>;
+
+    Drop constraint from table:-
+        command: ALTER TABLE <table_name>
+                 DROP CONSTRAINT <constraint_name>;
+
+    Changing column position:-
+        command: ALTER TABLE <table_name>
+                 MODIFY COLUMN <column_name> <datatype> <constraint> AFTER <another_column>;
+
+    Enable constraint:-
+        command: ALTER TABLE <table_name>
+                 ENABLE CONSTRAINT <constraint_name>;
+
+    Disable constraint:-
+        command: ALTER TABLE <table_name>
+                 DISABLE CONSTRAINT <constraint_name>;
+
+
+6) Views ----->
+    Views are virtual tables that are based on the result of a SELECT query. 
+    They do not store data physically but allow us to look at the data stored in tables.
+    
+    Creating a View:-
+        command: CREATE VIEW <view_name> AS
+                 SELECT column1, column2, ...
+                 FROM <table_name>
+                 WHERE condition;
+
+    Updating a View:-
+        command: UPDATE <view_name>
+                 SET age = 17
+                 WHERE user_id = 1802;
+
+    Deleting rows from View:-
+        command: DELETE FROM <view_name>
+                 WHERE condition;
+
+    Droping a View:-
+        command: DROP VIEW <view_name>;
+
+        
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    
+
+
+
+
+
 
 
 

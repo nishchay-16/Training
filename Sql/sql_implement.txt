@@ -262,3 +262,19 @@ Q10 write a query to give name of passenger having age greater than 25?
              nishchay |  45
              ramesh   |  42
              pinki    |  39
+
+Q11 create a view of table users having user_id , age and name whose gender is male?
+    command: CREATE VIEW userview AS    
+             SELECT u.user_id, u.age , u.first_name
+             FROM users as u 
+             WHERE u.gender = 'M';
+
+    Output:  select * from userview;
+             user_id | age | first_name 
+            ---------+-----+------------
+                1801 |  21 | nishchay
+                1802 |  18 | naman
+                1804 |  23 | deepin
+
+Q12
+             
