@@ -276,5 +276,15 @@ Q11 create a view of table users having user_id , age and name whose gender is m
                 1802 |  18 | naman
                 1804 |  23 | deepin
 
-Q12
+Q12 update the age of deepin to 32 in table userview?           
+    command: UPDATE userview
+             SET age = 32
+             WHERE first_name = 'deepin';
+
+    output:  user_id | age | first_name 
+            ---------+-----+------------
+                1801 |  21 | nishchay
+                1802 |  18 | naman
+                1804 |  32 | deepin
+
              

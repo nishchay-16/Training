@@ -143,7 +143,96 @@ How to enter postgres terminal in terminal:-
                  DISABLE CONSTRAINT <constraint_name>;
 
 
-6) Views ----->
+6)Clauses ---->
+
+    SELECT clause:-
+        It is used to specify the columns to be returned in the query result.
+        command: SELECT column1, column2 
+                 FROM <table_name>;
+
+    FROM clause:-
+        It specifies the table or tables from which to retrieve the data.
+        command: SELECT column1, column2 
+                 FROM <table_name>;
+
+    WHERE clause:-
+        It filters the records to be returned based on specified conditions.
+        command: SELECT column1, column2 
+                 FROM <table_name> 
+                 WHERE condition;
+
+    INSERT clause:- 
+        It adds new rows to a table.
+        command: INSERT INTO <table_name> (column1, column2) 
+                 VALUES (value1, value2);
+
+    DELETE clause:-
+        It removes rows from a table based on condition.
+        command: DELETE FROM <table_name>
+                 WHERE condition;
+    
+    UPDATE clause:-
+        It modifies the existing rows in table based on condition.
+        command: UPDATE table_name 
+                 SET column1 = value1, column2 = value2 
+                 WHERE condition;
+
+    GROUP BY clause:-
+        It group rows that have the same values in specified columns into summary rows.
+        command: SELECT column1, COUNT(*) 
+                 FROM <table_name>
+                 GROUP BY column1;
+    
+    HAVING clause:-
+        It filters groups based on specified conditions and used with GROUP BY clause.
+        command: SELECT column1, COUNT(*) 
+                 FROM <table_name> 
+                 GROUP BY column1 
+                 HAVING COUNT(*) > 1;
+    
+    ORDER BY clause:- 
+        It sorts the result set in ascending or descending order.
+        command: SELECT column1, column2 
+                 FROM <table_name>
+                 ORDER BY column1 ASC, column2 DESC;
+    
+    LIMIT clause:-
+        It limits the number of rows returned by the query.
+        command: SELECT column1, column2 
+                 FROM <table_name>
+                 LIMIT number_of_rows;
+    
+    OFFSET clause:-
+        It skips a specified number of rows before beginning to return the rows.
+        command: SELECT column1, column2 
+                 FROM <table_name> 
+                 OFFSET number_of_rows;
+
+    UNION clause:-
+        It combines the result sets of two or more SELECT statements, removing duplicates.
+        command: SELECT column1 FROM table1
+                 UNION
+                 SELECT column1 FROM table2;
+
+    UNION ALL Clause:-
+        It combines the result sets of two or more SELECT statements, including duplicates.
+        command: SELECT column1 FROM table1
+                 UNION ALL
+                 SELECT column1 FROM table2;
+    
+    EXCEPT clause:-
+        It returns the result set of the first SELECT statement that do not appear in second SELECT statement.
+        command: SELECT column1 FROM table1
+                 EXCEPT
+                 SELECT column1 FROM table2;
+
+    INTERSECT clause:-
+        It returns the result set that is intersection of result sets of two SELECT statements.
+        command: SELECT column1 FROM table1
+                 INTERSECT
+                 SELECT column1 FROM table2;
+
+7) Views ----->
     Views are virtual tables that are based on the result of a SELECT query. 
     They do not store data physically but allow us to look at the data stored in tables.
     
@@ -164,32 +253,3 @@ How to enter postgres terminal in terminal:-
 
     Droping a View:-
         command: DROP VIEW <view_name>;
-
-        
-
-
-
-
-
-    
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
