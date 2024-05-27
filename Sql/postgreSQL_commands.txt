@@ -277,3 +277,31 @@ How to enter postgres terminal in terminal:-
                     PRIMARY KEY (ID)
                  );
     
+
+9)TRANSACTIONS ---->
+        It is a unit of work performed against a database .
+	    It can be a unit or sequence of work accomplished in logical order, either manually or automatically.
+        It is the propagation of one or more changes to the database
+	    It is important to control transaction to ensure high data integrity and to handle database errors.
+
+	Properties of transaction (ACID PROPERTIES):
+			Atomicity - Ensures that all operations within the work unit are completed successfully otherwise, the transaction is aborted at the point of failure and previous operations are rolled back to their former state.
+			Consistency - Ensures that the database properly changes states upon a successfully committed transaction.
+			Isolation - Enables transactions to operate independently of and transparent to each other.
+			Durabilty - Ensures that the result or effect of a committed transaction persists in case of a system failure
+
+	Transaction Control Commands (used uith INSERT , UPDATE, DELETE):
+			BEGIN TRANSACTION - It is used to start a transaction.
+					command:  BEGIN | BEGIN TRANSACTION
+
+			COMMIT -  It is used to save changes after the last commit .
+                      It is the transactional command used to save changes invoked by a transaction to the database.
+                      It saves all transactions to the database since the last COMMIT or ROLLBACK command.
+					command:  COMMIT | END TRANSACTION
+
+			ROLLBACK - It is used to rollback to the last commit.
+                       It is the transactional command used to undo transactions that have not already been saved to the database.
+					command:  ROLLBACK;
+
+
+
