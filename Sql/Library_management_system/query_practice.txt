@@ -191,3 +191,181 @@ output:
 -------------+------------------------------
  Nishchay    | nishugupta123gupta@gmail.com
 
+
+Q11 Retrieve the names of authors who have written more than one book.
+Ans:
+
+SELECT a.author_name
+FROM Author a
+JOIN Book b ON a.author_id = b.author_id
+GROUP BY a.author_id
+HAVING COUNT(b.author_id) > 1;
+
+output:
+  author_name  
+---------------
+ Stephan King
+ George Orwell
+ J.K. Rowling
+
+
+Q12 Find the name and email of the member who has the earliest issued book.
+Ans: 
+
+SELECT m.member_name, m.email
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+ORDER BY t.issuedate ASC
+LIMIT 1;
+
+output:
+ member_name |      email       
+-------------+------------------
+ Deepin      | deepin@gmail.com
+
+
+Q13 Display the section names that have books by 'George Orwell'.
+Ans:
+
+SELECT s.section_name
+FROM Section s
+JOIN Book b ON s.section_id = b.section_id
+JOIN Author a ON b.author_id = a.author_id
+WHERE a.author_name = 'George Orwell';
+
+output:
+    section_name    
+--------------------
+ Horror Section
+ Literature Section
+
+
+Q14 Calculate the total number of books in each genre.
+Ans:
+
+SELECT g.genre_name, SUM(b.quantity) AS quantity
+FROM Book b
+JOIN Genre g ON g.genre_id = b.genre_id
+GROUP BY g.genre_id, g.genre_name;
+
+output:
+   genre_name    | sum 
+-----------------+-----
+ Literature      |   9
+ Science Fiction |   1
+ Comedy          |  48
+ Horror          |  18
+ Fantasy         |   8
+
+
+Q15 List all the members who have never borrowed a book.
+Ans:
+
+SELECT m.member_name
+FROM Member m
+LEFT JOIN Transaction t ON m.member_id = t.member_id
+WHERE t.member_id IS NULL;
+
+output:
+ member_name 
+-------------
+ Naman
+
+
+Q16 Show the most popular genre based on the number of books borrowed.
+Ans:
+
+SELECT g.genre_name                                 
+FROM Genre g
+JOIN Book b ON g.genre_id = b.genre_id
+GROUP BY g.genre_id              
+HAVING (MAX(b.quantity - b.available_quantity)) = 
+    (SELECT MAX(quantity - available_quantity) FROM Book);
+
+OR
+
+SELECT g.genre_name, COUNT(t.isbn) AS books_borrowed
+FROM Genre g
+JOIN Book b ON g.genre_id = b.genre_id
+JOIN Transaction t ON b.isbn = t.isbn
+GROUP BY g.genre_name
+ORDER BY books_borrowed DESC
+LIMIT 1;
+
+output:
+ genre_name | books_borrowed 
+------------+----------------
+ Comedy     |              4
+
+
+Q17 Display the details of the book with the highest quantity.
+Ans:
+
+SELECT * 
+FROM Book
+ORDER BY quantity DESC
+LIMIT 1;
+
+output:
+  isbn  |  title   | author_id | genre_id | quantity | available_quantity | section_id 
+--------+----------+-----------+----------+----------+--------------------+------------
+ 975987 | Catch-22 |         4 |        4 |       19 |                 19 |          4
+
+
+Q18 Retrieve the names of members who have fines that were issued in the last 30 days.
+Ans:
+
+SELECT DISTINCT m.member_name
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Fine f ON t.transaction_id = f.transaction_id
+WHERE f.fine_date >= CURRENT_DATE - INTERVAL '30 days';
+ member_name 
+
+output:
+ member_name 
+-------------
+ Nishchay
+
+
+Q19 List all the unique genres available in the library.
+Ans:
+
+SELECT DISTINCT genre_name
+FROM Genre;
+
+output:
+   genre_name    
+-----------------
+ Comedy
+ Literature
+ Fantasy
+ Horror
+ Science Fiction
+
+
+Q20 Find the average capacity of sections in the library.
+Ans: 
+
+SELECT AVG(capacity) AS Avg_capacity 
+FROM section ;
+
+output:
+     avg_capacity     
+----------------------
+ 159.0000000000000000
+
+
+Q21 Find the age of the member from dob.
+Ans:
+
+SELECT member_name , dob , EXTRACT(YEAR FROM AGE(CURRENT_DATE ,dob)) AS age 
+FROM member;
+
+output:
+ member_name |    dob     | age 
+-------------+------------+-----
+ Nishchay    | 2002-10-16 |  21
+ Naman       | 2002-11-06 |  21
+ Pragya      | 2004-01-24 |  20
+ Deepin      | 2002-06-15 |  21
