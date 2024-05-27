@@ -1,0 +1,74 @@
+OPERATORS IN POSTGRESQL
+
+An operator is a reserved word or a character used primarily in a PostgreSQL statement's WHERE clause to perform operation(s), such as comparisons and arithmetic operations.
+Operators are used to specify conditions in a PostgreSQL statement and to serve as conjunctions for multiple conditions in a statement.
+
+1) Arithmetic operators :-
+
+    +   Addition (Adds values on either side of the operator)
+      Example: a + b will give 5
+
+    -   Subtraction (Subtracts right hand operand from left hand operand)
+      Example: a - b will give -1
+
+    *   Multiplication (Multiplies values on either side of the operator)
+      Example: a * b will give 6
+
+    /   Division (Divides left hand operand by right hand operand)
+      Example: b / a will give 1
+
+    %   Modulus (Divides left hand operand by right hand operand and returns remainder)
+      Example: b % a will give 1
+
+    ^   Exponentiation (This gives the exponent value of the right hand operand)
+      Example: a ^ b will give 8
+
+    |/  Square root 
+      Example: |/ 25.0 will give 5
+
+    ||\ Cube root
+      Example: ||/ 27.0 will give 3
+
+    !   Factorial
+      Example: 5 ! will give 120
+
+
+2) Comparison operators :-
+
+    =    (Checks if the values of two operands are equal or not, if yes then condition becomes true.)
+      Example: (a = b) is not true.
+
+    !=   (Checks if the values of two operands are equal or not, if values are not equal then condition becomes true.)
+      Example: (a != b) is true.
+
+    <>   (Checks if the values of two operands are equal or not, if values are not equal then condition becomes true.)
+      Example: (a <> b) is true.
+
+    >    (Checks if the value of left operand is greater than the value of right operand, if yes then condition becomes true.)
+      Example: (a > b) is not true.
+
+    <    (Checks if the value of left operand is less than the value of right operand, if yes then condition becomes true.)
+      Example: (a < b) is true.
+
+    >=   (Checks if the value of left operand is greater than or equal to the value of right operand, if yes then condition becomes true.)
+      Example: (a >= b) is not true.
+
+    <=   (Checks if the value of left operand is less than or equal to the value of right operand, if yes then condition becomes true.)
+      Example: (a <= b) is true.
+
+
+3) Logical Operators :-
+
+    AND (The AND operator allows the existence of multiple conditions in a PostgresSQL statement's WHERE clause.)
+    NOT (The NOT operator reverses the meaning of the logical operator with which it is used)
+    OR  (The OR operator is used to combine multiple conditions in a PostgresSQL statement's WHERE clause.)
+
+
+4) BitString Operators :-
+
+    &  Binary AND (copies a bit to the result if it exists in both operands)
+    |  Binary OR (copies a bit if it exists in either operand.)
+    ~  Binary Ones Complement (It is unary and has the effect of 'flipping' bits.)
+    << Binary Left Shift (The left operands value is moved left by the number of bits specified by the right operand.)
+    >> Binary Right Shift (The left operands value is moved right by the number of bits specified by the right operand.)
+    #  Bitwise XOR.

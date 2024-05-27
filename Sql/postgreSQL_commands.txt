@@ -253,3 +253,27 @@ How to enter postgres terminal in terminal:-
 
     Droping a View:-
         command: DROP VIEW <view_name>;
+
+
+8) Schema ---->
+        A schema is a named collection of tables. 
+        A schema can also contain views, indexes, sequences, data types, operators, and functions. 
+        It allows many users to use one database without interfering with each other.
+        t organizes database objects into logical groups to make them more manageable.
+
+    Create schema:-
+        command: CREATE SCHEMA <schema_name>;
+
+    Drop a schema:-
+        command: DROP SCHEMA <schema_name>;
+
+    Create a table in schema:-
+        command: Create table myschema.company(
+                    ID   INT              NOT NULL,
+                    NAME VARCHAR (20)     NOT NULL,
+                    AGE  INT              NOT NULL,
+                    ADDRESS  CHAR (25),
+                    SALARY   DECIMAL (18, 2),
+                    PRIMARY KEY (ID)
+                 );
+    
