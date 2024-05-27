@@ -1,0 +1,193 @@
+!------------QUERY PRACTICE OF LIBRARY MANAGEMENT SYSTEM---------------!
+
+
+Q1 Retrieve the names and nationalities of all authors in the database.
+Ans:
+
+SELECT a.author_name, a.nationality 
+FROM author as a;
+        
+output:-
+  author_name  | nationality 
+---------------+-------------
+ J.K. Rowling  | British
+ George Orwell | African
+ MS chauhan    | Indian
+ Amy Poehler   | American
+ Stephan King  | American
+
+
+
+Q2 Find out how many books are available in the Horror Section.
+Ans: 
+
+SELECT COUNT(available_quantity) 
+FROM Book
+WHERE section_id = (
+    SELECT section_id
+    FROM Section
+    WHERE section_name = 'Horror Section'
+) AND available_quantity > 0;
+
+output:-
+ count 
+-------
+     4
+
+
+Q3 List all members who have borrowed books and their corresponding return dates.
+Ans:
+
+SELECT m.member_name , t.returndate 
+FROM member m JOIN transaction t on m.member_id = t.member_id ;
+
+output:-
+ member_name | returndate 
+-------------+------------
+ Nishchay    | 2024-05-30
+ Nishchay    | 2024-05-15
+ Pragya      | 2024-05-19
+ Deepin      | 2024-06-10
+ Nishchay    | 2024-07-25
+ Pragya      | 2024-06-26
+ Deepin      | 2024-02-09
+ Pragya      | 2024-07-11
+
+
+Q4 Display the titles of books borrowed by a specific member.
+Ans:
+
+SELECT b.title
+FROM Book b
+JOIN Transaction t ON b.isbn = t.isbn
+JOIN Member m ON t.member_id = m.member_id
+WHERE m.member_name = 'Nishchay';
+
+output:
+                  title                  
+-----------------------------------------
+ Harry Potter and the Philosophers Stone
+ 1984
+
+
+Q5 Calculate the total fine amount that has been paid by all members.
+Ans: 
+
+SELECT SUM(fine_amount) AS total_fine_paid
+FROM Fine
+WHERE payment_status = 'Paid';
+
+output:
+ total_fine_paid 
+-----------------
+           15.00
+
+
+Q6 Identify the librarian who issued the most transactions.
+Ans:
+
+SELECT l.librarian_name, COUNT(t.transaction_id) AS transaction_count
+FROM Librarian l
+JOIN Transaction t ON l.librarian_id = t.librarian_id
+GROUP BY l.librarian_name
+ORDER BY transaction_count DESC
+LIMIT 1;
+ 
+OR
+
+SELECT librarian_name 
+FROM librarian 
+WHERE librarian_id IN 
+    (SELECT t.librarian_id 
+     FROM transaction t 
+     GROUP BY t.librarian_id 
+     ORDER BY t.librarian_id DESC
+     LIMIT 1);
+
+output:
+ librarian_name | transaction_count 
+----------------+-------------------
+ Kavita         |                 3
+
+
+Q7 Show the titles of books with their corresponding authors and genres.
+Ans:
+
+SELECT b.title , g.genre_name, a.author_name 
+FROM book b 
+JOIN author a ON b.author_id = a.author_id 
+JOIN genre g ON b.genre_id = g.genre_id ;
+
+output:
+                  title                  |   genre_name    |  author_name  
+-----------------------------------------+-----------------+---------------
+ Harry Potter and the Deathly Hallows    | Fantasy         | J.K. Rowling
+ Harry Potter and the Philosophers Stone | Fantasy         | J.K. Rowling
+ The Shining                             | Horror          | Stephan King
+ Bird Box                                | Horror          | Stephan King
+ Dracula                                 | Horror          | J.K. Rowling
+ 1984                                    | Horror          | George Orwell
+ Pride and Prejudice                     | Literature      | MS chauhan
+ Inception                               | Literature      | George Orwell
+ Catch-22                                | Comedy          | Amy Poehler
+ Bossypants                              | Comedy          | J.K. Rowling
+ Yesplease                               | Comedy          | J.K. Rowling
+ Enders Game                             | Science Fiction | J.K. Rowling
+
+
+Q8 Find out which section has the highest capacity.
+Ans:
+
+SELECT * 
+FROM Section 
+ORDER BY capacity DESC 
+LIMIT 1;
+
+OR
+
+SELECT *
+FROM Section
+WHERE capacity = (
+    SELECT MAX(capacity)
+    FROM Section
+);
+
+output:
+ section_id |    section_name    | capacity 
+------------+--------------------+----------
+          3 | Literature Section |      500
+
+
+Q9 List all transactions issued by a specific librarian.
+Ans:
+
+SELECT * 
+FROM transaction 
+WHERE librarian_id IN
+    (SELECT l.librarian_id 
+     FROM librarian l 
+     WHERE l.librarian_name = 'Jitender'
+    );
+
+output:
+ transaction_id | member_id |  isbn  | issuedate  | returndate | librarian_id 
+----------------+-----------+--------+------------+------------+--------------
+              4 |         4 | 978076 | 2024-05-13 | 2024-06-10 |            3
+              6 |         3 | 978076 | 2024-05-22 | 2024-06-26 |            3
+              7 |         4 | 978077 | 2024-01-26 | 2024-02-09 |            3
+
+
+Q10 Display the names and email addresses of all members who have unpaid fines.
+Ans:
+
+SELECT m.member_name, m.email
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Fine f ON t.transaction_id = f.transaction_id
+WHERE f.payment_status = 'Unpaid';
+
+output:
+ member_name |            email             
+-------------+------------------------------
+ Nishchay    | nishugupta123gupta@gmail.com
+
