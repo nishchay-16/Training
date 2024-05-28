@@ -304,4 +304,115 @@ How to enter postgres terminal in terminal:-
 					command:  ROLLBACK;
 
 
+10)TRIGGERS ---->
+        These are database callback functions , which are automatially performed when a specific event occurs in the database.
+        If multiple triggers of the same kind are defined for the same event, they will be fired in alphabetical order by name.
+        A trigger that is marked FOR EACH ROW is called once for every row that the operation modifies.
 
+        command: CREATE  TRIGGER trigger_name [BEFORE|AFTER|INSTEAD OF] event_name
+                 ON table_name
+                [
+                    -- Trigger logic goes here....
+                ];
+
+        example: CREATE TRIGGER example_trigger 
+                 AFTER INSERT ON COMPANY
+                 FOR EACH ROW 
+                 EXECUTE PROCEDURE auditlogfunc();
+
+        above example contains function auditlogfunc() which is a trigger function and has definition-
+            CREATE OR REPLACE FUNCTION auditlogfunc() RETURNS TRIGGER AS <example_table>
+                BEGIN
+                    INSERT INTO AUDIT(EMP_ID, ENTRY_DATE) VALUES (new.ID, current_timestamp);
+                    RETURN NEW;
+                END;
+            <example_table> LANGUAGE plpgsql;
+
+        Listing Triggers:-
+            command:  \d+ trigger_name;
+                      SELECT * FROM trigger_name;
+
+        Dropping Triggers:-
+            command:  DROP TRIGGER trigger_name;
+
+        
+11)INDEXES ---->
+        They are special lookup tables that the database search engine can use to speed up data retrieval.
+        They are used to increase the performance of queries.
+        An index is a pointer to data in a table.
+        An index helps to speed up SELECT queries and WHERE clauses; 
+        however, it slows down data input, with UPDATE and INSERT statements.
+
+        Creating a index:-
+            command: CREATE INDEX index_name 
+                     ON table_name (column1, column2, ...);
+
+        Dropping an index:-
+            command: DROP INDEX index_name;
+
+    Types:-
+        * Single-Column Indexes ->
+            It is one that is created based on only one table column.
+            command: CREATE INDEX index_name
+                     ON table_name (column_name);
+
+        * Multi-Column Indexes ->
+            It is one that is created based on more than one table column.
+            command: CREATE INDEX index_name
+                     ON table_name (column1, column2, ...);
+
+        * Unique Indexes ->
+            It is a special index that ensures that all values in a column are unique.
+            It does not allow any duplicate values to be inserted into the table.
+            command: CREATE UNIQUE INDEX index_name
+                     ON table_name (column_name);
+        
+        * Partial Indexes ->
+            It is an index built over a subset of a table; the subset is defined by a conditional expression (called the predicate of the partial index).
+            The index contains entries only for those table rows that satisfy the predicate
+            command: CREATE INDEX index_name
+                     ON table_name (conditional_expression);
+            example: CREATE INDEX index_name
+                     ON table_name (title LIKE '%the%');
+
+        * Implicit Indexes ->
+            It is an index created automatically by the database engine.
+            command: CREATE INDEX index_name
+                     ON table_name USING btree (column_name);
+            example: CREATE INDEX salary_index 
+                     ON employees (salary);
+
+    B-tree is a self-balancing tree data structure that maintains sorted data and allows for efficient insertion, deletion, and search operations.
+
+
+12) LOCKS ---->
+        It is a mechanism that the database engine uses to prevent concurrent access to a table.
+        Locks are also known as Exclusive Locks or Write Locks 
+        It is used to prevent users from modifying a row or an entire table.
+
+        command:  LOCK [ TABLE ] <table_name> 
+                  IN lock_mode
+
+            lock_mode − The lock mode specifies which locks this lock conflicts with.
+                        If no lock mode is specified, then ACCESS EXCLUSIVE, the most restrictive mode, is used.
+                        Possible values are: 
+                                ACCESS SHARE, 
+                                ROW SHARE, 
+                                ROW EXCLUSIVE, 
+                                SHARE UPDATE EXCLUSIVE, 
+                                SHARE, 
+                                SHARE ROW EXCLUSIVE, 
+                                EXCLUSIVE, 
+                                ACCESS EXCLUSIVE.
+
+            * There is no UNLOCK TABLE command; locks are always released at the transaction end.
+
+            DEADLOCKS: It occurs when two transactions are waiting for each other to finish .
+            ADVISORY LOCKS: It is a lock mechanism that prevents deadlocks.
+
+            example: BEGIN;
+                     LOCK TABLE company1 
+                     IN ACCESS EXCLUSIVE MODE;
+
+
+13) 
