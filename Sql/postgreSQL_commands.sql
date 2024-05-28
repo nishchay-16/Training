@@ -259,7 +259,7 @@ How to enter postgres terminal in terminal:-
         A schema is a named collection of tables. 
         A schema can also contain views, indexes, sequences, data types, operators, and functions. 
         It allows many users to use one database without interfering with each other.
-        t organizes database objects into logical groups to make them more manageable.
+        It organizes database objects into logical groups to make them more manageable.
 
     Create schema:-
         command: CREATE SCHEMA <schema_name>;
@@ -415,4 +415,42 @@ How to enter postgres terminal in terminal:-
                      IN ACCESS EXCLUSIVE MODE;
 
 
-13) 
+13) PRIVILEGES ---->
+        These are granted by the database administrators to the users of the database.
+        The owner is usually the one who executed the creation statement.
+
+        Different kinds of privileges in PostgreSQL are −
+            * SELECT
+            * INSERT
+            * UPDATE
+            * DELETE
+            * TRUNCATE
+            * REFERENCES
+            * TRIGGER
+            * CREATE
+            * CONNECT
+            * TEMPORARY
+            * EXECUTE
+            * USAGE
+
+        Granting Privileges:-
+            command: GRANT privilege [, ...]
+                     ON object [, ...]
+                     TO { PUBLIC | GROUP group | username }
+    
+            example: GRANT ALL ON COMPANY TO manisha;
+
+        Revoking Privileges:-
+            command: REVOKE privilege [, ...]
+                     ON object [, ...]
+                     FROM { PUBLIC | GROUP group | username }
+
+            example: REVOKE ALL ON COMPANY FROM manisha;
+    
+                Here,
+                    Privilege   − values could be: SELECT, INSERT, UPDATE, DELETE, RULE, ALL.
+                    Object      − The name of an object to which to grant access. The possible objects are: table, view, sequence
+                    PUBLIC      − A short form representing all users.
+                    GROUP group − A group to whom to grant privileges.
+                    username    − The name of a user to whom to grant privileges. 
+                                    PUBLIC is a short form representing all users.
