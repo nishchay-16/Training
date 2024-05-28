@@ -362,6 +362,11 @@ Ans:
 SELECT member_name , dob , EXTRACT(YEAR FROM AGE(CURRENT_DATE ,dob)) AS age 
 FROM member;
 
+OR
+
+SELECT member_name , dob , EXTRACT(YEAR FROM AGE(dob)) AS age 
+FROM member;
+
 output:
  member_name |    dob     | age 
 -------------+------------+-----
@@ -373,3 +378,160 @@ output:
 
 Q22 Find the name of the member who has borrowed the most books.
 Ans: 
+
+SELECT m.member_name
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Book b ON t.isbn = b.isbn
+GROUP BY m.member_id, m.member_name
+ORDER BY COUNT(b.isbn) DESC
+LIMIT 1;
+
+OR
+
+SELECT m.member_name 
+FROM member m 
+JOIN transaction t ON m.member_id = t.member_id 
+GROUP BY m.member_id 
+ORDER BY count(t.transaction_id) DESC 
+LIMIT 1;
+
+output:
+ member_name 
+-------------
+ Pragya
+
+
+Q23  Retrieve the title of book that have been borrowed the most.
+Ans:  
+
+SELECT b.title 
+FROM book b 
+JOIN transaction t ON t.isbn = b.isbn
+GROUP BY b.isbn
+ORDER BY COUNT(t.transaction_id) DESC
+LIMIT 1;
+
+output:
+   title   
+-----------
+ Yesplease
+
+
+Q24 List the member names who have borrowed books from the 'Horror Section'.
+Ans:
+
+SELECT m.member_name
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Book b ON t.isbn = b.isbn
+JOIN Section s ON b.section_id = s.section_id
+WHERE s.section_name = 'Horror Section';
+
+output:
+ member_name 
+-------------
+ Nishchay
+
+
+Q25 Display the genre names along with the average quantity of books available in each genre.
+Ans:
+
+SELECT g.genre_name, AVG(b.available_quantity) AS avg_available_quantity
+FROM genre g
+JOIN book b ON g.genre_id = b.genre_id
+GROUP BY g.genre_id;
+
+output:
+   genre_name    | avg_available_quantity 
+-----------------+------------------------
+ Comedy          |    14.0000000000000000
+ Literature      |     3.5000000000000000
+ Fantasy         |     3.5000000000000000
+ Horror          |     3.7500000000000000
+ Science Fiction | 0.00000000000000000000
+
+
+Q26 List all the books that have been borrowed only once.
+Ans:
+
+SELECT b.*
+FROM book b
+JOIN transaction t on b.isbn = t.isbn
+GROUP BY b.isbn
+HAVING COUNT(t.transaction_id) = 1;
+
+output:
+  isbn  |                  title                  | author_id | genre_id | quantity | available_quantity | section_id 
+--------+-----------------------------------------+-----------+----------+----------+--------------------+------------
+ 978077 | Bossypants                              |         1 |        4 |       14 |                 13 |          4
+ 978055 | Harry Potter and the Philosophers Stone |         1 |        1 |        5 |                  4 |          1
+ 978014 | 1984                                    |         2 |        2 |        7 |                  7 |          2
+
+
+Q27 Show the names of members who have borrowed books in the last 30 days and have fines.
+Ans:
+
+SELECT DISTINCT m.member_name
+FROM member m
+JOIN transaction t ON m.member_id = t.member_id
+JOIN fine f on f.transaction_id = t.transaction_id
+where t.issuedate >= CURRENT_DATE - INTERVAL '30 days';
+
+output:
+ member_name 
+-------------
+ Nishchay
+
+
+Q28 Display the librarian names along with the total fine amount they have collected.
+Ans:
+
+SELECT l.librarian_name, SUM(f.fine_amount) AS total_fine
+FROM librarian l
+JOIN transaction t ON l.librarian_id = t.librarian_id
+JOIN fine f ON t.transaction_id = f.transaction_id
+GROUP BY l.librarian_name;
+
+output:
+ librarian_name | total_fine 
+----------------+------------
+ Dinesh         |      40.00
+
+
+Q29 Display the author detials whose books have been borrowed from the library.
+Ans:
+
+SELECT DISTINCT a.*
+FROM author a
+JOIN book b ON a.author_id = b.author_id
+JOIN transaction t ON b.isbn = t.isbn;
+
+output:
+ author_id |  author_name  | nationality 
+-----------+---------------+-------------
+         2 | George Orwell | African
+         1 | J.K. Rowling  | British
+
+  
+Q30 List the books details that have never been borrowed.
+Ans:
+
+SELECT b.*
+FROM book b
+LEFT JOIN transaction t ON b.isbn = t.isbn
+WHERE t.transaction_id IS NULL;
+
+output:
+  isbn  |                title                 | author_id | genre_id | quantity | available_quantity | section_id 
+--------+--------------------------------------+-----------+----------+----------+--------------------+------------
+ 975987 | Catch-22                             |         4 |        4 |       19 |                 19 |          4
+ 978990 | The Shining                          |         5 |        2 |        1 |                  0 |          2
+ 978090 | Enders Game                          |         1 |        5 |        1 |                  0 |          5
+ 990208 | Pride and Prejudice                  |         3 |        3 |        2 |                  2 |          3
+ 977101 | Dracula                              |         1 |        2 |        3 |                  2 |          2
+ 978054 | Harry Potter and the Deathly Hallows |         1 |        1 |        3 |                  3 |          1
+ 977000 | Bird Box                             |         5 |        2 |        7 |                  6 |          2
+
+
+ 
