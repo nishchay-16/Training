@@ -1003,3 +1003,188 @@ output:
  member_name |              fantasy_book               | sci_fi_book | comedy_book 
 -------------+-----------------------------------------+-------------+-------------
  Nishchay    | Harry Potter and the Philosophers Stone | 1984        | Yesplease
+
+
+
+Q51 Find all members who have borrowed books authored by 'J.K. Rowling'.
+Ans 
+
+SELECT distinct m.member_name
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Book b ON t.isbn = b.isbn
+JOIN Author a ON b.author_id = a.author_id
+WHERE a.author_name = 'J.K. Rowling';
+
+output:
+ member_name 
+-------------
+ Deepin
+ Nishchay
+ Pragya
+
+
+
+ Q52 Find all books that are currently not available.
+ Ans: 
+
+ SELECT *
+FROM Book
+WHERE available_quantity = 0;
+
+output:
+  isbn  |    title    | author_id | genre_id | quantity | available_quantity | section_id 
+--------+-------------+-----------+----------+----------+--------------------+------------
+ 978090 | Enders Game |         1 |        5 |        1 |                  0 |          5
+ 978990 | The Shining |         5 |        2 |        1 |                  0 |          2
+
+
+
+Q53 Update the phone number of a member.
+Ans:
+
+UPDATE Member
+SET phone_no = '9999999999'
+WHERE member_name = 'Nishchay';
+
+output:
+UPDATE 1
+
+
+
+Q54 Find the most popular book genre based on the number of transactions.
+Ans: 
+
+SELECT g.genre_name, COUNT(t.transaction_id) AS transaction_count
+FROM Transaction t
+JOIN Book b ON t.isbn = b.isbn
+JOIN Genre g ON b.genre_id = g.genre_id
+GROUP BY g.genre_name
+ORDER BY transaction_count DESC
+LIMIT 1;
+
+output:
+ genre_name | transaction_count 
+------------+-------------------
+ Comedy     |                 4
+
+
+
+Q55 Add 5 more copies of '1984' to the library stock.
+Ans:
+
+UPDATE Book
+SET quantity = quantity + 5, available_quantity = available_quantity + 5
+WHERE title = '1984';
+
+output:
+UPDATE 1
+
+
+
+Q56 List all books with their authors and genres.
+Ans:
+
+SELECT b.title, a.author_name, g.genre_name
+FROM Book b
+JOIN Author a ON b.author_id = a.author_id
+JOIN Genre g ON b.genre_id = g.genre_id;
+
+output:
+                  title                  |  author_name  |   genre_name    
+-----------------------------------------+---------------+-----------------
+ Harry Potter and the Deathly Hallows    | J.K. Rowling  | Fantasy
+ Harry Potter and the Philosophers Stone | J.K. Rowling  | Fantasy
+ 1984                                    | George Orwell | Horror
+ The Shining                             | Stephan King  | Horror
+ Bird Box                                | Stephan King  | Horror
+ Dracula                                 | J.K. Rowling  | Horror
+ Pride and Prejudice                     | MS chauhan    | Literature
+ Inception                               | George Orwell | Literature
+ Catch-22                                | Amy Poehler   | Comedy
+ Bossypants                              | J.K. Rowling  | Comedy
+ Yesplease                               | J.K. Rowling  | Comedy
+ Enders Game                             | J.K. Rowling  | Science Fiction
+
+
+
+Q57 List all books that have never been issued
+Ans:
+
+SELECT b.title
+FROM Book b
+LEFT JOIN Transaction t ON b.isbn = t.isbn
+WHERE t.isbn IS NULL;
+
+output:
+                title                 
+--------------------------------------
+ Catch-22
+ The Shining
+ Enders Game
+ Pride and Prejudice
+ Dracula
+ Harry Potter and the Deathly Hallows
+ Bird Box
+
+
+
+Q58 List all authors with the number of books they have in the library.
+Ans:
+
+SELECT a.author_name, COUNT(b.isbn) AS book_count
+FROM Author a
+JOIN Book b ON a.author_id = b.author_id
+GROUP BY a.author_name;
+
+output:
+  author_name  | book_count 
+---------------+------------
+ MS chauhan    |          1
+ George Orwell |          2
+ Stephan King  |          2
+ J.K. Rowling  |          6
+ Amy Poehler   |          1
+
+
+
+Q59 List all transactions along with the book title and member name.
+Ans: 
+
+SELECT t.transaction_id, m.member_name, b.title, t.issuedate, t.returndate
+FROM Transaction t
+JOIN Member m ON t.member_id = m.member_id
+JOIN Book b ON t.isbn = b.isbn;
+
+output:
+ transaction_id | member_name |                  title                  | issuedate  | returndate 
+----------------+-------------+-----------------------------------------+------------+------------
+              2 | Nishchay    | 1984                                    | 2024-05-05 | 2024-05-30
+              1 | Nishchay    | Harry Potter and the Philosophers Stone | 2024-05-01 | 2024-05-15
+              3 | Pragya      | Inception                               | 2024-04-08 | 2024-05-19
+              4 | Deepin      | Yesplease                               | 2024-05-13 | 2024-06-10
+              5 | Nishchay    | Yesplease                               | 2024-03-25 | 2024-07-25
+              6 | Pragya      | Yesplease                               | 2024-05-22 | 2024-06-26
+              7 | Deepin      | Bossypants                              | 2024-01-26 | 2024-02-09
+              8 | Pragya      | Inception                               | 2024-04-05 | 2024-07-11
+
+
+
+Q60 List the fines that are still unpaid along with the member and book details.
+Ans:
+
+SELECT f.fine_id, m.member_name, b.title, f.fine_amount, f.fine_date
+FROM Fine f
+JOIN Transaction t ON f.transaction_id = t.transaction_id
+JOIN Member m ON t.member_id = m.member_id
+JOIN Book b ON t.isbn = b.isbn
+WHERE f.payment_status = 'Unpaid';
+
+output:
+ fine_id | member_name |                  title                  | fine_amount | fine_date  
+---------+-------------+-----------------------------------------+-------------+------------
+       1 | Nishchay    | Harry Potter and the Philosophers Stone |       25.00 | 2024-05-20
+
+
+
+
