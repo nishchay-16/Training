@@ -43,40 +43,52 @@ CREATE TABLE Certified (
 
 INSERT INTO Flights (flno, "from", "to", distance, departs, arrives, price) 
 VALUES
-(1, 'Los Angeles', 'New York', 2475, '07:00', '15:30', 300),
-(2, 'Chicago', 'Los Angeles', 1745, '08:00', '11:30', 200),
-(3, 'Los Angeles', 'Honolulu', 2550, '09:00', '12:00', 400),
-(4, 'San Francisco', 'Chicago', 1850, '10:00', '14:30', 250),
-(5, 'Seattle', 'Boston', 2480, '11:00', '19:30', 350),
-(6, 'Miami', 'Los Angeles', 2345, '12:00', '18:00', 330),
-(7, 'Dallas', 'San Francisco', 1460, '13:00', '16:00', 220),
-(8, 'Denver', 'Miami', 2075, '14:00', '20:00', 300),
-(9, 'Atlanta', 'Chicago', 595, '15:00', '17:00', 150),
-(10, 'Houston', 'Seattle', 1890, '16:00', '20:30', 280),
-(11, 'Los Angeles', 'Chicago', 1745, '17:00', '21:00', 270),
-(12, 'New York', 'Miami', 1090, '18:00', '21:30', 200),
-(13, 'Boston', 'Atlanta', 950, '19:00', '22:00', 180),
-(14, 'Las Vegas', 'San Francisco', 420, '20:00', '21:30', 100),
-(15, 'Portland', 'Denver', 980, '21:00', '23:30', 150);
+(1, 'Los Angeles', 'New York', 2475, '07:00', '15:30', 70000),
+(2, 'Chicago', 'Los Angeles', 1745, '08:00', '11:30', 20000),
+(3, 'Los Angeles', 'Honolulu', 2550, '09:00', '12:00', 100000),
+(4, 'San Francisco', 'Chicago', 1850, '10:00', '14:30', 250000),
+(5, 'Seattle', 'Boston', 2480, '11:00', '19:30', 35000),
+(6, 'Miami', 'Los Angeles', 2345, '12:00', '18:00', 33000),
+(7, 'Dallas', 'San Francisco', 1460, '13:00', '16:00', 22000),
+(8, 'Denver', 'Miami', 2075, '14:00', '20:00', 30000),
+(9, 'Atlanta', 'Chicago', 595, '15:00', '17:00', 150000),
+(10, 'Houston', 'Seattle', 1890, '16:00', '20:30', 28000),
+(11, 'Los Angeles', 'Chicago', 1745, '17:00', '21:00', 27000),
+(12, 'New York', 'Miami', 1090, '18:00', '21:30', 20000),
+(13, 'Boston', 'Atlanta', 950, '19:00', '22:00', 180000),
+(14, 'Las Vegas', 'San Francisco', 420, '20:00', '21:30', 10000),
+(15, 'Portland', 'Denver', 980, '21:00', '23:30', 15000),
+(16, 'Madison', 'Chicago', 120, '07:00:00', '08:00:00', 10000),
+(17, 'Madison', 'Detroit', 250, '09:00:00', '11:00:00', 15000),
+(18, 'Madison', 'Minneapolis', 270, '12:00:00', '13:30:00', 12000)
+(19, 'Chicago', 'New York', 790, '09:00:00', '12:00:00', 20000),
+(20, 'Detroit', 'New York', 520, '12:00:00', '14:00:00', 18000),
+(21, 'Minneapolis', 'New York', 1020, '14:00:00', '17:00:00', 22000);
 
 output: SELECT * FROM Flights;
- flno |     from      |      to       | distance | departs  | arrives  | price 
-------+---------------+---------------+----------+----------+----------+-------
-    1 | Los Angeles   | New York      |     2475 | 07:00:00 | 15:30:00 |   300
-    2 | Chicago       | Los Angeles   |     1745 | 08:00:00 | 11:30:00 |   200
-    3 | Los Angeles   | Honolulu      |     2550 | 09:00:00 | 12:00:00 |   400
-    4 | San Francisco | Chicago       |     1850 | 10:00:00 | 14:30:00 |   250
-    5 | Seattle       | Boston        |     2480 | 11:00:00 | 19:30:00 |   350
-    6 | Miami         | Los Angeles   |     2345 | 12:00:00 | 18:00:00 |   330
-    7 | Dallas        | San Francisco |     1460 | 13:00:00 | 16:00:00 |   220
-    8 | Denver        | Miami         |     2075 | 14:00:00 | 20:00:00 |   300
-    9 | Atlanta       | Chicago       |      595 | 15:00:00 | 17:00:00 |   150
-   10 | Houston       | Seattle       |     1890 | 16:00:00 | 20:30:00 |   280
-   11 | Los Angeles   | Chicago       |     1745 | 17:00:00 | 21:00:00 |   270
-   12 | New York      | Miami         |     1090 | 18:00:00 | 21:30:00 |   200
-   13 | Boston        | Atlanta       |      950 | 19:00:00 | 22:00:00 |   180
-   14 | Las Vegas     | San Francisco |      420 | 20:00:00 | 21:30:00 |   100
-   15 | Portland      | Denver        |      980 | 21:00:00 | 23:30:00 |   150
+ flno |     from      |      to       | distance | departs  | arrives  | price  
+------+---------------+---------------+----------+----------+----------+--------
+    1 | Los Angeles   | New York      |     2475 | 07:00:00 | 15:30:00 |  70000
+    2 | Chicago       | Los Angeles   |     1745 | 08:00:00 | 11:30:00 |  20000
+    3 | Los Angeles   | Honolulu      |     2550 | 09:00:00 | 12:00:00 | 100000
+    4 | San Francisco | Chicago       |     1850 | 10:00:00 | 14:30:00 | 250000
+    5 | Seattle       | Boston        |     2480 | 11:00:00 | 19:30:00 |  35000
+    6 | Miami         | Los Angeles   |     2345 | 12:00:00 | 18:00:00 |  33000
+    7 | Dallas        | San Francisco |     1460 | 13:00:00 | 16:00:00 |  22000
+    8 | Denver        | Miami         |     2075 | 14:00:00 | 20:00:00 |  30000
+    9 | Atlanta       | Chicago       |      595 | 15:00:00 | 17:00:00 | 150000
+   10 | Houston       | Seattle       |     1890 | 16:00:00 | 20:30:00 |  28000
+   11 | Los Angeles   | Chicago       |     1745 | 17:00:00 | 21:00:00 |  27000
+   12 | New York      | Miami         |     1090 | 18:00:00 | 21:30:00 |  20000
+   13 | Boston        | Atlanta       |      950 | 19:00:00 | 22:00:00 | 180000
+   14 | Las Vegas     | San Francisco |      420 | 20:00:00 | 21:30:00 |  10000
+   15 | Portland      | Denver        |      980 | 21:00:00 | 23:30:00 |  15000
+   16 | Madison       | Chicago       |      120 | 07:00:00 | 08:00:00 |  10000
+   17 | Madison       | Detroit       |      250 | 09:00:00 | 11:00:00 |  15000
+   18 | Madison       | Minneapolis   |      270 | 12:00:00 | 13:30:00 |  12000
+   19 | Chicago       | New York      |      790 | 09:00:00 | 12:00:00 |  20000
+   20 | Detroit       | New York      |      520 | 12:00:00 | 14:00:00 |  18000
+   21 | Minneapolis   | New York      |     1020 | 14:00:00 | 17:00:00 |  22000
 
 
 INSERT INTO Aircraft (aid, aname, cruisingrange) 
