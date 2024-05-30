@@ -256,3 +256,127 @@ output:
  09:00:00
  12:00:00
 
+
+
+Q10 Compute the difference between the average salary of a pilot and the average salary of all employees (including pilots).
+Ans:
+
+WITH 
+PilotSalary AS (
+    SELECT AVG(salary) AS avg_pilot_salary
+    FROM Employees e
+    JOIN Certified c ON e.eid = c.eid
+),
+AllEmployeeSalary AS (
+    SELECT AVG(salary) AS avg_employee_salary
+    FROM Employees
+)
+SELECT avg_pilot_salary - avg_employee_salary AS salary_difference
+FROM PilotSalary, AllEmployeeSalary;
+
+output:
+ salary_difference 
+-------------------
+ 1117.241379310345
+
+
+
+Q11 Print the name and salary of every nonpilot whose salary is more than the average salary for pilots.
+Ans:
+
+SELECT ename, salary
+FROM Employees
+WHERE  salary > (
+    SELECT AVG(salary) 
+    FROM Employees e 
+    JOIN Certified c ON e.eid = c.eid
+    );
+
+output:
+     ename      | salary 
+----------------+--------
+ John Doe       |  95000
+ Chris Green    | 120000
+ Patricia Black |  91000
+ Linda Blue     |  94000
+ Robert Yellow  |  99000
+ Daniel Cyan    |  92000
+ Matthew Red    |  93000
+
+
+
+Q12 Print the names of employees who are certified only on aircrafts with cruising range longer than 1000 miles.
+Ans:
+
+SELECT e.ename
+FROM Employees e
+JOIN Certified c ON e.eid = c.eid
+JOIN Aircraft a ON c.aid = a.aid
+WHERE a.cruisingrange > 1000
+GROUP BY e.ename
+HAVING COUNT(*) = (
+    SELECT COUNT(*) 
+    FROM Aircraft 
+    WHERE cruisingrange > 1000
+    );
+
+
+
+Q13 Print the names of employees who are certified only on aircrafts with cruising range longer than 1000 miles, but on at least two such aircrafts.
+Ans:
+
+WITH count AS (
+    SELECT e.ename, COUNT(*) AS certified
+    FROM Employees e
+    JOIN Certified c ON e.eid = c.eid
+    JOIN Aircraft a ON c.aid = a.aid
+    WHERE a.cruisingrange > 1000
+    GROUP BY e.ename
+)
+SELECT ename
+FROM count
+WHERE certified >= 2;
+
+output:
+     ename      
+----------------
+ Sam Brown
+ Robert Yellow
+ Daniel Cyan
+ John Doe
+ Patricia Black
+ Matthew Red
+ Jane Smith
+ Joseph Gray
+
+
+
+Q14  Print the names of employees who are certified only on aircrafts with cruising range longer than 1000 miles and who are certified on some Boeing aircraft.
+Ans:
+
+SELECT distinct  e.eid, e.ename
+FROM Employees e
+JOIN Certified c ON e.eid = c.eid
+JOIN Aircraft a ON c.aid = a.aid
+WHERE a.cruisingrange > 1000
+AND EXISTS (
+    SELECT 1
+    FROM Aircraft
+    WHERE aid = c.aid AND aname LIKE 'Boeing%'
+);
+
+output:
+ eid |     ename     
+-----+---------------
+   1 | John Doe
+   2 | Jane Smith
+   3 | Sam Brown
+   5 | Anna White
+   6 | Chris Green
+   8 | Linda Blue
+   9 | Robert Yellow
+  11 | William Pink
+  13 | Joseph Gray
+  14 | Daniel Cyan
+  15 | Matthew Red
+
