@@ -1188,3 +1188,347 @@ output:
 
 
 
+Q61 list all books along with their authors, genres, and the section they belong to, sorted by the author name.
+Ans: 
+
+SELECT b.title AS book_title,
+    a.author_name,
+    g.genre_name,
+    s.section_name
+FROM Book b
+JOIN Author a ON b.author_id = a.author_id
+JOIN Genre g ON b.genre_id = g.genre_id
+JOIN Section s ON b.section_id = s.section_id
+ORDER BY a.author_name;
+
+output:
+               book_title                |  author_name  |   genre_name    |      section_name       
+-----------------------------------------+---------------+-----------------+-------------------------
+ Catch-22                                | Amy Poehler   | Comedy          | Comedy Section
+ Inception                               | George Orwell | Literature      | Literature Section
+ 1984                                    | George Orwell | Horror          | Horror Section
+ Enders Game                             | J.K. Rowling  | Science Fiction | Science Fiction Section
+ Harry Potter and the Deathly Hallows    | J.K. Rowling  | Fantasy         | Fantasy Section
+ Dracula                                 | J.K. Rowling  | Horror          | Horror Section
+ Yesplease                               | J.K. Rowling  | Comedy          | Comedy Section
+ Bossypants                              | J.K. Rowling  | Comedy          | Comedy Section
+ Harry Potter and the Philosophers Stone | J.K. Rowling  | Fantasy         | Fantasy Section
+ Pride and Prejudice                     | MS chauhan    | Literature      | Literature Section
+ The Shining                             | Stephan King  | Horror          | Horror Section
+ Bird Box                                | Stephan King  | Horror          | Horror Section
+
+
+
+
+Q61 What is the total number of books available in each section, and which section has the highest total quantity of books.
+Ans:
+
+SELECT 
+    s.section_name,
+    SUM(b.quantity) AS total_books
+FROM Book b
+JOIN Section s ON b.section_id = s.section_id
+GROUP BY s.section_name
+ORDER BY total_books DESC;
+
+output:
+      section_name       | total_books 
+-------------------------+-------------
+ Comedy Section          |          48
+ Horror Section          |          23
+ Literature Section      |           9
+ Fantasy Section         |           8
+ Science Fiction Section |           1
+
+
+
+
+Q62 Write a query to ensure that no book is issued more than its available quantity.
+Ans: 
+
+SELECT 
+    b.title,
+    b.available_quantity,
+    COUNT(t.isbn) AS issued_count
+FROM Book b
+LEFT JOIN Transaction t ON b.isbn = t.isbn
+GROUP BY b.title, b.available_quantity
+HAVING COUNT(t.isbn) > b.available_quantity;
+
+
+
+Q63 create an index to optimize the search for books by title and author.
+Ans:
+
+CREATE INDEX idx_book_title_author 
+ON Book (title, author_id);
+
+
+
+Q64 Find the members who have issued books in the last 2 month and the count of books issued by each
+Ans:
+
+SELECT 
+    m.member_name,
+    COUNT(t.transaction_id) AS books_issued
+FROM Transaction t
+JOIN Member m ON t.member_id = m.member_id
+WHERE t.issuedate >= CURRENT_DATE - INTERVAL '2 month'
+GROUP BY m.member_name;
+
+output:
+-------------+--------------
+ Pragya      |            3
+ Nishchay    |            2
+ Deepin      |            1
+
+
+
+Q65 Determine the most frequently issued book and the number of times it has been issued.
+Ans: 
+
+SELECT 
+    b.title,
+    COUNT(t.transaction_id) AS issue_count
+FROM Transaction t
+JOIN Book b ON t.isbn = b.isbn
+GROUP BY b.title
+ORDER BY issue_count DESC
+LIMIT 1;
+
+output:
+   title   | issue_count 
+-----------+-------------
+ Yesplease |           3
+
+
+
+Q66 Create a view that shows detailed transaction history including member name, book title, issue date, return date, librarian name, and fine amount if any.
+Ans: 
+
+CREATE VIEW TransactionHistory AS
+SELECT 
+    t.transaction_id,
+    m.member_name,
+    b.title AS book_title,
+    t.issuedate,
+    t.returndate,
+    l.librarian_name,
+    COALESCE(f.fine_amount, 0) AS fine_amount
+FROM Transaction t
+JOIN Member m ON t.member_id = m.member_id
+JOIN Book b ON t.isbn = b.isbn
+JOIN Librarian l ON t.librarian_id = l.librarian_id
+LEFT JOIN Fine f ON t.transaction_id = f.transaction_id;
+
+output:
+ SELECT * from TransactionHistory;
+
+ transaction_id | member_name |               book_title                | issuedate  | returndate | librarian_name | fine_amount 
+----------------+-------------+-----------------------------------------+------------+------------+----------------+-------------
+              1 | Nishchay    | Harry Potter and the Philosophers Stone | 2024-05-01 | 2024-05-15 | Dinesh         |       25.00
+              1 | Nishchay    | Harry Potter and the Philosophers Stone | 2024-05-01 | 2024-05-15 | Dinesh         |       15.00
+              2 | Nishchay    | 1984                                    | 2024-05-05 | 2024-05-30 | Dinesh         |           0
+              5 | Nishchay    | Yesplease                               | 2024-03-25 | 2024-07-25 | Kavita         |           0
+              8 | Pragya      | Inception                               | 2024-04-05 | 2024-07-11 | Kavita         |           0
+              6 | Pragya      | Yesplease                               | 2024-05-22 | 2024-06-26 | Jitender       |           0
+              4 | Deepin      | Yesplease                               | 2024-05-13 | 2024-06-10 | Jitender       |           0
+              3 | Pragya      | Inception                               | 2024-04-08 | 2024-05-19 | Kavita         |           0
+              7 | Deepin      | Bossypants                              | 2024-01-26 | 2024-02-09 | Jitender       |           0
+
+
+
+Q67 find the number of books issued and returned by each member along with their names.
+Ans: 
+
+SELECT 
+    m.member_name,
+    COUNT(t.transaction_id) FILTER (WHERE t.returndate IS NULL) AS books_issued,
+    COUNT(t.transaction_id) FILTER (WHERE t.returndate IS NOT NULL) AS books_returned
+FROM Transaction t
+JOIN Member m ON t.member_id = m.member_id
+GROUP BY m.member_name;
+
+output:
+ member_name | books_issued | books_returned 
+-------------+--------------+----------------
+ Pragya      |            0 |              3
+ Nishchay    |            0 |              3
+ Deepin      |            0 |              2
+
+
+
+Q68 Write a query to search for books by a specific keyword in the title and author name.
+Ans: 
+SELECT 
+    b.title,
+    a.author_name,
+    b.isbn
+FROM Book b
+JOIN Author a ON b.author_id = a.author_id
+WHERE b.title ILIKE '%cept%' OR a.author_name ILIKE '%vit%';
+
+output:
+   title   |  author_name  |  isbn  
+-----------+---------------+--------
+ Inception | George Orwell | 978009
+
+
+
+Q69 Generate a report showing the total number of books issued by genre within a specific date range.
+Ans: 
+
+SELECT 
+    g.genre_name,
+    COUNT(t.transaction_id) AS total_issues
+FROM Transaction t
+JOIN Book b ON t.isbn = b.isbn
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE t.issuedate BETWEEN '2024-01-01' AND '2024-12-31'
+GROUP BY g.genre_name
+ORDER BY total_issues DESC;
+
+output:
+ genre_name | total_issues 
+------------+--------------
+ Comedy     |            4
+ Literature |            2
+ Fantasy    |            1
+ Horror     |            1
+
+
+
+Q70 Write a query to mark all fines as "Paid" for a specific member.
+Ans: 
+
+UPDATE Fine f
+SET payment_status = 'Paid'
+FROM Transaction t
+JOIN Member m ON t.member_id = m.member_id
+WHERE f.transaction_id = t.transaction_id
+AND m.member_name = 'Nishchay';
+
+output:
+UPDATE 2
+
+
+
+Q71 Write an optimized query to find the top 5 most frequently issued books.
+Ans: 
+
+SELECT 
+    b.title,
+    COUNT(t.transaction_id) AS issue_count
+FROM Transaction t
+JOIN Book b ON t.isbn = b.isbn
+GROUP BY b.title
+ORDER BY issue_count DESC
+LIMIT 5;
+
+output: 
+                  title                  | issue_count 
+-----------------------------------------+-------------
+ Yesplease                               |           3
+ Inception                               |           2
+ 1984                                    |           1
+ Bossypants                              |           1
+ Harry Potter and the Philosophers Stone |           1
+
+
+
+Q72 Find members who have borrowed all books by a specific author.
+Ans: 
+
+SELECT m.member_name
+FROM Member m
+WHERE 
+    NOT EXISTS (
+        SELECT 1
+        FROM Book b
+        WHERE b.author_id = (SELECT author_id FROM Author WHERE author_name = 'George Orwell')
+        AND NOT EXISTS (
+            SELECT 1
+            FROM Transaction t
+            WHERE t.member_id = m.member_id
+            AND t.isbn = b.isbn
+        )
+    );
+
+output:
+ member_name 
+-------------
+(0 rows)
+
+
+
+Q73 Find the librarian who has handled the most transactions.
+Ans: 
+
+SELECT 
+    l.librarian_name,
+    COUNT(t.transaction_id) AS transactions_handled
+FROM Transaction t
+JOIN Librarian l ON t.librarian_id = l.librarian_id
+GROUP BY l.librarian_name
+ORDER BY transactions_handled DESC
+LIMIT 1;
+
+output: 
+ librarian_name | transactions_handled 
+----------------+----------------------
+ Kavita         |                    3
+
+
+
+Q74 Find all books that have sequels (e.g., "Harry Potter" series) and list them in order.
+Ans: 
+
+WITH RECURSIVE BookSeries AS (
+    SELECT 
+        b.isbn,
+        b.title,
+        b.author_id,
+        b.genre_id,
+        b.quantity,
+        b.available_quantity,
+        b.section_id,
+        1 AS series_order
+    FROM Book b
+    WHERE b.title LIKE 'Harry Potter%'
+    UNION ALL
+    SELECT 
+        b.isbn,
+        b.title,
+        b.author_id,
+        b.genre_id,
+        b.quantity,
+        b.available_quantity,
+        b.section_id,
+        bs.series_order + 1
+    FROM Book b
+    JOIN BookSeries bs ON b.title LIKE 'Harry Potter%'
+    WHERE b.title > bs.title
+)
+SELECT *
+FROM BookSeries
+ORDER BY series_order;
+
+output:
+  isbn  |                  title                  | author_id | genre_id | quantity | available_quantity | section_id | series_order 
+--------+-----------------------------------------+-----------+----------+----------+--------------------+------------+--------------
+ 978055 | Harry Potter and the Philosophers Stone |         1 |        1 |        5 |                  4 |          1 |            1
+ 978054 | Harry Potter and the Deathly Hallows    |         1 |        1 |        3 |                  3 |          1 |            1
+ 978055 | Harry Potter and the Philosophers Stone |         1 |        1 |        5 |                  4 |          1 |            2
+
+
+
+Q75 Ensure that no two members can have the same phone number or email address.
+Ans: 
+
+ALTER TABLE Member
+ADD CONSTRAINT unique_phone_email UNIQUE (phone_no, email);
+
+
+
+
+
