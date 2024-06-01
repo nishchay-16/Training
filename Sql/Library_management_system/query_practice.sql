@@ -1530,5 +1530,541 @@ ADD CONSTRAINT unique_phone_email UNIQUE (phone_no, email);
 
 
 
+Q76 Calculate the average number of books borrowed per member.
+Ans: 
+
+SELECT AVG(borrowed_books) AS avg_books_borrowed
+FROM (
+    SELECT m.member_id, COUNT(t.transaction_id) AS borrowed_books
+    FROM Member m
+    LEFT JOIN Transaction t ON m.member_id = t.member_id
+    GROUP BY m.member_id
+) AS member_borrow_stats;
+
+
+
+Q77 Rank members based on the number of books borrowed.
+Ans: 
+
+SELECT 
+    m.member_name,
+    COUNT(t.transaction_id) AS books_borrowed,
+    RANK() OVER (ORDER BY COUNT(t.transaction_id) DESC) AS borrow_rank
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+GROUP BY m.member_name;
+
+output:
+ member_name | books_borrowed | borrow_rank 
+-------------+----------------+-------------
+ Pragya      |              3 |           1
+ Nishchay    |              3 |           1
+ Deepin      |              2 |           3
+
+
+
+Q78 Find the member who has the most fines and the total amount of fines they have paid.
+Ans:
+
+SELECT 
+    m.member_name,
+    COUNT(f.fine_id) AS total_fines,
+    SUM(f.fine_amount) AS total_fine_amount
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Fine f ON t.transaction_id = f.transaction_id
+GROUP BY m.member_name
+ORDER BY total_fine_amount DESC
+LIMIT 1;
+
+output:
+ member_name | total_fines | total_fine_amount 
+-------------+-------------+-------------------
+ Nishchay    |           2 |             40.00
+
+
+
+Q79 List members who have borrowed books from more than one genre.
+Ans: 
+
+SELECT m.member_name
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Book b ON t.isbn = b.isbn
+GROUP BY m.member_name
+HAVING COUNT(DISTINCT b.genre_id) > 1;
+
+output:
+ member_name 
+-------------
+ Nishchay
+ Pragya
+
+
+
+Q80 Correct the nationality of 'George Orwell' to 'British' in the Author table
+Ans:
+
+UPDATE Author
+SET nationality = 'British'
+WHERE author_name = 'George Orwell';
+
+
+
+Q81 Generate a matrix of all possible combinations of authors and genres.
+Ans:
+
+SELECT 
+    a.author_name,
+    g.genre_name
+FROM Author a
+CROSS JOIN Genre g;
+
+output:
+  author_name  |   genre_name    
+---------------+-----------------
+ J.K. Rowling  | Fantasy
+ MS chauhan    | Fantasy
+ Amy Poehler   | Fantasy
+ Stephan King  | Fantasy
+ George Orwell | Fantasy
+ J.K. Rowling  | Horror
+ MS chauhan    | Horror
+ Amy Poehler   | Horror
+ Stephan King  | Horror
+ George Orwell | Horror
+ J.K. Rowling  | Literature
+ MS chauhan    | Literature
+ Amy Poehler   | Literature
+ Stephan King  | Literature
+ George Orwell | Literature
+ J.K. Rowling  | Comedy
+ MS chauhan    | Comedy
+ Amy Poehler   | Comedy
+ Stephan King  | Comedy
+ George Orwell | Comedy
+ J.K. Rowling  | Science Fiction
+ MS chauhan    | Science Fiction
+ Amy Poehler   | Science Fiction
+ Stephan King  | Science Fiction
+ George Orwell | Science Fiction
+
+
+
+Q82 Find books that have been issued more than once within the same month.
+Ans: 
+
+SELECT 
+    t1.isbn,
+    COUNT(t1.transaction_id) AS issue_count
+FROM Transaction t1
+JOIN Transaction t2 ON t1.isbn = t2.isbn 
+WHERE DATE_PART('month', t1.issuedate) = DATE_PART('month', t2.issuedate)
+  AND t1.transaction_id <> t2.transaction_id
+GROUP BY t1.isbn
+HAVING COUNT(t1.transaction_id) > 1;
+
+output:
+  isbn  | issue_count 
+--------+-------------
+ 978009 |           2
+ 978076 |           2
+
+
+
+Q83 Calculate the median fine amount.
+Ans:
+
+SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY fine_amount) AS median_fine
+FROM Fine;
+
+output:
+ median_fine 
+-------------
+          20
+
+
+
+Q84 Create a pivot table showing the number of books issued per genre each month.
+Ans: 
+
+SELECT 
+    g.genre_name,
+    DATE_TRUNC('month', t.issuedate) AS month,
+    COUNT(t.transaction_id) AS books_issued
+FROM Transaction t
+JOIN Book b ON t.isbn = b.isbn
+JOIN Genre g ON b.genre_id = g.genre_id
+GROUP BY g.genre_name, DATE_TRUNC('month', t.issuedate)
+ORDER BY month;
+
+output:
+ genre_name |           month           | books_issued 
+------------+---------------------------+--------------
+ Comedy     | 2024-01-01 00:00:00+05:30 |            1
+ Comedy     | 2024-03-01 00:00:00+05:30 |            1
+ Literature | 2024-04-01 00:00:00+05:30 |            2
+ Comedy     | 2024-05-01 00:00:00+05:30 |            2
+ Fantasy    | 2024-05-01 00:00:00+05:30 |            1
+ Horror     | 2024-05-01 00:00:00+05:30 |            1
+
+
+
+Q85 Find all members whose email domain is 'gmail.com'.
+Ans:
+
+SELECT 
+    member_name,
+    email
+FROM Member
+WHERE email LIKE '%@gmail.com';
+
+output:
+ member_name |            email             
+-------------+------------------------------
+ Naman       | namandua9@gmail.com
+ Pragya      | Pragya@gmail.com
+ Deepin      | deepin@gmail.com
+ Nishchay    | nishugupta123gupta@gmail.com
+
+
+
+Q86 Create a report showing the status of book availability.
+Ans: 
+
+SELECT 
+    title,
+    quantity,
+    available_quantity,
+    CASE 
+        WHEN available_quantity = 0 THEN 'Out of Stock'
+        WHEN available_quantity < quantity / 2 THEN 'Limited Stock'
+        ELSE 'In Stock'
+    END AS stock_status
+FROM Book;
+
+output:
+                  title                  | quantity | available_quantity | stock_status 
+-----------------------------------------+----------+--------------------+--------------
+ Harry Potter and the Philosophers Stone |        5 |                  4 | In Stock
+ Harry Potter and the Deathly Hallows    |        3 |                  3 | In Stock
+ Yesplease                               |       15 |                 10 | In Stock
+ Bossypants                              |       14 |                 13 | In Stock
+ Inception                               |        7 |                  5 | In Stock
+ Enders Game                             |        1 |                  0 | Out of Stock
+ Dracula                                 |        3 |                  2 | In Stock
+ Bird Box                                |        7 |                  6 | In Stock
+ The Shining                             |        1 |                  0 | Out of Stock
+ Pride and Prejudice                     |        2 |                  2 | In Stock
+ Catch-22                                |       19 |                 19 | In Stock
+ 1984                                    |       12 |                 12 | In Stock
+
+
+
+Q87 Find the average, minimum, and maximum fine amounts for each member.
+Ans:
+
+SELECT 
+    m.member_name,
+    AVG(f.fine_amount) AS avg_fine,
+    MIN(f.fine_amount) AS min_fine,
+    MAX(f.fine_amount) AS max_fine
+FROM Fine f
+JOIN Transaction t ON f.transaction_id = t.transaction_id
+JOIN Member m ON t.member_id = m.member_id
+GROUP BY m.member_name;
+
+output:
+ member_name |      avg_fine       | min_fine | max_fine 
+-------------+---------------------+----------+----------
+ Nishchay    | 20.0000000000000000 |    15.00 |    25.00
+
+
+
+Q88 Calculate the correlation between the quantity and available quantity of books.
+Ans: 
+
+SELECT CORR(quantity, available_quantity) AS correlation
+FROM Book;
+
+output:
+    correlation     
+--------------------
+ 0.9743657607140666
+
+
+
+Q89 Identify gaps in the transaction history for a particular member.
+Ans:
+
+SELECT 
+    t1.member_id,
+    t1.returndate AS prev_return_date,
+    t2.issuedate AS next_issue_date,
+    t2.issuedate - t1.returndate AS gap_days
+FROM Transaction t1
+JOIN Transaction t2 ON t1.member_id = t2.member_id AND t1.transaction_id < t2.transaction_id
+WHERE t1.returndate < t2.issuedate
+ORDER BY t1.member_id, gap_days DESC;
+
+output:
+    t1.member_id, gap_days DESC;
+ member_id | prev_return_date | next_issue_date | gap_days 
+-----------+------------------+-----------------+----------
+         3 | 2024-05-19       | 2024-05-22      |        3
+
+
+
+Q90 Find books that are either in the Fantasy genre or the Horror genre but not in both.
+Ans: 
+
+SELECT b.title
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE g.genre_name = 'Fantasy'
+UNION
+SELECT b.title
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE g.genre_name = 'Horror'
+EXCEPT
+SELECT b.title
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE g.genre_name = 'Fantasy'
+INTERSECT
+SELECT b.title
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE g.genre_name = 'Horror';
+
+output:
+                  title                  
+-----------------------------------------
+ 1984
+ The Shining
+ Harry Potter and the Deathly Hallows
+ Bird Box
+ Harry Potter and the Philosophers Stone
+ Dracula
+
+
+
+Q91 Aggregate book titles issued to each member into an array.
+Ans: 
+
+SELECT 
+    m.member_name,
+    ARRAY_AGG(b.title) AS books_issued
+FROM Transaction t
+JOIN Member m ON t.member_id = m.member_id
+JOIN Book b ON t.isbn = b.isbn
+GROUP BY m.member_name;
+
+output:
+ member_name |                        books_issued                        
+-------------+------------------------------------------------------------
+ Deepin      | {Yesplease,Bossypants}
+ Pragya      | {Inception,Yesplease,Inception}
+ Nishchay    | {1984,"Harry Potter and the Philosophers Stone",Yesplease}
+
+
+
+Q92 Perform a full outer join to find all members and transactions, including those without matches.
+Ans:
+
+SELECT 
+    m.member_name,
+    t.transaction_id,
+    b.title,
+    t.issuedate,
+    t.returndate
+FROM Member m
+FULL OUTER JOIN Transaction t ON m.member_id = t.member_id
+LEFT JOIN Book b ON t.isbn = b.isbn;
+
+output:
+ member_name | transaction_id |                  title                  | issuedate  | returndate 
+-------------+----------------+-----------------------------------------+------------+------------
+ Nishchay    |              2 | 1984                                    | 2024-05-05 | 2024-05-30
+ Nishchay    |              1 | Harry Potter and the Philosophers Stone | 2024-05-01 | 2024-05-15
+ Pragya      |              3 | Inception                               | 2024-04-08 | 2024-05-19
+ Deepin      |              4 | Yesplease                               | 2024-05-13 | 2024-06-10
+ Nishchay    |              5 | Yesplease                               | 2024-03-25 | 2024-07-25
+ Pragya      |              6 | Yesplease                               | 2024-05-22 | 2024-06-26
+ Deepin      |              7 | Bossypants                              | 2024-01-26 | 2024-02-09
+ Pragya      |              8 | Inception                               | 2024-04-05 | 2024-07-11
+ Naman       |                |                                         |            | 
+
+
+
+Q93 Categorize members based on the total fines they have paid.
+Ans:
+
+SELECT 
+    m.member_name,
+    SUM(f.fine_amount) AS total_fines,
+    CASE 
+        WHEN SUM(f.fine_amount) > 100 THEN 'High Payer'
+        WHEN SUM(f.fine_amount) BETWEEN 50 AND 100 THEN 'Medium Payer'
+        ELSE 'Low Payer'
+    END AS fine_category
+FROM Member m
+JOIN Transaction t ON m.member_id = t.member_id
+JOIN Fine f ON t.transaction_id = f.transaction_id
+GROUP BY m.member_name;
+
+output:
+ member_name | total_fines | fine_category 
+-------------+-------------+---------------
+ Nishchay    |       40.00 | Low Payer
+
+
+
+Q94 Use UNION ALL to combine results from different genres and group them.
+Ans:
+
+SELECT 'Fantasy' AS genre, COUNT(*) AS book_count
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE g.genre_name = 'Fantasy'
+UNION ALL
+SELECT 'Horror', COUNT(*)
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+WHERE g.genre_name = 'Horror';
+
+output:
+  genre  | book_count 
+---------+------------
+ Fantasy |          2
+ Horror  |          4
+
+
+
+Q95  Use a lateral join to find the first issued book for each member.
+Ans:
+
+SELECT 
+    m.member_name,
+    first_issue.*
+FROM 
+    Member m,
+    LATERAL (
+        SELECT 
+            t.issuedate,
+            b.title
+        FROM Transaction t
+        JOIN Book b ON t.isbn = b.isbn
+        WHERE t.member_id = m.member_id
+        ORDER BY t.issuedate
+        LIMIT 1
+    ) AS first_issue;
+
+output:
+ member_name | issuedate  |   title    
+-------------+------------+------------
+ Pragya      | 2024-04-05 | Inception
+ Deepin      | 2024-01-26 | Bossypants
+ Nishchay    | 2024-03-25 | Yesplease
+
+
+
+Q96 Use the FILTER clause to calculate aggregate values conditionally.
+Ans:
+
+SELECT 
+    member_id,
+    COUNT(*) FILTER (WHERE issuedate >= '2024-01-01') AS issued_this_year,
+    COUNT(*) FILTER (WHERE issuedate < '2024-01-01') AS issued_last_year
+FROM Transaction
+GROUP BY member_id;
+
+output:
+ member_id | issued_this_year | issued_last_year 
+-----------+------------------+------------------
+         3 |                3 |                0
+         4 |                2 |                0
+         1 |                3 |                0
+
+
+
+Q97 Retrieve the details of all books that are currently borrowed and overdue for return.
+Ans:
+
+SELECT b.*
+FROM Book b
+JOIN Transaction t ON b.isbn = t.isbn
+WHERE t.returndate < CURRENT_DATE;
+
+output:
+  isbn  |                  title                  | author_id | genre_id | quantity | available_quantity | section_id 
+--------+-----------------------------------------+-----------+----------+----------+--------------------+------------
+ 978014 | 1984                                    |         2 |        2 |       12 |                 12 |          2
+ 978055 | Harry Potter and the Philosophers Stone |         1 |        1 |        5 |                  4 |          1
+ 978009 | Inception                               |         2 |        3 |        7 |                  5 |          3
+ 978077 | Bossypants                              |         1 |        4 |       14 |                 13 |          4
+
+
+
+Q98 Retrieve the details of books that have been borrowed less than three times.
+Ans: 
+
+SELECT b.*
+FROM Book b
+JOIN (
+    SELECT isbn, COUNT(*) AS borrow_count
+    FROM Transaction
+    GROUP BY isbn
+) AS book_counts ON b.isbn = book_counts.isbn
+WHERE book_counts.borrow_count < 3;
+
+output:
+  isbn  |                  title                  | author_id | genre_id | quantity | available_quantity | section_id 
+--------+-----------------------------------------+-----------+----------+----------+--------------------+------------
+ 978077 | Bossypants                              |         1 |        4 |       14 |                 13 |          4
+ 978009 | Inception                               |         2 |        3 |        7 |                  5 |          3
+ 978055 | Harry Potter and the Philosophers Stone |         1 |        1 |        5 |                  4 |          1
+ 978014 | 1984                                    |         2 |        2 |       12 |                 12 |          2
+
+
+
+Q99 Find the genres where the total available quantity of books is less than 10.
+Ans:
+
+SELECT 
+    g.genre_name,
+    SUM(b.available_quantity) AS total_available_quantity
+FROM Book b
+JOIN Genre g ON b.genre_id = g.genre_id
+GROUP BY g.genre_name
+HAVING SUM(b.available_quantity) < 10;
+
+output:
+   genre_name    | total_available_quantity 
+-----------------+--------------------------
+ Fantasy         |                        7
+ Literature      |                        7
+ Science Fiction |                        0
+
+
+
+Q100 Determine the total number of transactions made each month.
+Ans:
+
+SELECT 
+    EXTRACT(MONTH FROM issuedate) AS month,
+    COUNT(*) AS total_transactions
+FROM Transaction
+GROUP BY month
+ORDER BY month;
+
+output:
+ month | total_transactions 
+-------+--------------------
+     1 |                  1
+     3 |                  1
+     4 |                  2
+     5 |                  4
 
 
