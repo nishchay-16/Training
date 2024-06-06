@@ -42,12 +42,11 @@ PARTITION BY RANGE (waiting_list_id);
 
 
 -- Define the ranges for partitioning
-CREATE TABLE subscribers_part_1 PARTITION OF subscribers_part FOR VALUES FROM (1) TO (3000);
-CREATE TABLE subscribers_part_2 PARTITION OF subscribers_part FOR VALUES FROM (3001) TO (6000);
-CREATE TABLE subscribers_part_3 PARTITION OF subscribers_part FOR VALUES FROM (6001) TO (9000);
-CREATE TABLE subscribers_part_4 PARTITION OF subscribers_part FOR VALUES FROM (9001) TO (12000);
-CREATE TABLE subscribers_part_5 PARTITION OF subscribers_part FOR VALUES FROM (12001) TO (15000);
-CREATE TABLE subscribers_part_6 PARTITION OF subscribers_part FOR VALUES FROM (15001) TO (18000); 
+CREATE TABLE subscribers_part_1 PARTITION OF subscribers_part FOR VALUES FROM (1) TO (6000);
+CREATE TABLE subscribers_part_2 PARTITION OF subscribers_part FOR VALUES FROM (6001) TO (9000);
+CREATE TABLE subscribers_part_3 PARTITION OF subscribers_part FOR VALUES FROM (9001) TO (12000);
+CREATE TABLE subscribers_part_4 PARTITION OF subscribers_part FOR VALUES FROM (12001) TO (15000);
+CREATE TABLE subscribers_part_5 PARTITION OF subscribers_part FOR VALUES FROM (15001) TO (18000);
 
 -- Create a default partition for rows with NULL values for "waiting_list_id" 
 CREATE TABLE subscribers_part_default PARTITION OF subscribers_part DEFAULT;
@@ -82,9 +81,38 @@ CREATE INDEX idx_subscribers_part_id ON subscribers_part (id);
 
 
 
--- Creating foreign_key relation with Transaction table
-ALTER TABLE subscribers_part ALTER COLUMN id SET DEFAULT nextval('subscribers_id_seq'::regclass);
+-- Setting all the default values in the partitioned table
+ALTER TABLE subscribers_part ALTER COLUMN id SET DEFAULT nextval('subscribers_id_seq'::regclass); 
+ALTER TABLE subscribers_part ALTER COLUMN referred SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN points SET DEFAULT 1;
+ALTER TABLE subscribers_part ALTER COLUMN status SET DEFAULT 'registered'::character varying;
+ALTER TABLE subscribers_part ALTER COLUMN verified SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN referral_points SET DEFAULT 1;
+ALTER TABLE subscribers_part ALTER COLUMN bounced SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN people_referred SET DEFAULT 0;
+ALTER TABLE subscribers_part ALTER COLUMN risk_level SET DEFAULT 0;
+ALTER TABLE subscribers_part ALTER COLUMN approved SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN sms_verified SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN events_referred SET DEFAULT 0;
+ALTER TABLE subscribers_part ALTER COLUMN is_quick_add_referral SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN phone_number SET DEFAULT ''::character varying;
+ALTER TABLE subscribers_part ALTER COLUMN crypto_wallet_address SET DEFAULT ''::character varying;
+ALTER TABLE subscribers_part ALTER COLUMN crypto_wallet_provider SET DEFAULT ''::character varying;
+ALTER TABLE subscribers_part ALTER COLUMN other_identifier_value SET DEFAULT ''::character varying;
+ALTER TABLE subscribers_part ALTER COLUMN verify_email SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN email_verified SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN is_high_risk_referrer SET DEFAULT false;
+ALTER TABLE subscribers_part ALTER COLUMN pending_referrals SET DEFAULT 0;
+ALTER TABLE subscribers_part ALTER COLUMN unconfirmed_referrals SET DEFAULT 0;
+ALTER TABLE subscribers_part ALTER COLUMN people_visitors SET DEFAULT 0;
+ALTER TABLE subscribers_part ALTER COLUMN coupon_details SET DEFAULT ''::hstore;
+ALTER TABLE subscribers_part ALTER COLUMN lifetime_spend SET DEFAULT 0.0;
+ALTER TABLE subscribers_part ALTER COLUMN stage_passed SET DEFAULT '{}'::character varying[];
+ALTER TABLE subscribers_part ALTER COLUMN promoted SET DEFAULT false;
 
+
+
+-- Creating foreign_key relation with Transaction table
 ALTER TABLE subscribers_part
 ADD CONSTRAINT subscribers_part_id_waiting_list_id_unique 
 UNIQUE (id, waiting_list_id);
@@ -94,3 +122,8 @@ ADD CONSTRAINT fk_transactions_subscribers_part
 FOREIGN KEY (subscriber_id, waiting_list_id) 
 REFERENCES subscribers_part(id, waiting_list_id);
 
+
+
+-- Rename Table
+ALTER TABLE subscribers RENAME TO subscribers_temp;
+ALTER TABLE subscribers_part RENAME TO subscribers;

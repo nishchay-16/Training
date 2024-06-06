@@ -80,4 +80,3 @@ Here are some effective solutions:
 -- Upgrade Hardware: 
             Consider upgrading the hardware where the database is hosted, such as adding more RAM, using faster storage (SSD), or increasing CPU resources.
 
-
