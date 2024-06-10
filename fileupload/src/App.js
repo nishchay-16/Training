@@ -8,9 +8,18 @@ const App = () => {
     setFileUploadVisible(true);
   };
 
+  const handleClose = () => {
+    setFileUploadVisible(false);
+  };
+
   return (
-    <div style={{ backgroundColor: 'lightpink', height: '100vh' }}>
-      {fileUploadVisible && <FileUpload />}
+    <div style={{ backgroundColor: 'lightpink', height: '100vh', position: 'relative' }}>
+      {fileUploadVisible && (
+        <>
+          <div className="overlay" onClick={handleClose}></div>
+          <FileUpload onClose={handleClose} />
+        </>
+      )}
       <button onClick={handleClick}>Open File Upload</button>
     </div>
   );

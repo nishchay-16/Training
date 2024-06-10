@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './FileUpload.css';
 
-const FileUpload = () => {
+const FileUpload = ({ onClose }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
 
@@ -53,6 +53,7 @@ const FileUpload = () => {
   const handleUpload = () => {
     console.log("Files Uploaded:", selectedFiles);
     setSelectedFiles([]);
+    onClose();
   };
 
   const handleDeleteClick = (file, event) => {
@@ -62,68 +63,66 @@ const FileUpload = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#01030662', height: '100vh' }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', position: 'absolute', width: '100%', height: '100vh' }}>
-        <div className="file-upload">
-          <h1 style={{ fontFamily: "sans-serif" }}>Create new Program/Policy</h1>
-          <div style={{ marginTop: '50px', fontFamily: "sans-serif" }}>
-            <h3 style={{ color: 'grey', fontWeight: '550' }}>Title of HR Program/policy</h3>
-            <input className='hr-input' type="text" style={{ width: '95%' }} />
-          </div>
-          <div style={{ width: '80%', marginTop: '50px', fontFamily: "sans-serif" }}>
-            <h3 style={{ color: 'grey', fontWeight: '550' }}>Upload File</h3>
-            {!dragActive && selectedFiles.length === 0 && (
-              <button className="upload-button" onClick={open} >
-                <div style={{ marginTop: '-2px' }}>
-                  <i className="fa-solid fa-arrow-up-from-bracket upload-icon"></i>
-                  Upload File
-                </div>
-              </button>
-            )}
-            {dragActive && (
-              <div {...getRootProps()} className={`dropzone ${dragActive ? 'active' : ''}`}>
-                <div>
-                  <h1 style={{ fontSize: '40px', marginTop: '12px' }}>Drop it like it's hot</h1>
-                  <p style={{ marginTop: '-20px' }}>Upload files or folders by dropping them in this window</p>
-                </div>
-                <input {...getInputProps()} type="file" style={{ display: 'none' }} multiple />
+    <div className="file-upload-overlay">
+      <div className="file-upload slide-in">
+        <h1 style={{ fontFamily: "sans-serif" }}>Create new Program/Policy</h1>
+        <div style={{ marginTop: '50px', fontFamily: "sans-serif" }}>
+          <h3 style={{ color: 'grey', fontWeight: '550' }}>Title of HR Program/policy</h3>
+          <input className='hr-input' type="text" style={{ width: '95%' }} />
+        </div>
+        <div style={{ width: '80%', marginTop: '50px', fontFamily: "sans-serif" }}>
+          <h3 style={{ color: 'grey', fontWeight: '550' }}>Upload File</h3>
+          {!dragActive && selectedFiles.length === 0 && (
+            <button className="upload-button" onClick={open} >
+              <div style={{ marginTop: '-2px' }}>
+                <i className="fa-solid fa-arrow-up-from-bracket upload-icon"></i>
+                Upload File
               </div>
-            )}
-            {!isDragActive && selectedFiles.length > 0 && (
-              <ul className="file-list">
-                {selectedFiles.map(file => (
-                  <li key={file.name} className="file-item" style={{ width: '115%' }}>
-                    <div>
-                      <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{file.name}</span>
-                      <div className="file-details" style={{ fontSize: '14px', color: "grey" }}>
-                        {`${(file.size / 1024).toFixed(2)} KB | ${file.type}`}
-                      </div>
-                    </div>
-                    <button className="delete-button" onClick={(event) => handleDeleteClick(file, event)}>
-                      &#x2716;
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button style={{ border: 'none', padding: '8px', color: 'blue', fontWeight: 'bold' }} onClick={open}>
-                    <i className="fa-solid fa-circle-plus"></i> Add more files
-                  </button>
-                  <input {...getInputProps()} type="file" style={{ display: 'none' }} multiple />
-                </li>
-              </ul>
-            )}
-          </div>
-          <div style={{ marginTop: '65px', fontFamily: "sans-serif" }}>
-            <h3 style={{ color: 'grey', fontWeight: '550' }}>Collaborate</h3>
-            <h5 style={{ fontFamily: "sans-serif", color: 'grey', marginTop: '-12px' }}>Invite colleagues to contribute on the RFP</h5>
-            <i className="fa-solid fa-magnifying-glass" style={{ position: 'absolute', fontSize: '20px', marginLeft: '10px', marginTop: '10px', color: '#606060' }} />
-            <input className='hr-input' type="text" placeholder="Search for colleagues" style={{ paddingLeft: '40px', width: '91%' }} />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', width: "100%", marginTop: "8%", marginLeft: "-3%" }}>
-            <button className="upload-btn" type="button" onClick={handleUpload}>
-              Save
             </button>
-          </div>
+          )}
+          {dragActive && (
+            <div {...getRootProps()} className={`dropzone ${dragActive ? 'active' : ''}`}>
+              <div>
+                <h1 style={{ fontSize: '40px', marginTop: '12px' }}>Drop it like it's hot</h1>
+                <p style={{ marginTop: '-20px' }}>Upload files or folders by dropping them in this window</p>
+              </div>
+              <input {...getInputProps()} type="file" style={{ display: 'none' }} multiple />
+            </div>
+          )}
+          {!isDragActive && selectedFiles.length > 0 && (
+            <ul className="file-list">
+              {selectedFiles.map(file => (
+                <li key={file.name} className="file-item" style={{ width: '115%' }}>
+                  <div>
+                    <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{file.name}</span>
+                    <div className="file-details" style={{ fontSize: '14px', color: "grey" }}>
+                      {`${(file.size / 1024).toFixed(2)} KB | ${file.type}`}
+                    </div>
+                  </div>
+                  <button className="delete-button" onClick={(event) => handleDeleteClick(file, event)}>
+                    &#x2716;
+                  </button>
+                </li>
+              ))}
+              <li>
+                <button style={{ border: 'none', padding: '8px', color: 'blue', fontWeight: 'bold' }} onClick={open}>
+                  <i className="fa-solid fa-circle-plus"></i> Add more files
+                </button>
+                <input {...getInputProps()} type="file" style={{ display: 'none' }} multiple />
+              </li>
+            </ul>
+          )}
+        </div>
+        <div style={{ marginTop: '65px', fontFamily: "sans-serif" }}>
+          <h3 style={{ color: 'grey', fontWeight: '550' }}>Collaborate</h3>
+          <h5 style={{ fontFamily: "sans-serif", color: 'grey', marginTop: '-12px' }}>Invite colleagues to contribute on the RFP</h5>
+          <i className="fa-solid fa-magnifying-glass" style={{ position: 'absolute', fontSize: '20px', marginLeft: '10px', marginTop: '10px', color: '#606060' }} />
+          <input className='hr-input' type="text" placeholder="Search for colleagues" style={{ paddingLeft: '40px', width: '91%' }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', width: "100%", marginTop: "8%", marginLeft: "-3%" }}>
+          <button className="upload-btn" type="button" onClick={handleUpload}>
+            Save
+          </button>
         </div>
       </div>
     </div>
