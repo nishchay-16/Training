@@ -7,9 +7,13 @@ const FileUpload = () => {
   const [dragActive, setDragActive] = useState(false);
 
   const onDrop = useCallback(acceptedFiles => {
-    setSelectedFiles(prevFiles => [...prevFiles, ...acceptedFiles]);
+    const filteredFiles = acceptedFiles.filter(file => file.size <= 1024 * 1024);
+    if (filteredFiles.length !== acceptedFiles.length) {
+      alert("Files should not exceed the maximum size of 1 MB.");
+    }
+    setSelectedFiles(prevFiles => [...prevFiles, ...filteredFiles]);
     setDragActive(false); // Close drop zone after files are dropped
-  }, []);
+  }, []);  
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop,
