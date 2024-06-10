@@ -9,7 +9,6 @@
 .file-upload {
   background: white;
   padding: 20px;
-
   max-width: 800px;
   box-sizing: border-box;
   /* display: flex;
@@ -21,15 +20,16 @@
   width: 80%;
   height: 40px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #e9eef1;
   padding: 0 10px;
   font-size: 16px;
+  border-radius: 13px;
+  background-color: rgb(235, 235, 235);
 }
 
 .dropzone { 
   margin:0px;
   padding: 0px;
-  
 }
 
 .dropzone.active {
@@ -43,26 +43,25 @@
   margin-bottom: 20px;
   height: 120px;
   overflow: hidden;
-  width: 78%;
+  width: 100%;
 }
 
 .file-list {
   list-style: none;
   padding: 0;
   margin: 20px 0 0;
-  max-height: 200px;
-  overflow-y: auto; 
 }
 
 .file-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f9f9f9;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  background-color: #ffffff;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 15px;
   cursor: pointer;
+  border: 2px solid lightgrey;
 }
 
 .file-item:hover {
@@ -77,9 +76,15 @@
 .delete-button {
   background: none;
   border: none;
-  color: red;
+  color: rgb(0, 76, 255);
   cursor: pointer;
   font-size: 18px;
+  font-weight: lighter;
+  transition: transform 0.2s ease-in-out; 
+}
+
+.delete-button:hover {
+  transform: scale(1.2); 
 }
 
 .upload-button {
@@ -93,6 +98,8 @@
   margin-top: 20px;
   font-weight: bold;
   background-color: white;
+  height: 35px;
+  margin-top: -2px;
 }
 
 .upload-icon {
@@ -102,20 +109,15 @@
   padding: 0px;
 }
 
-.upload-button1 {
+.upload-btn {
   display: block;
   padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+  background-color: #d8e5fbd1;
+  color: rgb(35, 116, 202);
+  border:  1px solid rgb(35, 116, 202);
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
   margin-top: 20px;
   font-weight: bold;
-}
-
-.upload-button1:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
 }
