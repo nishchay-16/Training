@@ -1,15 +1,16 @@
-.file-upload-wrapper {
+/* .file-upload-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: teal;
-}
+} */
 
 .file-upload {
   background: white;
   padding: 20px;
   max-width: 800px;
+  width:800px;
   box-sizing: border-box;
   /* display: flex;
   flex-direction: column;
@@ -30,6 +31,7 @@
 .dropzone { 
   margin:0px;
   padding: 0px;
+  
 }
 
 .dropzone.active {
@@ -43,8 +45,9 @@
   margin-bottom: 20px;
   height: 120px;
   overflow: hidden;
-  width: 100%;
+  width: 115%;
 }
+
 
 .file-list {
   list-style: none;
@@ -62,6 +65,7 @@
   border-radius: 15px;
   cursor: pointer;
   border: 2px solid lightgrey;
+  width:100%;
 }
 
 .file-item:hover {
@@ -119,5 +123,6 @@
   cursor: pointer;
   font-size: 16px;
   margin-top: 20px;
+  width: 15%;
   font-weight: bold;
 }
