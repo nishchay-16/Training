@@ -22,6 +22,7 @@ Installing Ruby using RVM (Ruby Version Manager) is a common practice among Ruby
             \curl -sSL https://get.rvm.io | bash -s stable --ruby
 
     STEP 3: Additionally stable with rails:
+            command: 
             \curl -sSL https://get.rvm.io | bash -s stable --rails
 
     STEP 4: After installation, source the RVM script to add RVM to your terminal session:

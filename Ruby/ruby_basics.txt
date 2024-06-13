@@ -1,0 +1,65 @@
+Ruby is a scripting language designed by Yukihiro Matsumoto, also known as Matz. 
+It runs on a variety of platforms, such as Windows, Mac OS, and the various versions of UNIX.
+
+* Ruby is a pure object-oriented programming language.
+* Ruby is an open-source and is freely available on the Web, but it is subject to a license.
+* Ruby is a general-purpose, interpreted programming language.
+* Ruby is a server-side scripting language similar to Python and PERL.
+* Ruby can be used to write Common Gateway Interface (CGI) scripts.
+* Ruby can be embedded into Hypertext Markup Language (HTML).
+* Ruby has a clean and easy syntax that allows a new developer to learn very quickly and easily.
+* Ruby is very much scalable and big programs written in Ruby are easily maintainable.
+* Ruby has similar syntax to that of many programming languages such as C++ and Perl.
+* Ruby can be used for developing Internet and intranet applications.
+* Ruby can be installed in Windows and POSIX environments.
+* Ruby can easily be connected to DB2, MySQL, Oracle, and Sybase.
+* Ruby has a rich set of built-in functions, which can be used directly into Ruby scripts.
+* Ruby support many GUI tools such as Tcl/Tk, GTK, and OpenGL.
+
+
+
+# Ruby BEGIN Statement
+   Declares code to be called before the program is run.
+   Syntax:  BEGIN {
+                code
+            }
+
+        Example:    puts "Hello, Nishchay Gupta." 
+                    BEGIN {
+                        puts "This is Ruby Learning!"
+                    }  
+
+        Output: This is Ruby Learning!
+                Hello, Nishchay Gupta.
+
+
+
+# Ruby END Statement
+    Declares code to be called at the end of the program.   
+    Syntax: END {
+                code
+            }
+
+        Example:    puts "Hello, Nishchay Gupta." 
+                    END {
+                        puts "Completed Ruby Learning!"
+                    }
+
+        Output: Hello, Nishchay Gupta.
+                Completed Ruby Learning!
+
+
+
+# Ruby Comments
+    A comment hides a line, part of a line, or several lines from the Ruby interpreter.
+
+    SingleLined:   # I am a comment. Just ignore me.
+
+    MultiLined:   =begin
+                  This is a comment.
+                  This is a comment, too.
+                  This is a comment, too.
+                  I said that already.
+                  =end  
+    
+
