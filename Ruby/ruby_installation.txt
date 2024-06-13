@@ -1,0 +1,60 @@
+First we have to install RVM before installing Ruby.
+
+Why?
+Installing Ruby using RVM (Ruby Version Manager) is a common practice among Ruby developers for several reasons:
+1) Multiple Ruby Versions (Flexibility & Switching Versions)
+2) Gem Management (Isolated Gemsets & Project-specific Gemsets)
+3) Ease of Installation (Automated Installation & Dependency Management)
+4) Compatibility and Stability (Consistent Environments & Isolation from System Ruby)
+5) Community Support (Widespread Adoption)
+
+∞ Install GPG keys
+
+    STEP 1: Install GPG keys used to verify installation package:
+            command: 
+            gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+
+
+∞ Basic install
+
+    STEP 2: Install RVM stable with ruby:
+            command: 
+            \curl -sSL https://get.rvm.io | bash -s stable --ruby
+
+    STEP 3: Additionally stable with rails:
+            \curl -sSL https://get.rvm.io | bash -s stable --rails
+
+    STEP 4: After installation, source the RVM script to add RVM to your terminal session:
+            command: 
+            source ~/.rvm/scripts/rvm
+
+
+∞ Let's install Ruby
+
+    STEP 5: List available Ruby versions:
+            command: 
+            rvm list known
+
+    STEP 6: Install the desired Ruby version:
+            command: 
+            rvm install 3.0.0
+
+
+∞ Use the Installed Ruby Version
+
+    STEP 7: List available Ruby versions:
+            command: 
+            rvm use 3.0.0 --default
+
+    STEP 8: Verify the installed Ruby version:
+            command: 
+            ruby -v
+
+    STEP 9: Verify the installed Ruby path:
+            command: 
+            which ruby
+
+
+            
+
+    
