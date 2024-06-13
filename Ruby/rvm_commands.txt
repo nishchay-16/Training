@@ -1,0 +1,120 @@
+<! ------------------------- RVM COMMANDS ------------------------!>
+
+
+RVM (Ruby Version Manager) is a command-line tool which allows you to easily install, manage, and work with multiple Ruby environments. 
+Here are some common RVM commands along with their functions:
+
+
+Ruby Installation and Management
+
+1) Install Specific Ruby Version:
+    command: rvm install 2.7.1
+
+2) Uninstall Specific Ruby Version:
+    command: rvm uninstall 2.7.1
+
+3) Reinstall Ruby:
+    command: rvm reinstall 2.7.1
+
+4) List Installed Ruby Versions:
+    command: rvm list
+
+5) Use a Specific Ruby Version:
+    command: rvm use 2.7.1
+
+6) Set Default Ruby Version:
+    command: rvm use 2.7.1 --default
+
+7) Remove a Ruby Version:
+    command: rvm remove 2.7.1
+
+
+Gemset Management
+
+8) Create a New Gemset:
+    Creates a gemset named my_gemset.
+    command: rvm gemset create my_gemset
+
+9) Use a Gemset:
+    Switches to the gemset my_gemset.
+    command: rvm gemset use my_gemset
+
+10) List Gemsets:
+    Lists all gemsets for the current Ruby version.
+    command: rvm gemset list
+
+11) Delete a Gemset:
+    Deletes the gemset my_gemset.
+    command: rvm gemset delete my_gemset
+
+
+Environment and Information
+
+12) Show Current Ruby Version and Gemset:
+    Displays the currently active Ruby version and gemset.
+    command: rvm current
+
+13) Show All Known RVM Environments:
+    Lists all Ruby versions known to RVM that can be installed.
+    command: rvm list known
+
+14) Show RVM Info:
+    Displays detailed information about the current RVM environment, including Ruby version, gemset, and paths.
+    command: rvm info
+
+
+Updating and Maintenance
+
+15) Update RVM:
+    command: rvm get stable
+
+16) Reload RVM:
+    command: rvm reload
+
+17) RVM Requirements:
+    This is used to display the dependencies and requirements needed to install and use a particular Ruby version with RVM
+    command: rvm requirements
+
+18) RVM Disk-Usages:
+    This command will give statistics of how rvm using disk for what features.
+    command: rvm disk-usage
+
+19) RVM Repair:
+    This command lets you to repair environment.
+    command: rvm repair
+
+20) RVM Help:
+    This command should be used to get full list of all commands that can be used with RVM. 
+    command: rvm help
+
+21) Generate Docs:
+    Generates RVM documentation.
+    command: rvm docs generate
+
+
+
+Basic Usage
+
+22) Help for Specific Commands:
+    This command will list general help and a summary of available subcommands.
+    command: rvm help
+
+
+
+Cleanup and Maintenance
+
+23) Clean Up Source Files:
+    Cleans up source files and binaries no longer needed.
+    command: rvm cleanup all
+
+24) Check RVM Installation:
+    Checks the RVM installation for potential issues and suggests fixes.
+    command: rvm doctor
+
+25) Remove Unused Rubies:
+    Removes all Ruby versions that are not currently used.
+    command: rvm remove rubies
+
+26) Update All Rubies:
+    Updates all installed Ruby versions to the latest patch level.
+    command: rvm update --rubies
