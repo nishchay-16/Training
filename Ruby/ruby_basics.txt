@@ -17,6 +17,13 @@ It runs on a variety of platforms, such as Windows, Mac OS, and the various vers
 * Ruby support many GUI tools such as Tcl/Tk, GTK, and OpenGL.
 
 
+FEATURES OF RUBY:-
+Ruby has many reasons for being popular and in demand. Few of the reasons are mentioned below:
+ 
+1) The code written in Ruby is small, elegant and powerful as it has fewer number of lines of code.
+2) Ruby allows simple and fast creation of Web application which results in less hard work.
+3) As Ruby is free of charge that is Ruby is free to copy, use, modify, it allow programmers to make necessary changes as and when required.
+4) Ruby is a dynamic programming language due to which there is no tough rules on how to built in features and it is very close to spoken languages.
 
 # Ruby BEGIN Statement
    Declares code to be called before the program is run.
@@ -63,3 +70,68 @@ It runs on a variety of platforms, such as Windows, Mac OS, and the various vers
                   =end  
     
 
+
+# Loops
+
+    1) While Loop
+        Executes code while conditional is true
+        Syntax:
+                while condition
+                            code
+                end
+
+        example: 
+                x = 4
+                while x >= 1
+                    puts "Nishchay Gupta"
+                    x = x - 1
+                end
+
+
+    2) Do While Loop
+        A while loop's conditional is separated from code by the reserved word do, a newline, backslash \, or a semicolon ;.
+        Syntax:
+                while conditional [do]
+                    code
+                end
+
+            example: 
+                    loop do
+                       puts "Nishchay"
+                       val = '7'
+                       if val == '7'
+                          break
+                       end
+                    end
+
+
+    3) For Loop
+        Executes code once for each element in expression.
+        Syntax: 
+                for variable [, variable ...] in expression [do]
+                    code
+                end
+            
+        example: 
+                i = "Nishchay"
+                for a in 1..5 do
+                    puts i 
+                end
+
+
+    4) Until Loop
+    Executes code while conditional is false.
+    If an until modifier follows a begin statement with no rescue or ensure clauses, code is executed once before conditional is evaluated.
+        Syntax:
+                code until conditional
+                        OR
+                begin
+                    code
+                end until conditional
+
+        example:    
+                var = 7
+                until var == 11 do
+                    puts var * 10
+                    var = var + 1
+                end
