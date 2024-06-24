@@ -309,3 +309,138 @@ Ruby has many reasons for being popular and in demand. Few of the reasons are me
 				Example: 1...10 Creates a range from 1 to 9.
 
 
+# Decision Making
+	A programming language uses control statements to control the flow of execution of the program based on certain conditions.
+	These are used to cause the flow of execution to advance and branch based on changes to the state of a program.
+	Decision-Making Statements:
+
+		1)if statement:
+				If statement in Ruby is used to decide whether a certain statement or block of statements will be executed or not i.e if a certain condition is true then a block of statement is executed otherwise not.
+			Syntax: 
+						if (condition) 
+						end  
+			Example:
+								a = 20
+								if a >= 18
+  								puts "You are eligible to vote."
+								end
+
+
+		2)if-else statement:	
+				In this ‘if’ statement used to execute block of code when the condition is true and ‘else’ statement is used to execute a block of code when the condition is false.
+			Syntax:
+						if(condition)  
+						else  
+						end  
+			example: 
+							a = 15
+							if a >= 18
+  							puts "You are eligible to vote."
+							else
+  							puts "You are not eligible to vote."
+							end
+
+
+		3)if – elsif ladder:
+				Here, a user can decide among multiple options. ‘if’ statements are executed from the top down. 
+				As soon as one of the conditions controlling the ‘if’ is true, the statement associated with that ‘if’ is executed, and the rest of the ladder is bypassed. 
+				If none of the conditions is true, then the final else statement will be executed.
+			Syntax:
+						if(condition1)  
+						elsif(condition2)
+						else(condition3)  
+						end 
+			example: 
+							a = 78 
+							if a  < 50  
+  							puts "Student is failed" 
+							elsif a >= 50 && a <= 60  
+  							puts "Student gets D grade" 
+							elsif a >= 70 && a <= 80  
+  							puts "Student gets B grade"
+							elsif a >= 80 && a <= 90  
+  							puts "Student gets A grade"
+							elsif a >= 90 && a <= 100  
+  							puts "Student gets A+ grade"   
+							end 
+
+		4)Ternary statement:
+				In Ruby ternary statement is also termed as the shortened if statement. 
+				It will first evaluate the expression for true or false value and then execute one of the statements. 
+				If the expression is true, then the true statement is executed else false statement will get executed.
+			Syntax:
+							test-expression ? if-true-expression : if-false-expression 
+			Example:
+							var = 5;
+							a = (var > 2) ? true : false ;
+							puts a
+			Output: True
+			
+
+
+# Loops
+
+    1) While Loop
+        Executes code while conditional is true
+        Syntax:
+                while condition
+                            code
+                end
+
+        example: 
+                x = 4
+                while x >= 1
+                    puts "Nishchay Gupta"
+                    x = x - 1
+                end
+
+
+    2) Do While Loop
+        A while loop's conditional is separated from code by the reserved word do, a newline, backslash \, or a semicolon ;.
+        Syntax:
+                while conditional [do]
+                    code
+                end
+
+            example: 
+                    loop do
+                       puts "Nishchay"
+                       val = '7'
+                       if val == '7'
+                          break
+                       end
+                    end
+
+
+    3) For Loop
+        Executes code once for each element in expression.
+        Syntax: 
+                for variable [, variable ...] in expression [do]
+                    code
+                end
+            
+        example: 
+                i = "Nishchay"
+                for a in 1..5 do
+                    puts i 
+                end
+
+
+    4) Until Loop
+    Executes code while conditional is false.
+    If an until modifier follows a begin statement with no rescue or ensure clauses, code is executed once before conditional is evaluated.
+        Syntax:
+                code until conditional
+                        OR
+                begin
+                    code
+                end until conditional
+
+        example:    
+                var = 7
+                until var == 11 do
+                    puts var * 10
+                    var = var + 1
+                end
+
+
