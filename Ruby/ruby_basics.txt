@@ -135,3 +135,105 @@ Ruby has many reasons for being popular and in demand. Few of the reasons are me
                     puts var * 10
                     var = var + 1
                 end
+
+
+
+# Variables
+    There are different types of variables in Ruby:
+				1) Local variables:
+						- A local variable name always starts with a lowercase letter(a-z) or underscore (_). 
+						- These variables are local to the code construct in which they are declared.
+						- A local variable is only accessible within the block of its initialization. 
+						- Local variables are not available outside the method. 
+						- There is no need to initialize the local variables.
+						Example: age = 10
+										 _Age = 20
+
+				2) Instance variables:
+						- An instance variable name always starts with a @ sign. 
+						- They are similar to Class variables but their values are local to specific instances of an object. 
+						- Instance variables are available across methods for any specified instance or object i.e. instance variables can change from object to object.
+						- There is no need to initialize the instance variables and uninitialized instance variable always contains a nil value.
+						Example: 
+							class Customer
+   							def initialize(id, name, addr)
+      						@cust_id = id
+      						@cust_name = name
+      						@cust_addr = addr
+   							end
+  						 def display_details()
+      						puts "Customer id #@cust_id"
+      						puts "Customer name #@cust_name"
+      						puts "Customer address #@cust_addr"
+   									end
+								end
+
+								cust1 = Customer.new("1", "John", "Wisdom Apartments, Ludhiya")
+								cust2 = Customer.new("2", "Poul", "New Empire road, Khandala")
+
+										cust1.display_details()
+										cust2.display_details()
+
+				3) Class variables:
+						- A class variable name always starts with @@ sign.
+						- It is available across different objects.
+						- A class variable belongs to the class and it is a characteristic of a class. 
+						- They need to be initialized before use.
+						- Another way of thinking about class variables is as global variables within the context of a single class. 
+						- A class variable is shared by all the descendants of the class. 
+						- An uninitialized class variable will result in an error.
+						Example: 
+							class Customer 
+								@@no_of_customers = 0
+
+								def initialize(id, name, addr)  
+									@cust_id = id 
+									@cust_name = name 
+									@cust_addr = addr 
+								end
+ 
+								def display_details() 
+									puts "Customer id #@cust_id"
+									puts "Customer name #@cust_name"
+									puts "Customer address #@cust_addr"
+								end
+
+								def total_no_of_customers() 
+									@@no_of_customers += 1
+									puts "Total number of customers: #@@no_of_customers"
+								end
+							end
+
+							cust1 = Customer.new("1", "John", "Wisdom Apartments, Ludhiya") 
+							cust2 = Customer.new("2", "Poul", "New Empire road, Khandala") 
+
+							cust1.display_details() 
+							cust1.total_no_of_customers() 
+							cust2.display_details() 
+							cust2.total_no_of_customers() 
+
+
+				4) Global variables :
+						- A global variable name always starts with $. 
+						- Class variables are not available across classes. 
+						- If you want to have a single variable, which is available across classes, you need to define a global variable. 
+						- Its scope is global, means it can be accessed from anywhere in a program. 
+						- By default, an uninitialized global variable has a nil value and its use can cause the programs to be cryptic and complex.
+						Example: 							
+							$global_variable = 10
+							class Class1 
+								def print_global 
+									puts "Global variable in Class1 is #$global_variable"
+								end
+							end
+							class Class2 
+								def print_global 
+									puts "Global variable in Class2 is #$global_variable"
+									end
+								end
+							class1obj = Class1.new
+							class1obj.print_global 
+							class2obj = Class2.new
+							class2obj.print_global 
+
+																																																																																																																																																																				
