@@ -1,0 +1,249 @@
+A String object in Ruby holds and manipulates an arbitrary sequence of one or more bytes, typically representing characters that represent human language.
+The simplest string literals are enclosed in single quotes
+
+
+Expression Substitution:-
+Expression substitution is a means of embedding the value of any Ruby expression into a string using #{ and }
+Example:
+x, y, z = 12, 36, 72
+puts "The value of x is #{ x }."
+puts "The sum of x and y is #{ x + y }."
+puts "The average was #{ (x + y + z)/3 }."
+
+Output:
+The value of x is 12.
+The sum of x and y is 48.
+The average was 40.
+
+
+STRING METHODS::
+
+1) str.length
+It returns the number of characters in string
+
+Example:
+str = "Hello, World!"
+puts str.length  
+
+Output: 13
+
+
+2) str.empty?
+It returns true if the number of characters in string is zero
+
+Example:
+str = ""
+puts str.empty?  
+
+Output: true
+
+
+3) str.count()
+It counts how many times a specific character is repeated     # This method is case sensitive
+
+Example:
+str = "hello"
+puts str.count("l")  
+
+Output: 2
+
+
+4) str.insert(index, "")
+It insert the given characters before the given index
+
+Example:
+str = "Hello"
+str.insert(1, "ey")
+puts str  
+
+Output: "Heyello"
+
+
+5) str.upcase / str.downcase
+It transform all the letters of the string in uppercase and downcase
+
+Example:
+str = "Hello"
+puts str.upcase        # Output: "HELLO"
+puts str.downcase      # Output: "hello"
+
+
+6) str.swapcase
+It transform the uppercase letter to downcase and downcase letter to uppercase
+
+Example:
+str = "Hello"
+puts str.swapcase   
+
+Output: "hELLO"
+
+
+7) str.captialize
+It transform the first letter of string in uppercase and rest of the letters in downcase
+
+Example:
+str = "hello WORLD"
+puts str.capitalize  
+
+Output: "Hello world"
+
+
+8) str.reverse
+It reverse the order of characters in string
+
+Example:
+str = "Hello"
+puts str.reverse  
+
+Output: "olleH"
+
+
+9) str.split
+It split the string into an array and returns the array
+
+Example:
+str = "Hello, World!"
+puts str.split(" ")  
+
+Output: ["Hello,", "World!"]
+
+
+10) str.chop
+It removes the last character of the string and returns the new string and (str.chop!) this mutates the original string
+
+Example:
+str = "Hello"
+puts str.chop  
+
+Output: "Hell"
+
+
+11) str.strip
+It removes the extra spaces in string (\t, \r, \n)
+
+Example:
+str = "  Hello, World!  "
+puts str.strip  
+
+Output: "Hello, World!"
+
+
+12) str.chomp
+It removes the last character if it is a carriage return or a new line  # This method is commonly used with gets command
+
+Example:
+str = "Hello\n"
+puts str.chomp  
+
+Output: "Hello"
+
+
+13) str.to_i , str.to_r
+It coverts a string to integer and rational number
+
+Example:
+str = "123"
+puts str.to_i  # Output: 123
+puts str.to_r  # Output: (123/1)
+
+
+14) str.gsub("" , "")
+It replace the first parameter of the string with second parameter   # First parameter can also be a regular expression
+
+Example:
+str = "Hello, World!"
+puts str.gsub("World", "Ruby")  
+
+Output: "Hello, Ruby!"
+
+
+15) str.concat, "" + "", "" << ""
+It to concatenate two strings together
+
+Example:
+str1 = "Hello"
+str2 = "World"
+puts str1.concat(" ", str2)  # Output: "Hello World"
+puts "Hello" + " World"      # Output: "Hello World"
+str = "Hello"
+str << " World"
+puts str                    # Output: "Hello World"
+
+
+16) str.index() , str.rindex()
+It gives the index of the first and last occurence of the substring
+
+Example:
+str = "Hello, World!"
+puts str.index("o")    # Output: 4
+puts str.rindex("o")   # Output: 8
+
+
+17) str.clear
+It removes the content of the string
+
+Example:
+str = "Hello"
+str.clear
+puts str  
+
+Output: ""
+
+
+18) str.start_with? , str.end_with?
+It returns true if the string is starting and ending with the given substring
+
+Example:
+str = "Hello, World!"
+puts str.start_with?("Hello")  # Output: true
+puts str.end_with?("World!")   # Output: true
+
+
+19) str.succ
+It returns the successor of self string
+
+Example:
+str = "abc"
+puts str.succ  
+
+Output: "abd"
+
+
+20) str.to_c , str.to_f
+It converts the string into complex or floating point number
+
+Example:
+str = "3.14"
+puts str.to_f  # Output: 3.14
+str = "2+3i"
+puts str.to_c  # Output: (2+3i)
+
+
+21) str.scan()
+It returns an array of characters which is present fron given condition
+
+Example:
+str = "abc123"
+puts str.scan(/\d+/)  
+
+Output: ["123"]
+
+
+22) str.char
+It returns an array of all characters given in string
+
+Example:
+str = "Hello"
+puts str.chars  
+
+Output: ["H", "e", "l", "l", "o"]
+
+
+23) str.slice()
+It remove the substring from the given string
+
+Example:
+str = "Hello, World!"
+puts str.slice(7, 5)  
+
+Output: "World"

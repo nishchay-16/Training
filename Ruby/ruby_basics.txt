@@ -545,6 +545,115 @@ printing     // calling method
 
 	
 
+# Blocks
+A block consists of chunks of code.
+You assign a name to a block.
+The code in the block is always enclosed within braces ({}).
+A block is always invoked from a function with the same name as that of the block. This means that if you have a block with the name test, then you use the function test to invoke this block.
+You invoke a block by using the yield statement.
+
+Syntax: 
+block_name {
+   statement1
+   statement2
+   ..........
+}
+
+* The yield Statement:
+Example:
+def test
+   puts "You are in the method"
+   yield
+   puts "You are again back to the method"
+   yield
+end
+test {puts "You are in the block"}
+
+Output:
+You are in the method
+You are in the block
+You are again back to the method
+You are in the block
+
+
+
+# Modules and Mixins
+Modules are a way of grouping together methods, classes, and constants. 
+Modules give you two major benefits.
+- Modules provide a namespace and prevent name clashes.
+- Modules implement the mixin facility.
+
+Syntax:
+module Identifier
+   statement1
+   statement2
+   ...........
+end
+
+Example:
+module Trig
+   PI = 3.141592654
+   def Trig.sin(x)
+   end
+   def Trig.cos(x)
+   end
+end
+
+
+			 Ruby require Statement:-
+
+			 Syntax:
+			 require filename
+
+			 Example:
+			 $LOAD_PATH << '.'	
+			 require 'trig.rb'
+			 y = Trig.sin(Trig::PI/4)
+
+We are using $LOAD_PATH << '.' to make Ruby aware that included files must be searched in the current directory.
+
+
+				Ruby include Statement:-
+
+				Syntax:
+				include modulename
+
+				Example:
+				module Week
+   				FIRST_DAY = "Sunday"
+   				def Week.weeks_in_month
+      			puts "You have four weeks in a month"
+   				end
+   				def Week.weeks_in_year
+      			puts "You have 52 weeks in a year"
+   				end
+				end
+
+				$LOAD_PATH << '.'
+				require "support"
+
+				class Decade
+				include Week
+   				no_of_yrs = 10
+   				def no_of_months
+      			puts Week::FIRST_DAY
+      			number = 10*12
+      			puts number
+   				end
+				end
+				d1 = Decade.new
+				puts Week::FIRST_DAY
+				Week.weeks_in_month
+				Week.weeks_in_year
+				d1.no_of_months
+
+				Output:
+				Sunday
+				You have four weeks in a month
+				You have 52 weeks in a year
+				Sunday
+				120
+
 
 
 
