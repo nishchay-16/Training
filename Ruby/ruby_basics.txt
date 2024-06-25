@@ -444,3 +444,108 @@ Ruby has many reasons for being popular and in demand. Few of the reasons are me
                 end
 
 
+
+# Methods
+Method is a collection of statements that perform some specific task and return the result.
+Methods are time savers and help the user to reuse the code without retyping the code
+In Ruby, the method defines with the help of def keyword followed by method_name and end with end keyword. 
+A method must be defined before calling and the name of the method should be in lowercase. 
+Methods are simply called by its name. 
+
+Syntax:
+def method_name
+# Statement 1
+# Statement 2
+.
+.
+end
+
+Example:
+def printing
+puts "Hello Nishchay"
+end
+ 
+printing     // calling method
+
+
+				1) Passing parameters to methods: 
+						Parameter passing is similar to other programming language’s parameter passing i.e simply write the parameters in the brackets (). 
+
+						Syntax:
+						def method_name(var1, var2, var3)
+						# Statement 1
+						# Statement 2
+						.
+						.
+						end
+
+						Example:
+						def geeks (var1 = "GFG", var2 = "G4G")
+     					puts "First parameter is #{var1}"
+     					puts "First parameter is #{var2}"
+						end
+						geeks "GeeksforGeeks", "Sudo"    # calling method with parameters
+ 						puts ""
+						puts "Without Parameters"
+						puts ""
+						geeks                            # calling method without passing parameters
+
+						Output:
+						First parameter is GeeksforGeeks
+						First parameter is Sudo
+
+						Without Parameters
+
+						First parameter is GFG
+						First parameter is G4G
+
+
+				2) Variable Number of Parameters: 
+						Ruby allows the programmer to define a method that can take the variable number of arguments. 
+						It is useful when the user doesn’t know the number of parameters to be passed while defining the method. 
+
+						Syntax:
+						def method_name(*variable_name)
+						# Statement 1
+						# Statement 2
+						.
+						.
+						end
+
+						Example:
+						def geeks (*var)
+							puts "Number of parameters is: #{var.length}"
+							for i in 0...var.length
+      					puts "Parameters are: #{var[i]}"
+   						end
+						end
+						geeks "GFG", "G4G"
+						geeks "GeeksforGeeks"
+
+						Output:
+						Number of parameters is: 2
+						Parameters are: GFG
+						Parameters are: G4G
+						Number of parameters is: 1
+						Parameters are: GeeksforGeeks
+
+				3) Return statement in Methods:
+						Return statement used to returns one or more values. 
+						By default, a method always returns the last statement that was evaluated in the body of the method. 
+						‘return’ keyword is used to return the statements. 
+
+						Example:
+						def addition
+							a = 10
+							b = 39
+							sum = a+b
+							return sum
+						end
+						puts "The result is: #{num}"    # calling of num method
+
+	
+
+
+
+
+
