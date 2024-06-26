@@ -220,7 +220,7 @@ puts str.to_c  # Output: (2+3i)
 
 
 21) str.scan()
-It returns an array of characters which is present fron given condition
+It returns an array of characters which is present from given condition
 
 Example:
 str = "abc123"
