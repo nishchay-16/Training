@@ -54,3 +54,8 @@ puts str.slice(7, 5)
 str = "abc123"
 
 puts str.scan(/\d+/)
+
+
+arr = [1, 2, 3, 4]
+puts arr[0]    
+puts arr.at(0)    
