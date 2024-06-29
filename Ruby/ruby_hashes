@@ -1,0 +1,147 @@
+RUBY HASHES
+
+Hash is a collection of unique keys and their values. 
+Hash is like an Array, except the indexing is done with the help of arbitrary keys of any object type. 
+In Hash, the order of returning keys and their value by various iterators is arbitrary and will generally not be in the insertion order. 
+The default value of Hashes is nil. 
+When a user tries to access the keys which do not exist in the hash, then the nil value is returned.
+
+# Creating Hashes
+
+As with arrays, there is a variety of ways to create hashes.
+
+CLASS METHOD
+
+1. [] : This method creates a new hash that is populated with the given objects. 
+        It is equivalent to creating a hash using literal {Key=>value….}. 
+        Keys and values are present in the pair so there is even number of arguments present.
+
+Hash[(key=>value)*]
+
+Example:
+p Hash["x", 30, "y", 19] 
+p Hash["x" => 30, "y" => 19]
+
+Output:
+{"x"=>30, "y"=>19}
+{"x"=>30, "y"=>19}
+
+
+2. new : This method returns a empty hash. 
+         If a hash is subsequently accessed by the key that does not match to the hash entry, the value returned by this method depends upon the style of new used to create a hash. 
+         In the first form the access return nil. If obj is specified then, this object is used for all default values. 
+         If a block is specified, then it will be called by the hash key and objects and return the default value. 
+         The values are stored in the hash (if necessary) depends upon the block. 
+
+Hash.new
+Hash.new(obj)
+Hash.new{|hash, key|block}
+
+Example:
+a = Hash.new("Nishchay")
+p a["x"] = 40
+p a["y"] = 49
+p a["x"] 
+p a["y"]
+p a["z"]
+
+Output:
+40
+49
+40
+49
+"Nishchay"
+
+
+3. try_convert : This method is used to convert obj into hash and returns hash or nil. 
+                It return nil when the obj does not convert into hash.
+
+Hash.try_convert(obj)
+
+Example;
+p Hash.try_convert({3=>8})
+p Hash.try_convert("3=>8")
+
+Output:
+{3=>8}
+nil
+
+
+
+INSTANCE METHOD
+
+1. ==: It is known as Equality. 
+       It is used to check if two hashes are equal or not. 
+       If they are equal means they contain the same number of keys and the value related to these keys are equal, then it will return true otherwise returns false. 
+
+hsh1 == hsh2
+
+Example:
+a1 = {"x" => 4, "y" => 109}
+a2 = {"x" => 67, "f" => 78, "z" => 21}
+a3 = {"f" => 78, "x" => 67, "z" => 21}
+p a1 == a2 
+p a2 == a3 
+
+Output:
+false
+true
+
+
+2. [] : It is known as Element Reference. 
+        It retrieves the value that stored in the key. 
+        If it does not find any value then it return the default value.
+
+hsh[key]
+
+Example:
+a = {"x" => 45, "y" => 67}
+p a["x"] 
+p a["z"]
+
+Output: 
+45
+nil
+
+
+3. []= : It is known as Element Assignment. 
+         It associates the value given by value with the key given by key.
+
+hsh[key]=value
+
+Example:
+a = {"x" => 45, "y" => 67}
+a["x"]= 34
+a["z"]= 89
+p a
+
+Output:
+{"x"=>34, "y"=>67, "z"=>89}
+
+
+4. clear : This method removes all the keys and their values from the hsh.
+
+hsh.clear
+
+Example:
+a = {"x" => 45, "y" => 67}
+p a.clear
+
+Output:
+{}
+
+
+5. default : This method return the default value. 
+             The value that returned by hsh[key], if key did not exist in hsh.
+
+hsh.default(nil=key)
+
+Example:
+a = Hash.new("Nishchay") 
+p a.default 
+p a.default(2)
+
+Output:
+"Nishchay"
+"Nishchay"
+
