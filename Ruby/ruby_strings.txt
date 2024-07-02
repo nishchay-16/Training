@@ -247,3 +247,241 @@ str = "Hello, World!"
 puts str.slice(7, 5)  
 
 Output: "World"
+
+
+24) str%arg
+It is used to do modulus (arg must be array)
+
+Example:
+str = "Hello, %s!"
+puts str % ["World"]  
+
+Output: 
+"Hello, World!"
+
+
+25) str*arg
+It repeats string a specified number of times.
+
+Example:
+str = "Hello"
+puts str * 3  
+
+Output:
+"HelloHelloHello"
+
+
+26) str+other_str
+It concatenates two strings.
+
+Example:
+str1 = "Hello"
+str2 = "World"
+puts str1 + " " + str2  
+
+Output: 
+"Hello World"
+
+
+27) str << obj
+It concatenates an object to a string.
+str = "Hello"
+str << " World"
+puts str  
+
+Output: 
+"Hello World"
+
+
+28) str <=> other_str
+Compares str with other_str, returning -1 (less than), 0 (equal), or 1 (greater than) [The comparison is case-sensitive].
+
+Example:
+puts "abc" <=> "def"        # Output: -1
+puts "abc" <=> "abc"        # Output: 0
+puts "def" <=> "abc"        # Output: 1
+
+
+29) str == obj
+Tests str and obj for equality. If obj is a String, returns true, otherwise false.
+
+Example:
+puts "abc" == "abc"  # Output: true
+puts "abc" == "def"  # Output: false
+
+
+30) str =~ obj
+Matches str against a regular expression pattern obj. 
+Returns the position where the match starts; otherwise, false.
+
+Example:
+puts "hello" =~ /e/  # Output: 1
+puts "hello" =~ /z/  # Output: nil
+
+
+31) str.b
+Returns a copy of self that has ASCII-8BIT encoding
+
+Example:
+str = "Hello"
+puts str.b.encoding 
+
+Output: 
+ASCII-8BIT
+
+
+32) str.bytes
+Returns the ASCII bits for each character
+
+Example:
+str = "Hello"
+puts str.bytes  
+
+Output: 
+[72, 101, 108, 108, 111]
+
+
+33) str.bytesize
+Returns the total number of bytes in the string.
+
+Example:
+str = "Hello"
+puts str.bytesize  
+
+Output: 
+5
+
+
+34) str.byteslice(x)
+Returns the byte present at the xth position
+
+Example:
+str = "Hello"
+puts str.byteslice(1)  
+
+Output: 
+"e"
+
+
+35) str.byteslice(x, n)
+Returns n characters from the position of the xth byte
+
+Example:
+str = "Hello"
+puts str.byteslice(1, 2)  
+
+Output: 
+"el"
+
+
+36) str.bytesplice(x, n, 'a')
+Replaces what the above returned with 'a'.
+
+Example:
+str = "Hello"
+str.bytesplice(1, 2, "a")
+puts str  
+
+Output: 
+"Hallo"
+
+
+37) str.byteindex('character')
+Returns the position of the character mentioned.
+
+Example:
+str = "Hello"
+puts str.byteindex('e')  
+
+Output: 
+1
+
+
+38) str.byterindex('char', x)
+Returns the position where the character occurs for the xth time.
+
+Example:
+str = "Hello"
+puts str.byterindex('l', 2)  
+
+Output: 
+3
+
+
+39) str.casecmp
+Makes a case-insensitive comparison of strings
+
+Example:
+puts "abc".casecmp("ABC")  
+
+Output: 
+0
+
+
+40) str.center(size, pad_string = ' ')
+Centers a string within the size mentioned with the character mentioned in the pad string
+
+Example:
+str = "Hello"
+puts str.center(11, '-')  
+
+Output: 
+"---Hello---"
+
+
+41) str.chomp!
+Same as str.chomp, but changes are made in place.
+
+Example:
+str = "Hello\n"
+str.chomp!
+puts str  
+
+Output: 
+"Hello"
+
+
+42) str.chop!
+Same as str.chop, but changes are made in place.
+
+Example:
+str = "Hello"
+str.chop!
+puts str  
+
+Output: 
+"Hell"
+
+
+43) str.concat(other_str)
+Concatenates other_str to str
+
+Example:
+str = "Hello"
+str.concat(" World")
+puts str  
+
+Output: 
+"Hello World"
+
+
+44) str.crypt(other_str)
+Applies a one-way cryptographic hash to str. The argument is the salt string
+
+Example:
+str = "password"
+puts str.crypt("aa")  
+
+Output: 
+a hashed password string
+
+
+45) str.delete(x)
+Returns a copy of str with all characters specified deleted.
+
+Example:
+str = "Hello, World!"
+puts str.delete("l")  
+
+Output: 
+"Heo, Word!"
