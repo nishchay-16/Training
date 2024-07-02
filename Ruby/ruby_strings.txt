@@ -485,3 +485,487 @@ puts str.delete("l")
 
 Output: 
 "Heo, Word!"
+
+
+46) str.delete!(x)
+Same as str.delete, but changes are made in place.
+
+Example:
+str = "Hello, World!"
+str.delete!("l")
+puts str  
+
+Output: 
+"Heo, Word!"
+
+
+47) str.delete_prefix(prefix)
+Removes the prefix mentioned and displays the remaining content of the string
+
+Example:
+str = "Hello, World!"
+puts str.delete_prefix("Hello, ")  
+
+Output: 
+"World!"
+
+
+48) str.delete_prefix!(prefix)
+Does the same as above if the prefix exists, otherwise returns nil.
+
+Example:
+str = "Hello, World!"
+str.delete_prefix!("Hello, ")
+puts str  
+
+Output: 
+"World!"
+
+
+49) str.delete_suffix(suffix)
+Removes the suffix mentioned and displays the remaining content of the string.
+
+Example:
+str = "Hello, World!"
+puts str.delete_suffix(", World!")  
+
+Output: 
+"Hello"
+
+
+50) str.delete_suffix!(suffix)
+Does the same as above if the suffix exists, otherwise returns nil.
+
+Example:
+str = "Hello, World!"
+str.delete_suffix!(", World!")
+puts str  
+
+Output: 
+"Hello"
+
+
+51) str.downcase!
+Same as str.downcase, but changes are made in place.
+
+Example:
+str = "Hello"
+str.downcase!
+puts str  
+
+Output: 
+"hello"
+
+
+52) str.dump
+Returns a version of str with all nonprinting characters replaced by \nnn notation and all special characters escaped.
+
+Example:
+str = "Hello\nWorld"
+puts str.dump  
+
+Output: 
+"\"Hello\\nWorld\""
+
+
+53) str.eql?('string')
+Checks if str is equal to the string mentioned in the bracket.
+
+Example:
+str = "Hello"
+puts str.eql?("Hello")  
+
+Output: 
+true
+
+
+54) str.each_byte { |byte| print byte, ' ' }
+Gives ASCII code for each character in the string along with the string.
+
+Example:
+str = "Hello"
+str.each_byte { |byte| print byte, ' ' }  
+
+Output: 
+72 101 108 108 111 
+
+
+55) str.each_char { |c| print c, ' ' }
+Calls the given block with each successive character from self; returns self
+
+Example:
+str = "Hello"
+str.each_char { |c| print c, ' ' }  
+
+Output:
+H e l l o 
+
+
+56) str.encoding
+Returns the Encoding object that represents the encoding of obj
+
+Example:
+str = "Hello"
+puts str.encoding  
+
+Output: 
+UTF-8
+
+
+57) str.force_encoding(type)
+Changes the encoding of the string to the type mentioned.
+
+Example:
+str = "Hello"
+str.force_encoding("ASCII-8BIT")
+puts str.encoding  
+
+Output: 
+ASCII-8BIT
+
+
+58) str.freeze
+Makes the string immutable
+
+Example:
+str = "Hello"
+str.freeze
+
+# str << " World"  # This will raise an error
+
+
+59) str.getbyte(n)
+Returns the nth byte as an integer.
+
+Example:
+str = "Hello"
+puts str.getbyte(1)  
+
+Output: 
+101
+
+
+60) str.hex
+Treats leading characters from str as a string of hexadecimal digits (with an optional sign) and returns the corresponding number.
+
+Example:
+str = "1a"
+puts str.hex  
+
+Output:
+26
+
+
+61) str.include?('substring')
+Returns true if str contains the given string or character.
+
+Example:
+str = "Hello"
+puts str.include?("ell")  
+
+Output: 
+true
+
+
+62) str.initialize_copy
+Copies the string to another variable.
+
+Example:
+str1 = "Hello"
+str2 = str1.dup
+puts str2  
+
+Output: 
+"Hello"
+
+
+63) str.inspect
+Returns a printable version of str, surrounded by quote marks, with special characters escaped.
+
+Example:
+str = "Hello\nWorld"
+puts str.inspect  
+
+Output: 
+"\"Hello\\nWorld\""
+
+
+64) str.intern
+Same as to_sym.
+
+Example:
+str = "symbol"
+puts str.intern  
+
+Output:
+ :symbol
+
+
+66) str.ljust(n, 'pad_string')
+Left-justifies str in a field of width n. Pads the string with pad_string until it is n characters long.
+
+Example:
+str = "Hello"
+puts str.ljust(10, '-')  
+
+Output: 
+"Hello-----"
+
+
+67) str.lstrip
+Returns a copy of str with leading whitespace removed.
+
+Example:
+str = "   Hello"
+puts str.lstrip  
+
+Output: 
+"Hello"
+
+
+68) str.lstrip!
+Removes leading whitespace from str. Returns nil if no change was made.
+
+Example:
+str = "   Hello"
+str.lstrip!
+puts str  
+
+Output: 
+"Hello"
+
+
+69) str.next
+Returns the successor to str. 
+The successor is calculated by incrementing characters and digits within the string.
+
+Example:
+str = "abc"
+puts str.next  
+
+Output: 
+"abd"
+
+
+70) str.next!
+Same as next, but changes are made in place.
+
+Example:
+str = "abc"
+str.next!
+puts str  
+
+Output: 
+"abd"
+
+
+71) str.oct
+Treats leading characters of str as a string of octal digits (with an optional sign) and returns the corresponding number.
+
+Example:
+str = "10"
+puts str.oct  
+
+Output: 8
+
+
+72) str.ord
+Returns the codepoint of the first character in the string.
+
+Example:
+str = "A"
+puts str.ord  
+
+Output: 65
+
+
+73) str.partition(sep)
+Divides str into three parts: the part before sep, sep itself, and the part after sep. If sep is not found, returns [str, "", ""].
+
+Example:
+str = "Hello World"
+puts str.partition(" ")  
+
+Output: 
+["Hello", " ", "World"]
+
+
+74) str.prepend(prefix)
+Prepend adds prefix to str.
+
+Example:
+str = "World"
+str.prepend("Hello ")
+puts str  
+
+Output: 
+"Hello World"
+
+
+75) str.rjust(n, pad_string=' ')
+Right-justifies str in a field of width n. 
+Pads the string with pad_string until it is n characters long.
+
+Example:
+str = "Hello"
+puts str.rjust(10, '-')  
+
+Output: 
+"-----Hello"
+
+
+76) str.rpartition(sep)
+Same as partition, but searches for sep from the end of the string.
+
+Example:
+str = "Hello World"
+puts str.rpartition(" ")  
+
+Output: 
+["Hello", " ", "World"]
+
+
+77) str.rstrip
+Returns a copy of str with trailing whitespace removed.
+
+Example:
+str = "Hello   "
+puts str.rstrip  
+
+Output: "Hello"
+
+
+78) str.scan(/regex/) { |match| block }
+Splits str based on the pattern and calls the block with each match.
+
+Example:
+str = "Hello123World456"
+str.scan(/\d+/) { |match| puts match }  
+
+Output: "123" "456"
+
+
+79) str.setbyte(index, integer)
+Modifies the index position with the integer provided.
+
+Example:
+str = "Hello"
+str.setbyte(1, 97)
+puts str  
+
+Output: "Hallo"
+
+
+80) str.size
+Returns the character length of str.
+
+Example:
+str = "Hello"
+puts str.size  
+
+Output: 5
+
+
+81) str.slice!(x, n)
+Removes n characters from the xth position.
+
+Example:
+str = "Hello"
+str.slice!(1, 3)
+puts str  
+
+Output: "Ho"
+
+
+82) str.squeeze('chars')
+Returns a new string where runs of the same character that occur in this set are replaced by a single character.
+
+Example:
+str = "HHeelloo"
+puts str.squeeze("e")  
+
+Output: "HHello"
+
+
+83) str.sub(/pattern/, replacement)
+Returns a copy of str with the first occurrence of pattern replaced by replacement.
+
+Example:
+str = "Hello World"
+puts str.sub(/World/, "Ruby")  
+
+Output: 
+"Hello Ruby"
+
+
+84) str.sum
+Returns a basic n-bit checksum of the characters in str, where n is the optional integer parameter.
+
+Example:
+str = "Hello"
+puts str.sum  
+
+Output: 500
+
+
+85) str.upto(limit, exclusive=false) { |str| block }
+Iterates through successive values, starting at str and ending at the value of limit.
+
+Example:
+str = "a"
+str.upto("e") { |s| print s, ' ' }  
+
+Output: "a b c d e"
+
+
+86) str.valid_encoding?
+Returns true if str is a valid sequence of characters in its current encoding.
+
+Example:
+str = "Hello"
+puts str.valid_encoding?  
+
+Output: true
+
+
+87) str.gsub!(/pattern/, replacement)
+Same as gsub, but changes are made in place.
+
+Example:
+str = "Hello World"
+str.gsub!(/World/, "Ruby")
+puts str  
+
+Output: "Hello Ruby"
+
+
+88) str.match(/pattern/)
+Matches the string against a pattern.
+
+Example:
+str = "Hello World"
+puts str.match(/World/)[0]  
+
+Output: "World"
+
+
+89) str.hash
+Returns the hash value of the string.
+
+Example:
+str = "Hello"
+puts str.hash  
+
+Output: (a unique hash value for the string)
+-2312086633523929043
+
+
+90) new
+Creates a new instance of the string class.
+
+Example:
+str = String.new("Hello")
+puts str  
+
+Output: "Hello"
+
