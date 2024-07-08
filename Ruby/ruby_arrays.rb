@@ -458,6 +458,7 @@ array = Array.try_convert([1, 2, 3])
 puts array.inspect    # => [1, 2, 3]
 
 
+
 2) Methods for Querying
 
 length, size -> Returns the count of elements.
@@ -467,7 +468,6 @@ arr.length
 # => 3
 arr.size
 # => 3
-
 
 include? -> Returns whether any element == a given object.
 Example:
@@ -531,6 +531,7 @@ arr = [1, 2, 3]
 arr.hash
 
 
+
 3) Methods for Comparing
 
 <=> -> Returns -1, 0, or 1 * as self is less than, equal to, or greater than a given object.
@@ -559,219 +560,541 @@ puts arr1.eql?(arr2)  # Output: true (elements are exactly equal)
 puts arr1.eql?(arr3)  # Output: false (elements are not exactly equal due to type difference)
 
 
+
 4) Methods for Fetching
 
-[]: Returns one or more elements.
+[] -> Returns one or more elements.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr[2]      # Output: 3
 puts arr[1..3]   # Output: [2, 3, 4]
 
-fetch: Returns the element at a given offset.
+fetch -> Returns the element at a given offset.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.fetch(2)         # Output: 3
 puts arr.fetch(10, 'N/A') # Output: N/A
 
-first: Returns one or more leading elements.
+first -> Returns one or more leading elements.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.first        # Output: 1
 puts arr.first(3)     # Output: [1, 2, 3]
 
-last: Returns one or more trailing elements.
+last -> Returns one or more trailing elements.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.last         # Output: 5
 puts arr.last(3)      # Output: [3, 4, 5]
 
-max: Returns one or more maximum-valued elements, as determined by <=> or a given block.
+max -> Returns one or more maximum-valued elements, as determined by <=> or a given block.
 Example:
 arr = [1, 3, 2, 5, 4]
 puts arr.max          # Output: 5
 puts arr.max(2)       # Output: [5, 4]
 
-min: Returns one or more minimum-valued elements, as determined by <=> or a given block.
+min -> Returns one or more minimum-valued elements, as determined by <=> or a given block.
 Example:
 arr = [1, 3, 2, 5, 4]
 puts arr.min          # Output: 1
 puts arr.min(2)       # Output: [1, 2]
 
-minmax: Returns the minimum-valued and maximum-valued elements, as determined by <=> or a given block.
+minmax -> Returns the minimum-valued and maximum-valued elements, as determined by <=> or a given block.
 Example:
 arr = [1, 3, 2, 5, 4]
 puts arr.minmax       # Output: [1, 5]
 
-assoc: Returns the first element that is an array whose first element == a given object.
+assoc -> Returns the first element that is an array whose first element == a given object.
 Example:
 arr = [[1, "one"], [2, "two"], [3, "three"]]
 puts arr.assoc(2)     # Output: [2, "two"]
 
-rassoc: Returns the first element that is an array whose second element == a given object.
+rassoc -> Returns the first element that is an array whose second element == a given object.
 Example:
 arr = [[1, "one"], [2, "two"], [3, "three"]]
 puts arr.rassoc("three")  # Output: [3, "three"]
 
-at: Returns the element at a given offset.
+at -> Returns the element at a given offset.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.at(2)        # Output: 3
 
-values_at: Returns the elements at given offsets.
+values_at -> Returns the elements at given offsets.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.values_at(1, 3, 4)  # Output: [2, 4, 5]
 
-dig: Returns the object in nested objects that is specified by a given index and additional arguments.
+dig -> Returns the object in nested objects that is specified by a given index and additional arguments.
 Example:
 nested_arr = [[1, [2, 3]], [4, 5]]
 puts nested_arr.dig(0, 1, 1)  # Output: 3
 
-drop: Returns trailing elements as determined by a given index.
+drop -> Returns trailing elements as determined by a given index.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.drop(2)      # Output: [3, 4, 5]
 
-take: Returns leading elements as determined by a given index.
+take -> Returns leading elements as determined by a given index.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.take(3)      # Output: [1, 2, 3]
 
-drop_while: Returns trailing elements as determined by a given block.
+drop_while -> Returns trailing elements as determined by a given block.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.drop_while { |i| i < 3 }  # Output: [3, 4, 5]
 
-take_while: Returns leading elements as determined by a given block.
+take_while -> Returns leading elements as determined by a given block.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.take_while { |i| i < 3 }  # Output: [1, 2]
 
-slice: Returns consecutive elements as determined by a given argument.
+slice -> Returns consecutive elements as determined by a given argument.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.take_while { |i| i < 3 }  # Output: [1, 2]
 
-sort: Returns all elements in an order determined by <=> or a given block.
+sort -> Returns all elements in an order determined by <=> or a given block.
 Example:
 arr = [5, 3, 4, 1, 2]
 puts arr.sort         # Output: [1, 2, 3, 4, 5]
 
-reverse: Returns all elements in reverse order.
+reverse -> Returns all elements in reverse order.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.reverse      # Output: [5, 4, 3, 2, 1]
 
-compact: Returns an array containing all non-nil elements.
+compact -> Returns an array containing all non-nil elements.
 Example:
 arr = [1, nil, 3, nil, 5]
 puts arr.compact      # Output: [1, 3, 5]
 
-select, filter: Returns an array containing elements selected by a given block.
+select, filter -> Returns an array containing elements selected by a given block.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.select { |i| i.even? }  # Output: [2, 4]
 
-uniq: Returns an array containing non-duplicate elements.
+uniq -> Returns an array containing non-duplicate elements.
 Example:
 arr = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
 puts arr.uniq         # Output: [1, 2, 3, 4]
 
-rotate: Returns all elements with some rotated from one end to the other.
+rotate -> Returns all elements with some rotated from one end to the other.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.rotate       # Output: [2, 3, 4, 5, 1]
 puts arr.rotate(2)    # Output: [3, 4, 5, 1, 2]
 
-bsearch: Returns an element selected via a binary search as determined by a given block.
+bsearch -> Returns an element selected via a binary search as determined by a given block.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.bsearch { |x| x >= 3 }  # Output: 3
 
-bsearch_index: Returns the index of an element selected via a binary search as determined by a given block.
+bsearch_index -> Returns the index of an element selected via a binary search as determined by a given block.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.bsearch_index { |x| x >= 3 }  # Output: 2
 
-sample: Returns one or more random elements.
+sample -> Returns one or more random elements.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.sample       # Output: (a random element, e.g., 3)
 puts arr.sample(3)    # Output: (three random elements, e.g., [2, 4, 5])
 
-shuffle: Returns elements in a random order.
+shuffle -> Returns elements in a random order.
 Example:
 arr = [1, 2, 3, 4, 5]
 puts arr.shuffle      # Output: (elements in random order, e.g., [3, 1, 5, 2, 4])
 
 
+
 5) Methods for Assigning
 These methods add, replace, or reorder elements in self.
 
-[]=: Assigns specified elements with a given object.
-push, append, <<: Appends trailing elements.
-unshift, prepend: Prepends leading elements.
-insert: Inserts given objects at a given offset; does not replace elements.
-concat: Appends all elements from given arrays.
-fill: Replaces specified elements with specified objects.
-replace: Replaces the content of self with the content of a given array.
-reverse!: Replaces self with its elements reversed.
-rotate!: Replaces self with its elements rotated.
-shuffle!: Replaces self with its elements in random order.
-sort!: Replaces self with its elements sorted, as determined by <=> or a given block.
-sort_by!: Replaces self with its elements sorted, as determined by a given block.
+[]= -> Assigns specified elements with a given object.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr[2] = 10
+puts arr             # Output: [1, 2, 10, 4, 5]
+arr[1..3] = [20, 30]
+puts arr             # Output: [1, 20, 30, 5]
+
+push, append, << -> Appends trailing elements.
+Example:
+arr = [1, 2, 3]
+arr.push(4)
+puts arr             # Output: [1, 2, 3, 4]
+arr << 5
+puts arr             # Output: [1, 2, 3, 4, 5]
+
+unshift, prepend -> Prepends leading elements.
+Example:
+arr = [1, 2, 3]
+arr.unshift(0)
+puts arr             # Output: [0, 1, 2, 3]
+arr.prepend(-1)
+puts arr             # Output: [-1, 0, 1, 2, 3]
+
+insert -> Inserts given objects at a given offset; does not replace elements.
+Example:
+arr = [1, 2, 3]
+arr.insert(1, 1.5)
+puts arr             # Output: [1, 1.5, 2, 3]
+arr.insert(3, 2.5, 2.75)
+puts arr             # Output: [1, 1.5, 2, 2.5, 2.75, 3]
+
+concat -> Appends all elements from given arrays.
+Example:
+arr = [1, 2, 3]
+arr.concat([4, 5], [6, 7])
+puts arr             # Output: [1, 2, 3, 4, 5, 6, 7]
+
+fill -> Replaces specified elements with specified objects.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.fill(1..3, 0)
+puts arr.inspect  # Output: [1, 0, 0, 0, 5]
+
+replace -> Replaces the content of self with the content of a given array.
+Example:
+varr = [1, 2, 3]
+arr.replace([4, 5, 6])
+puts arr.inspect  # Output: [4, 5, 6]
+
+reverse! -> Replaces self with its elements reversed.
+Example:
+arr = [1, 2, 3]
+arr.reverse!
+puts arr.inspect  # Output: [3, 2, 1]
+
+rotate! -> Replaces self with its elements rotated.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.rotate!(2)
+puts arr.inspect  # Output: [3, 4, 5, 1, 2]
+
+shuffle! -> Replaces self with its elements in random order.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.shuffle!
+puts arr.inspect  # Output: (elements in random order, e.g., [3, 1, 5, 2, 4])
+
+sort! -> Replaces self with its elements sorted, as determined by <=> or a given block.
+Example:
+arr = [3, 1, 4, 1, 5, 9, 2, 6]
+arr.sort!
+puts arr.inspect  # Output: [1, 1, 2, 3, 4, 5, 6, 9]
+
+sort_by! -> Replaces self with its elements sorted, as determined by a given block.
+Example:
+arr = ["apple", "banana", "cherry"]
+arr.sort_by! { |fruit| fruit.length }
+puts arr.inspect  # Output: ["apple", "cherry", "banana"]
+
 
 
 6) Methods for Deleting
 Each of these methods removes elements from self:
 
-pop: Removes and returns the last element.
-shift: Removes and returns the first element.
-compact!: Removes all nil elements.
-delete: Removes elements equal to a given object.
-delete_at: Removes the element at a given offset.
-delete_if: Removes elements specified by a given block.
-keep_if: Removes elements not specified by a given block.
-reject!: Removes elements specified by a given block.
-select!, filter!: Removes elements not specified by a given block.
-slice!: Removes and returns a sequence of elements.
-uniq!: Removes duplicates.
+pop -> Removes and returns the last element.
+Example:
+arr = [1, 2, 3, 4, 5]
+last_element = arr.pop
+puts last_element  # Output: 5
+puts arr.inspect   # Output: [1, 2, 3, 4]
+
+shift -> Removes and returns the first element.
+Example:
+arr = [1, 2, 3, 4, 5]
+first_element = arr.shift
+puts first_element  # Output: 1
+puts arr.inspect    # Output: [2, 3, 4, 5]
+
+compact! -> Removes all nil elements.
+Example:
+arr = [1, nil, 3, nil, 5]
+arr.compact!
+puts arr.inspect   # Output: [1, 3, 5]
+
+delete -> Removes elements equal to a given object.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.delete(3)
+puts arr.inspect   # Output: [1, 2, 4, 5]
+
+delete_at -> Removes the element at a given offset.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.delete_at(2)
+puts arr.inspect   # Output: [1, 2, 4, 5]
+
+delete_if -> Removes elements specified by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.delete_if { |i| i > 3 }
+puts arr.inspect   # Output: [1, 2, 3]
+
+keep_if -> Removes elements not specified by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.keep_if { |i| i < 3 }
+puts arr.inspect   # Output: [1, 2]
+
+reject! -> Removes elements specified by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.reject! { |i| i > 3 }
+puts arr.inspect   # Output: [1, 2, 3]
+
+select!, filter! -> Removes elements not specified by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.select! { |i| i.even? }
+puts arr.inspect   # Output: [2, 4]
+
+slice! -> Removes and returns a sequence of elements.
+Example:
+arr = [1, 2, 3, 4, 5]
+removed_elements = arr.slice!(1, 2)
+puts removed_elements.inspect  # Output: [2, 3]
+puts arr.inspect               # Output: [1, 4, 5]
+
+uniq! -> Removes duplicates.
+Example:
+arr = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+arr.uniq!
+puts arr.inspect   # Output: [1, 2, 3, 4]
+
 
 
 7) Methods for Combining
 
-&: Returns an array containing elements found both in self and a given array.
-intersection: Returns an array containing elements found both in self and in each given array.
-+: Returns an array containing all elements of self followed by all elements of a given array.
--: Returns an array containing all elements of self that are not found in a given array.
-|: Returns an array containing all elements of self and all elements of a given array, duplicates removed.
-union: Returns an array containing all elements of self and all elements of given arrays, duplicates removed.
-difference: Returns an array containing all elements of self that are not found in any of the given arrays..
-product: Returns or yields all combinations of elements from self and given arrays.
+& -> Returns an array containing elements found both in self and a given array.
+Example:
+arr1 = [1, 2, 3, 4, 5]
+arr2 = [3, 4, 5, 6, 7]
+intersection = arr1 & arr2
+puts intersection.inspect   # Output: [3, 4, 5]
+
+intersection -> Returns an array containing elements found both in self and in each given array.
+Example:
+arr1 = [1, 2, 3, 4, 5]
+arr2 = [3, 4, 5, 6, 7]
+intersection = arr1.intersection(arr2)
+puts intersection.inspect   # Output: [3, 4, 5]
+
++ -> Returns an array containing all elements of self followed by all elements of a given array.
+Example:
+arr1 = [1, 2]
+arr2 = [3, 4]
+combined = arr1 + arr2
+puts combined.inspect   # Output: [1, 2, 3, 4]
+
+- -> Returns an array containing all elements of self that are not found in a given array.
+Example:
+arr1 = [1, 2, 3, 4, 5]
+arr2 = [3, 4, 6]
+difference = arr1 - arr2
+puts difference.inspect   # Output: [1, 2, 5]
+
+| -> Returns an array containing all elements of self and all elements of a given array, duplicates removed.
+Example:
+arr1 = [1, 2, 3]
+arr2 = [2, 3, 4]
+union = arr1 | arr2
+puts union.inspect   # Output: [1, 2, 3, 4]
+
+union -> Returns an array containing all elements of self and all elements of given arrays, duplicates removed.
+Example:
+arr1 = [1, 2, 3]
+arr2 = [2, 3, 4]
+union = arr1.union(arr2)
+puts union.inspect   # Output: [1, 2, 3, 4]
+
+difference -> Returns an array containing all elements of self that are not found in any of the given arrays.
+Example:
+arr1 = [1, 2, 3, 4, 5]
+arr2 = [3, 4, 6]
+diff = arr1.difference(arr2)
+puts diff.inspect   # Output: [1, 2, 5]
+
+product -> Returns or yields all combinations of elements from self and given arrays.
+Example:
+arr1 = [1, 2]
+arr2 = [3, 4]
+product = arr1.product(arr2)
+puts product.inspect   # Output: [[1, 3], [1, 4], [2, 3], [2, 4]]
+
 
 
 8) Methods for Iterating
 
-each: Passes each element to a given block.
-reverse_each: Passes each element, in reverse order, to a given block.
-each_index: Passes each element index to a given block.
-cycle: Calls a given block with each element, then does so again, for a specified number of times, or forever.
-combination: Calls a given block with combinations of elements of self; a combination does not use the same element more than once.
-permutation: Calls a given block with permutations of elements of self; a permutation does not use the same element more than once.
-repeated_combination: Calls a given block with combinations of elements of self; a combination may use the same element more than once.
-repeated_permutation: Calls a given block with permutations of elements of self; a permutation may use the same element more than once.
+each -> Passes each element to a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.each { |element| puts element }
+# Output:
+# 1
+# 2
+# 3
+# 4
+# 5
+
+reverse_each -> Passes each element, in reverse order, to a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.reverse_each { |element| puts element }
+# Output:
+# 5
+# 4
+# 3
+# 2
+# 1
+
+each_index -> Passes each element index to a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.each_index { |index| puts "Index #{index}: #{arr[index]}" }
+# Output:
+# Index 0: 1
+# Index 1: 2
+# Index 2: 3
+# Index 3: 4
+# Index 4: 5
+
+cycle -> Calls a given block with each element, then does so again, for a specified number of times, or forever.
+Example:
+arr = [1, 2, 3]
+arr.cycle(2) { |element| puts element }
+# Output:
+# 1
+# 2
+# 3
+# 1
+# 2
+# 3
+
+combination -> Calls a given block with combinations of elements of self; a combination does not use the same element more than once.
+Example:
+arr = [1, 2, 3]
+arr.combination(2) { |combo| p combo }
+# Output:
+# [1, 2]
+# [1, 3]
+# [2, 3]
+
+permutation -> Calls a given block with permutations of elements of self; a permutation does not use the same element more than once.
+Example:
+arr = [1, 2, 3]
+arr.permutation(2) { |perm| p perm }
+# Output:
+# [1, 2]
+# [1, 3]
+# [2, 1]
+# [2, 3]
+# [3, 1]
+# [3, 2]
+
+repeated_combination -> Calls a given block with combinations of elements of self; a combination may use the same element more than once.
+Example:
+arr = [1, 2, 3]
+arr.repeated_combination(2) { |combo| p combo }
+# Output:
+# [1, 1]
+# [1, 2]
+# [1, 3]
+# [2, 2]
+# [2, 3]
+# [3, 3]
+
+repeated_permutation -> Calls a given block with permutations of elements of self; a permutation may use the same element more than once.
+Example:
+arr = [1, 2, 3]
+arr.repeated_permutation(2) { |perm| p perm }
+# Output:
+# [1, 1]
+# [1, 2]
+# [1, 3]
+# [2, 1]
+# [2, 2]
+# [2, 3]
+# [3, 1]
+# [3, 2]
+# [3, 3]
 
 
 9)Methods for Converting
 
-map, collect: Returns an array containing the block return-value for each element.
-map!, collect!: Replaces each element with a block return-value.
-flatten: Returns an array that is a recursive flattening of self.
-flatten!: Replaces each nested array in self with the elements from that array.
-inspect, to_s: Returns a new String containing the elements.
-join: Returns a newsString containing the elements joined by the field separator.
-to_a: Returns self or a new array containing all elements.
-to_ary: Returns self.
-to_h: Returns a new hash formed from the elements.
-transpose: Transposes self, which must be an array of arrays.
-zip: Returns a new array of arrays containing self and given arrays; follow the link for details.
+map, collect -> Returns an array containing the block return-value for each element.
+Example:
+arr = [1, 2, 3, 4, 5]
+mapped_arr = arr.map { |element| element * 2 }
+puts mapped_arr.inspect  # Output: [2, 4, 6, 8, 10]
+
+map!, collect! -> Replaces each element with a block return-value.
+Example:
+arr = [1, 2, 3, 4, 5]
+arr.map! { |element| element * 2 }
+puts arr.inspect  # Output: [2, 4, 6, 8, 10]
+
+flatten -> Returns an array that is a recursive flattening of self.
+Example:
+arr = [1, [2, [3, 4]], [5, 6]]
+flattened_arr = arr.flatten
+puts flattened_arr.inspect  # Output: [1, 2, 3, 4, 5, 6]
+
+flatten! -> Replaces each nested array in self with the elements from that array.
+Example:
+arr = [1, [2, [3, 4]], [5, 6]]
+arr.flatten!
+puts arr.inspect  # Output: [1, 2, 3, 4, 5, 6]
+
+inspect, to_s -> Returns a new String containing the elements.
+Example:
+arr = [1, 2, 3]
+str = arr.inspect
+puts str  # Output: "[1, 2, 3]"
+
+join -> Returns a newsString containing the elements joined by the field separator.
+Example:
+arr = [1, 2, 3]
+joined_str = arr.join(", ")
+puts joined_str  # Output: "1, 2, 3"
+
+to_a -> Returns self or a new array containing all elements.
+Example:
+arr = [1, 2, 3]
+arr_copy = arr.to_a
+puts arr_copy.inspect  # Output: [1, 2, 3]
+
+to_ary -> Returns self.
+Example:
+arr = [1, 2, 3]
+arr_copy = arr.to_ary
+puts arr_copy.inspect  # Output: [1, 2, 3]
+
+to_h -> Returns a new hash formed from the elements.
+Example:
+arr = [[:name, "John"], [:age, 30]]
+hash = arr.to_h
+puts hash.inspect  # Output: {:name=>"John", :age=>30}
+
+transpose -> Transposes self, which must be an array of arrays.
+Example:
+arr = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+transposed_arr = arr.transpose
+puts transposed_arr.inspect
+# Output:
+# [[1, 4, 7],
+#  [2, 5, 8],
+#  [3, 6, 9]]
+
+zip -> Returns a new array of arrays containing self and given arrays; follow the link for details.
+Example:
+arr1 = [1, 2, 3]
+arr2 = ['a', 'b', 'c']
+zipped_arr = arr1.zip(arr2)
+puts zipped_arr.inspect
+# Output:
+# [[1, "a"], [2, "b"], [3, "c"]]
+
