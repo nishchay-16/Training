@@ -442,62 +442,267 @@ https://docs.ruby-lang.org/en/3.3/Array.html
 
 1) Methods for Creating an Array
 
-::[]: Returns a new array populated with given objects.
-::new: Returns a new array.
-::try_convert: Returns a new array created from a given object.
+::[] -> Returns a new array populated with given objects.
+Example:
+array = Array[1, 2, 3]
+puts array.inspect    # => [1, 2, 3]
+
+::new -> Returns a new array.
+Example:
+array = Array.new
+puts array.inspect    # => []
+
+::try_convert -> Returns a new array created from a given object.
+Example:
+array = Array.try_convert([1, 2, 3])
+puts array.inspect    # => [1, 2, 3]
 
 
 2) Methods for Querying
 
-length, size: Returns the count of elements.
-include?: Returns whether any element == a given object.
-empty?: Returns whether there are no elements.
-all?: Returns whether all elements meet a given criterion.
-any?: Returns whether any element meets a given criterion.
-none?: Returns whether no element == a given object.
-one?: Returns whether exactly one element == a given object.
-count: Returns the count of elements that meet a given criterion.
-find_index, index: Returns the index of the first element that meets a given criterion.
-rindex: Returns the index of the last element that meets a given criterion.
-hash: Returns the integer hash code.
+length, size -> Returns the count of elements.
+Example:
+arr = [1, 2, 3]
+arr.length
+# => 3
+arr.size
+# => 3
+
+
+include? -> Returns whether any element == a given object.
+Example:
+arr = [1, 2, 3]
+arr.include?(2)
+# => true
+
+empty? -> Returns whether there are no elements.
+Example:
+arr = []
+arr.empty?
+# => true
+
+all? -> Returns whether all elements meet a given criterion.
+Example:
+arr = [1, 2, 3]
+arr.all? { |x| x > 0 }
+# => true
+
+any? -> Returns whether any element meets a given criterion.
+Example:
+arr = [1, 2, 3]
+arr.any? { |x| x > 2 }
+# => true
+
+none? -> Returns whether no element == a given object.
+Example:
+arr = [1, 2, 3]
+arr.none? { |x| x > 3 }
+# => true
+
+one? -> Returns whether exactly one element == a given object.
+Example:
+arr = [1, 2, 3]
+arr.one? { |x| x == 2 }
+# => true
+
+count -> Returns the count of elements that meet a given criterion.
+Example:
+arr = [1, 2, 3, 2]
+arr.count(2)
+# => 2
+
+find_index, index -> Returns the index of the first element that meets a given criterion.
+Example:
+arr = [1, 2, 3]
+arr.find_index { |x| x == 2 }
+# => 1
+arr.index(2)
+# => 1
+
+rindex -> Returns the index of the last element that meets a given criterion.
+Example:
+arr = [1, 2, 3, 2]
+arr.rindex(2)
+# => 3
+
+hash -> Returns the integer hash code.
+Example:
+arr = [1, 2, 3]
+arr.hash
 
 
 3) Methods for Comparing
 
-<=>: Returns -1, 0, or 1 * as self is less than, equal to, or greater than a given object.
-==: Returns whether each element in self is == to the corresponding element in a given object.
-eql?: Returns whether each element in self is eql? to the corresponding element in a given object.
+<=> -> Returns -1, 0, or 1 * as self is less than, equal to, or greater than a given object.
+Example:
+arr1 = [1, 2, 3]
+arr2 = [1, 2, 3]
+arr3 = [1, 2, 4]
+puts arr1 <=> arr2  # Output: 0 (equal)
+puts arr1 <=> arr3  # Output: -1 (less than)
+puts arr3 <=> arr1  # Output: 1 (greater than)
+
+== -> Returns whether each element in self is == to the corresponding element in a given object.
+Example:
+arr1 = [1, 2, 3]
+arr2 = [1, 2, 3]
+arr3 = [1, 2, 4]
+puts arr1 == arr2  # Output: true (elements are equal)
+puts arr1 == arr3  # Output: false (elements are not equal)
+
+eql? -> Returns whether each element in self is eql? to the corresponding element in a given object.
+Example:
+arr1 = [1, 2, 3]
+arr2 = [1, 2, 3]
+arr3 = [1, 2, 3.0]  # Note: 3.0 is a float
+puts arr1.eql?(arr2)  # Output: true (elements are exactly equal)
+puts arr1.eql?(arr3)  # Output: false (elements are not exactly equal due to type difference)
 
 
 4) Methods for Fetching
 
 []: Returns one or more elements.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr[2]      # Output: 3
+puts arr[1..3]   # Output: [2, 3, 4]
+
 fetch: Returns the element at a given offset.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.fetch(2)         # Output: 3
+puts arr.fetch(10, 'N/A') # Output: N/A
+
 first: Returns one or more leading elements.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.first        # Output: 1
+puts arr.first(3)     # Output: [1, 2, 3]
+
 last: Returns one or more trailing elements.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.last         # Output: 5
+puts arr.last(3)      # Output: [3, 4, 5]
+
 max: Returns one or more maximum-valued elements, as determined by <=> or a given block.
+Example:
+arr = [1, 3, 2, 5, 4]
+puts arr.max          # Output: 5
+puts arr.max(2)       # Output: [5, 4]
+
 min: Returns one or more minimum-valued elements, as determined by <=> or a given block.
+Example:
+arr = [1, 3, 2, 5, 4]
+puts arr.min          # Output: 1
+puts arr.min(2)       # Output: [1, 2]
+
 minmax: Returns the minimum-valued and maximum-valued elements, as determined by <=> or a given block.
+Example:
+arr = [1, 3, 2, 5, 4]
+puts arr.minmax       # Output: [1, 5]
+
 assoc: Returns the first element that is an array whose first element == a given object.
+Example:
+arr = [[1, "one"], [2, "two"], [3, "three"]]
+puts arr.assoc(2)     # Output: [2, "two"]
+
 rassoc: Returns the first element that is an array whose second element == a given object.
+Example:
+arr = [[1, "one"], [2, "two"], [3, "three"]]
+puts arr.rassoc("three")  # Output: [3, "three"]
+
 at: Returns the element at a given offset.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.at(2)        # Output: 3
+
 values_at: Returns the elements at given offsets.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.values_at(1, 3, 4)  # Output: [2, 4, 5]
+
 dig: Returns the object in nested objects that is specified by a given index and additional arguments.
+Example:
+nested_arr = [[1, [2, 3]], [4, 5]]
+puts nested_arr.dig(0, 1, 1)  # Output: 3
+
 drop: Returns trailing elements as determined by a given index.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.drop(2)      # Output: [3, 4, 5]
+
 take: Returns leading elements as determined by a given index.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.take(3)      # Output: [1, 2, 3]
+
 drop_while: Returns trailing elements as determined by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.drop_while { |i| i < 3 }  # Output: [3, 4, 5]
+
 take_while: Returns leading elements as determined by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.take_while { |i| i < 3 }  # Output: [1, 2]
+
 slice: Returns consecutive elements as determined by a given argument.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.take_while { |i| i < 3 }  # Output: [1, 2]
+
 sort: Returns all elements in an order determined by <=> or a given block.
+Example:
+arr = [5, 3, 4, 1, 2]
+puts arr.sort         # Output: [1, 2, 3, 4, 5]
+
 reverse: Returns all elements in reverse order.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.reverse      # Output: [5, 4, 3, 2, 1]
+
 compact: Returns an array containing all non-nil elements.
+Example:
+arr = [1, nil, 3, nil, 5]
+puts arr.compact      # Output: [1, 3, 5]
+
 select, filter: Returns an array containing elements selected by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.select { |i| i.even? }  # Output: [2, 4]
+
 uniq: Returns an array containing non-duplicate elements.
+Example:
+arr = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+puts arr.uniq         # Output: [1, 2, 3, 4]
+
 rotate: Returns all elements with some rotated from one end to the other.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.rotate       # Output: [2, 3, 4, 5, 1]
+puts arr.rotate(2)    # Output: [3, 4, 5, 1, 2]
+
 bsearch: Returns an element selected via a binary search as determined by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.bsearch { |x| x >= 3 }  # Output: 3
+
 bsearch_index: Returns the index of an element selected via a binary search as determined by a given block.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.bsearch_index { |x| x >= 3 }  # Output: 2
+
 sample: Returns one or more random elements.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.sample       # Output: (a random element, e.g., 3)
+puts arr.sample(3)    # Output: (three random elements, e.g., [2, 4, 5])
+
 shuffle: Returns elements in a random order.
+Example:
+arr = [1, 2, 3, 4, 5]
+puts arr.shuffle      # Output: (elements in random order, e.g., [3, 1, 5, 2, 4])
 
 
 5) Methods for Assigning
