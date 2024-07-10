@@ -502,3 +502,174 @@ require 'date'
 year = Date.new(2024, 7, 9).year
 puts year                # Output: 2024
 
+
+
+<---------------------- DATETIME CLASS METHODS ----------------------->
+A subclass of Date that easily handles date, hour, minute, second, and offset.
+DateTime class is considered deprecated. Use Time class.
+DateTime does not consider any leap seconds, does not track any summer time rules.
+
+1) DateTime.new -> Returns a new DateTime object representing the current date and time.
+Example:
+require 'date'
+time = DateTime.new
+puts time               # Output: -4712-01-01T00:00:00+00:00 
+
+2) DateTime.strptime(string[, format='%FT%T%z']) ->  Parses the given date/time string with the specified format and returns a new DateTime object.
+Example: 
+require 'date'
+dt = DateTime.strptime("2024-07-10T12:30:45+0530", "%Y-%m-%dT%H:%M:%S%z")
+puts dt                  # Output: 2024-07-10T12:30:45+05:30
+
+3) DateTime._strptime(string[, format='%FT%T%z']) -> Returns a hash of parsed values from the given date/time string using the specified format.
+Example:
+require 'date'
+hash = DateTime._strptime("2024-07-10T12:30:45+0530", "%Y-%m-%dT%H:%M:%S%z")
+puts hash                # Output: {:year=>2024, :mon=>7, :mday=>10, :hour=>12, :min=>30, :sec=>45, :zone=>"+0530", :offset=>19800}
+
+4) DateTime.commercial([cwyear=-4712[, cweek=1[, cwday=1[, hour=0[, minute=0[, second=0[, offset=0[, start=Date::ITALY]]]]]]]]) -> Creates a DateTime object representing the specified commercial date and time.
+Example:
+require 'date'
+dt = DateTime.commercial(2024, 28, 1)
+puts dt                 # Output: 2024-07-08T00:00:00+00:00
+
+5) DateTime.httpdate(string) -> Creates a new DateTime object by parsing the HTTP-date string according to RFC 2616 format.
+Example:
+require 'date'
+dt = DateTime.httpdate("Sun, 06 Nov 1994 08:49:37 GMT")
+puts dt                 # Output: 1994-11-06T08:49:37+00:00
+
+6) DateTime.iso8601(string) -> Creates a new DateTime object by parsing the ISO 8601 date/time string format.
+Example:
+require 'date'
+dt = DateTime.iso8601("2024-07-10T12:30:45+05:30")
+puts dt                # Output: 2024-07-10T12:30:45+05:30
+
+7) DateTime.jd(days) -> Creates a new DateTime object denoting the Julian day number days.
+Example:
+require 'date'
+dt = DateTime.jd(2459420)
+puts dt               # Output: 2024-07-10T00:00:00+00:00
+
+8) DateTime.jisx0301(string) -> Creates a new DateTime object by parsing the JIS X 0301 date/time string format.
+Example:
+require 'date'
+dt = DateTime.jisx0301("H26.07.10")
+puts dt                # Output: 2014-07-10T00:00:00+00:00
+
+9) DateTime.now -> Creates a new DateTime object initialized to the current system time.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt                # Output: 2024-07-10T13:18:43+05:30
+
+10) DateTime.ordinal(year, day) -> Creates a new DateTime object denoting the given ordinal date (yyyy and day of year dd).
+Example:
+require 'date'
+dt = DateTime.ordinal(2024, 193)
+puts dt                # Output: 2024-07-11T00:00:00+00:00
+
+11) DateTime.parse(datetime) -> Parses the given representation of date and time and returns a new DateTime object.
+Example:
+require 'date'
+dt = DateTime.parse("2024-07-10T12:30:45+05:30")
+puts dt                # Output: 2024-07-10T12:30:45+05:30
+
+12) DateTime.rfc2822(string) -> Creates a new DateTime object denoting the RFC 2822 date/time format based on the provided string.
+Example:
+require 'date'
+dt = DateTime.rfc2822("Fri, 07 Jul 2024 12:30:45 +0530")
+puts dt                # Output: 2024-07-07T12:30:45+05:30
+
+13) DateTime.rfc3339(string) -> Creates a new DateTime object denoting the RFC 3339 date/time format based on the provided string.
+Example:
+require 'date'
+dt = DateTime.rfc3339("2024-07-10T12:30:45+05:30")
+puts dt                # Output: 2024-07-10T12:30:45+05:30
+
+14) DateTime.hour -> Returns the hour component of the DateTime object dt (0 to 23).
+Example: 
+require 'date'
+dt = DateTime.now
+puts dt.hour           # Output: 13
+
+15) dt.iso8601(n) or dt.xmlschema ->  Returns a string representation of the DateTime object dt in ISO 8601 format, optionally including n fractional seconds.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.iso8601(3)     # Output: 2024-07-10T13:22:03.367+05:30
+
+16) dt.jisx0301(n) -> Returns a string representation of the DateTime object dt in JIS X 0301 format, optionally including n fractional seconds.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.jisx0301(3)    # Output: R06.07.10T13:22:27.871+05:30
+
+17) dt.min or dt.minute -> Returns the minute component of the DateTime object dt (0 to 59).
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.min            # Output: 22
+
+18) dt.new_offset(string) -> Duplicates dt and resets its offset to the one specified in string.
+Example:
+require 'date'
+dt = DateTime.now
+new_dt = dt.new_offset('+0700')
+puts new_dt            # Output: 2024-07-10T14:53:37+07:00
+
+19) dt.offset -> Returns the offset of the DateTime object dt from UTC.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.offset         # Output: 11/48
+
+20) dt.rfc3339(n) -> Returns a string representation of the DateTime object dt in RFC 3339 format.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.rfc3339        # Output: 2024-07-10T13:24:11+05:30
+
+21) dt.sec or dt.second -> Returns the second component of the DateTime object dt (0 to 59).
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.sec             # Output: 35
+
+22) dt.sec_fraction or dt.second_fraction -> Returns the fractional seconds of the DateTime object dt.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.sec_fraction    # Output: 774907/1000000
+
+23) dt.strftime(format) -> Returns a string of dt formatted according to the specified format string.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.strftime("%Y-%m-%d %H:%M:%S")   # Output: 2024-07-10 13:25:12
+
+24) dt.to_date -> Returns a Date object that denotes the same date as dt.
+Example:
+require 'date'
+dt = DateTime.now
+date = dt.to_date
+puts date               # Output: 2024-07-10 
+
+25) dt.to_s -> Returns a string representation of dt in ISO 8601 format.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.to_s           # Output: 2024-07-10T13:25:56+05:30
+
+26) dt.to_time -> Returns a Time object that denotes the same time as dt.
+Example:
+require 'date'
+dt = DateTime.now
+time = dt.to_time
+puts time               # Output: 2024-07-10 13:26:27.069984 +0530 
+
+27) dt.zone -> Returns the time zone name associated with dt.
+Example:
+require 'date'
+dt = DateTime.now
+puts dt.zone            # Output: +05:30
