@@ -174,7 +174,7 @@ Ruby has many reasons for being popular and in demand. Few of the reasons are me
 
 
 # Operators
-	Ruby supports a rich set of operators, as you'd expect from a modern language. 
+	Ruby supports a rich set of operators, as you could expect from a modern language. 
 	Most operators are actually method calls		
 
 	1)  Arithmetic Operators:-
@@ -267,7 +267,7 @@ Ruby has many reasons for being popular and in demand. Few of the reasons are me
 				Example: (a ^ b) will give 49, which is 0011 0001
  
 			d) ~ operator: (Binary Ones Complement Operator) is unary and has the effect of 'flipping' bits.
-				Example: (~a ) will give -61, which is 1100 0011 in 2's complement form due to a signed binary number.
+				Example: (~a ) will give -61, which is 1100 0011 in 2s complement form due to a signed binary number.
  
 			e) << operator: (Binary Left Shift Operator). The left operands value is moved left by the number of bits specified by the right operand.
 				Example: a << 2 will give 240, which is 1111 0000
@@ -396,7 +396,7 @@ Ruby has many reasons for being popular and in demand. Few of the reasons are me
 
 
     2) Do While Loop
-        A while loop's conditional is separated from code by the reserved word do, a newline, backslash \, or a semicolon ;.
+        A while loop conditional is separated from code by the reserved word do, a newline, backslash \, or a semicolon ;.
         Syntax:
                 while conditional [do]
                     code
@@ -654,6 +654,134 @@ We are using $LOAD_PATH << '.' to make Ruby aware that included files must be se
 				Sunday
 				120
 
+
+
+
+# Ranges
+Ranges occur everywhere: January to December, 0 to 9, lines 50 through 67, and so on.
+
+Types:
+1) Ranges as Sequences:
+Ranges are commonly used to represent sequences of values:
+
+* Inclusive Range (..): Includes both the start and end values.
+Example:
+inclusive_range = 1..5
+puts inclusive_range.to_a.inspect
+# Output: [1, 2, 3, 4, 5]
+
+* Exclusive Range (...): Includes values up to, but not including, the end value
+Example:
+exclusive_range = 1...5
+puts exclusive_range.to_a.inspect
+# Output: [1, 2, 3, 4]
+
+* Iterating Over a Range:
+Example:
+(1..5).each { |num| puts num }
+# Output:
+# 1
+# 2
+# 3
+# 4
+# 5
+
+* Checking Membership:
+range = 1..10
+puts range.include?(5)  # true
+puts range.include?(15) # false
+
+
+2) Ranges as Conditions
+Ranges can be used as conditions to check if a value falls within a specified range:
+Example:
+score = 85
+grade = case score
+  when 90..100
+    "A"
+  when 80..89
+    "B"
+  when 70..79
+    "C"
+  when 60..69
+    "D"
+  else
+    "F"
+end
+puts "Your grade is #{grade}"
+# Output: Your grade is B
+
+
+3) Ranges as Intervals
+A final use of the versatile range is as an interval test: seeing if some value falls within the interval represented by the range. 
+This is done using ===, the case equality operator.
+
+* Numerical Range
+Example:
+if (1..10) === 5
+	puts "5 lies in (1..10)"
+  end
+# Output: 5 lies in (1..10)
+
+* Character Range
+Example:
+if ('a'..'j') === 'c'
+	puts "c lies in ('a'..'j')"
+  end
+# Output: c lies in ('a'..'j')
+
+* Character Range (out of range)
+Example:
+if ('a'..'j') === 'z'
+	puts "z lies in ('a'..'j')"
+  end
+# Output: nil
+
+
+
+# Iterarors
+Iterators are nothing but methods supported by collections. 
+Objects that store a group of data members are called collections. 
+In Ruby, arrays and hashes can be termed collections.
+Iterators return all the elements of a collection, one after the other.
+
+
+* each Iterator
+The each iterator returns all the elements of an array or a hash.
+Syntax:
+collection.each do |variable|
+	code
+ end
+
+Example:
+ary = [1,2,3,4,5]
+ary.each do |i|
+   puts i
+end
+# Output:
+1
+2
+3
+4
+5
+
+
+* collect Iterator
+The collect iterator returns all the elements of a collection.
+Syntax:
+collection = collection.collect
+
+Example:
+a = [1,2,3,4,5]
+b = Array.new
+b = a.collect
+puts b
+# Output:
+1
+2
+3
+4
+5
 
 
 
