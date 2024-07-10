@@ -662,80 +662,81 @@ Ranges occur everywhere: January to December, 0 to 9, lines 50 through 67, and s
 
 Types:
 1) Ranges as Sequences:
-Ranges are commonly used to represent sequences of values:
+	Ranges are commonly used to represent sequences of values:
 
-* Inclusive Range (..): Includes both the start and end values.
-Example:
-inclusive_range = 1..5
-puts inclusive_range.to_a.inspect
-# Output: [1, 2, 3, 4, 5]
+		* Inclusive Range (..): Includes both the start and end values.
+			Example:
+					inclusive_range = 1..5
+					puts inclusive_range.to_a.inspect
+			# Output: [1, 2, 3, 4, 5]
 
-* Exclusive Range (...): Includes values up to, but not including, the end value
-Example:
-exclusive_range = 1...5
-puts exclusive_range.to_a.inspect
-# Output: [1, 2, 3, 4]
+		* Exclusive Range (...): Includes values up to, but not including, the end value
+			Example:
+					exclusive_range = 1...5
+					puts exclusive_range.to_a.inspect
+			# Output: [1, 2, 3, 4]
 
-* Iterating Over a Range:
-Example:
-(1..5).each { |num| puts num }
-# Output:
-# 1
-# 2
-# 3
-# 4
-# 5
+		* Iterating Over a Range:
+			Example:
+					(1..5).each { |num| puts num }
+			# Output:
+						# 1
+						# 2
+						# 3
+						# 4
+						# 5
 
-* Checking Membership:
-range = 1..10
-puts range.include?(5)  # true
-puts range.include?(15) # false
+		* Checking Membership:
+			Example:
+					range = 1..10
+					puts range.include?(5)  # true
+					puts range.include?(15) # false
 
 
 2) Ranges as Conditions
 Ranges can be used as conditions to check if a value falls within a specified range:
-Example:
-score = 85
-grade = case score
-  when 90..100
-    "A"
-  when 80..89
-    "B"
-  when 70..79
-    "C"
-  when 60..69
-    "D"
-  else
-    "F"
-end
-puts "Your grade is #{grade}"
-# Output: Your grade is B
+		Example:
+				score = 85
+				grade = case score
+  					when 90..100
+    					"A"
+  					when 80..89
+    					"B"
+  					when 70..79
+    					"C"
+  					when 60..69
+    					"D"
+  					else
+    					"F"
+				end
+				puts "Your grade is #{grade}"
+		# Output: Your grade is B
 
 
 3) Ranges as Intervals
 A final use of the versatile range is as an interval test: seeing if some value falls within the interval represented by the range. 
 This is done using ===, the case equality operator.
 
-* Numerical Range
-Example:
-if (1..10) === 5
-	puts "5 lies in (1..10)"
-  end
-# Output: 5 lies in (1..10)
+		* Numerical Range
+			Example:
+					if (1..10) === 5
+						puts "5 lies in (1..10)"
+  					end
+			# Output: 5 lies in (1..10)
 
-* Character Range
-Example:
-if ('a'..'j') === 'c'
-	puts "c lies in ('a'..'j')"
-  end
-# Output: c lies in ('a'..'j')
+		* Character Range
+			Example:
+					if ('a'..'j') === 'c'
+						puts "c lies in ('a'..'j')"
+  					end
+			# Output: c lies in ('a'..'j')
 
-* Character Range (out of range)
-Example:
-if ('a'..'j') === 'z'
-	puts "z lies in ('a'..'j')"
-  end
-# Output: nil
+		* Character Range (out of range)
+				Example:
+						if ('a'..'j') === 'z'
+							puts "z lies in ('a'..'j')"
+  						end
+			# Output: nil
 
 
 
@@ -745,44 +746,301 @@ Objects that store a group of data members are called collections.
 In Ruby, arrays and hashes can be termed collections.
 Iterators return all the elements of a collection, one after the other.
 
+		* each Iterator
+			The each iterator returns all the elements of an array or a hash.
+			Syntax:
+					collection.each do |variable|
+						code
+ 					end
 
-* each Iterator
-The each iterator returns all the elements of an array or a hash.
-Syntax:
-collection.each do |variable|
-	code
- end
-
-Example:
-ary = [1,2,3,4,5]
-ary.each do |i|
-   puts i
-end
-# Output:
-1
-2
-3
-4
-5
-
-
-* collect Iterator
-The collect iterator returns all the elements of a collection.
-Syntax:
-collection = collection.collect
-
-Example:
-a = [1,2,3,4,5]
-b = Array.new
-b = a.collect
-puts b
-# Output:
-1
-2
-3
-4
-5
+			Example:
+					ary = [1,2,3,4,5]
+					ary.each do |i|
+					   puts i
+					end
+			# Output:
+					1
+					2
+					3
+					4
+					5
 
 
+		* collect Iterator
+			The collect iterator returns all the elements of a collection.
+			Syntax:
+					collection = collection.collect
 
+			Example:
+					a = [1,2,3,4,5]
+					b = Array.new
+					b = a.collect
+					puts b
+			# Output:
+					1
+					2
+					3
+					4
+					5
+
+
+
+
+# File I/O
+Ruby provides a whole set of I/O-related methods implemented in the Kernel module. 
+All the I/O methods are derived from the class IO.
+The class IO provides all the basic methods, such as read, write, gets, puts, readline, getc, and printf.
+
+		* puts Statement ->
+		The puts statement instructs the program to display the value stored in the variable. 
+		This will add a new line at the end of each line it writes.
+
+		Example:
+		      val = "Hello World"
+		      puts val
+		Output:
+		      Hello World
+			
+					
+		* gets Statement ->
+		The gets statement can be used to take any input from the user from standard screen called STDIN.
+
+		Example:
+			puts "Enter your name:"
+			name = gets.chomp  # 'chomp' removes the trailing newline character
+			puts "Hello, #{name}!"
+		Output:
+			Enter your name:
+			Nishchay
+			Hello, Nishchay!
+
+		
+		* putc Statement ->
+		The output of the following code is just the character H 
+
+		Example:
+				str = "Hello Ruby!"
+				putc str
+		Output:
+				H => "Hello Ruby!" 
+
+
+		* print Statement ->
+	    The print statement is similar to the puts statement. 
+		The only difference is that the puts statement goes to the next line after printing the contents, whereas with the print statement the cursor is positioned on the same line.
+
+		Example:
+				print "Hello World"
+				print "Good Morning"
+		Output:
+				Hello WorldGood Morning
+
+
+	Opening and Closing Files
+		* The File.new Method ->
+		We can create a File object using File.new method for reading, writing, or both, according to the mode string. 
+		Syntax:
+				aFile = File.new("filename", "mode")
+				# ... process the file
+	 			aFile.close
+
+		* The File.open Method ->
+		We can use File.open method to create a new file object and assign that file object to a file. 
+		However, there is one difference in between File.open and File.new methods. 
+		The difference is that the File.open method can be associated with a block, whereas you cannot do the same using the File.new method.
+		Syntax:
+				File.open("filename", "mode") do |aFile|
+				# ... process the file
+		 		end
+
+
+	Reading and Writing Files
+		* The sysread Method ->
+		We can use the method sysread to read the contents of a file. 
+		We can open the file in any of the modes when using the method sysread.
+		Example:
+			aFile = File.new("input.txt", "r")
+			if aFile
+   				content = aFile.sysread(20)
+   				puts content
+			else
+   				puts "Unable to open file!"
+			end
+		
+		* The syswrite Method ->
+		We can use the method syswrite to write the contents into a file. 
+		We need to open the file in write mode when using the method syswrite.
+		Example:
+			aFile = File.new("input.txt", "r+")
+			if aFile
+   				aFile.syswrite("ABCDEF")
+			else
+   				puts "Unable to open file!"
+			end
+
+		* The each_byte Method ->
+		This method belongs to the class File. 
+		The method each_byte is always associated with a block.
+		Example:
+			aFile = File.new("input.txt", "r+")
+			if aFile
+		   		aFile.syswrite("ABCDEF")
+		   		aFile.each_byte {|ch| putc ch; putc ?. }
+			else
+		   		puts "Unable to open file!"
+			end
+		
+		* The IO.readlines Method ->
+		The class File is a subclass of the class IO. 
+		The class IO also has some methods, which can be used to manipulate files.
+		One of the IO class methods is IO.readlines. 
+		This method returns the contents of the file line by line.
+		Example:
+			arr = IO.readlines("input.txt")
+			puts arr[0]
+			puts arr[1]
+
+		* The IO.foreach Method ->
+		This method also returns output line by line. 
+		The difference between the method foreach and the method readlines is that the method foreach is associated with a block. 
+		However, unlike the method readlines, the method foreach does not return an array.
+		Example:
+		IO.foreach("input.txt"){|block| puts block}
+
+		
+	Renaming and Deleting Files
+		* Rename Method ->
+			Example:
+			File.rename( "test1.txt", "test2.txt" )
+
+		* Delete Method ->
+			Example:
+			File.delete( "test2.txt" )
+
+
+	File Modes and Ownership
+		Use the chmod method with a mask to change the mode or permissions/access list of a file
+		Example:
+		file = File.new( "test.txt", "w" )
+		file.chmod( 0755 )
+
+	
+	File Inquiries
+		* The following command tests whether a file exists before opening it
+		Example:
+			File.open("file.rb") if File::exists?( "file.rb" )
+
+		* The following command inquire whether the file is really a file 
+		Example:
+			File.file?( "file.rb" )
+
+		* The following command inquire whether the file is really a directory
+		Example:
+			File::directory?( "/usr/local/bin" ) # => true
+			File::directory?( "file.rb" ) # => false
+
+		* The following command finds whether the file is readable, writable or executable
+		Example:
+			File.readable?( "file.rb" )
+			File.writable?( "file.rb" )
+			File.executable?( "file.rb" )
+
+		* The following command finds whether the file has zero size or not
+		Example:
+			File.zero?( "file.rb" )
+
+		* The following command returns size of the file
+		Example:
+			File.size?( "file.rb" )    # => 1002
+
+		* The following command can be used to find out a type of file 
+		Example:
+			File::ftype( "test.txt" )     # => file
+			The ftype method identifies the type of the file by returning one of the following file, directory, characterSpecial, blockSpecial, fifo, link, socket, or unknown.
+
+		* The following command can be used to find when a file was created, modified, or last accessed
+		Example:
+			File::ctime( "test.txt" ) # => Fri May 09 10:06:37 -0700 2021
+			File::mtime( "text.txt" ) # => Fri May 09 10:44:44 -0700 2024
+			File::atime( "text.txt" ) # => Fri May 09 10:45:01 -0700 2024
+		
+
+	Directories in Ruby
+	All files are contained within various directories, and Ruby has no problem handling these too. 
+	Whereas the File class handles files, directories are handled with the Dir class.
+
+		* Creating a Directory ->
+		The Dir.mkdir can be used to create directories
+		Example:
+			Dir.mkdir("mynewdir")
+
+		You can also set permissions on a new directory (not one that already exists) with mkdir
+		Example:
+			Dir.mkdir( "mynewdir", 755 )
+
+
+		* Deleting a Directory ->
+		The Dir.delete can be used to delete a directory. 
+		The Dir.unlink and Dir.rmdir performs exactly the same function and are provided for convenience.
+		Example:
+			Dir.delete("mynewdir")
+
+		
+		* Navigating Through Directories ->
+			Change Directory :->
+			To change the current working directory in a Ruby program, use Dir.chdir. This changes the current directory to the specified path.
+			Example:
+		    	Dir.chdir("/usr/bin")
+
+			Get Current Directory :->
+			To find out what the current directory is, use Dir.pwd.
+			Example:
+				puts Dir.pwd  # Output: /usr/bin
+
+			Listing Directory Contents :->
+			To get a list of files and directories within a specific directory, use Dir.entries:
+			Example:
+				puts Dir.entries("/usr/bin")
+			This returns an array of entries in the specified directory. 
+
+			Alternatively, Dir.foreach can be used to iterate over each entry:
+			Example:
+				Dir.foreach("/usr/bin") do |entry|
+					puts entry
+			  	end
+
+			Another concise way to get directory listings is by using Dir.glob:
+			Example:
+				Dir["/usr/bin/*"]
+
+
+		* Creating Files & Temporary Directories ->
+			Temporary Directory Path :->
+			To access the temporary directory path, use Dir.tmpdir. 
+			This requires the tmpdir library:
+			Example:
+				require 'tmpdir'
+				temp_dir = Dir.tmpdir
+
+			Creating a Temporary File :->
+			You can create a platform-independent temporary file using File.join with Dir.tmpdir:
+			Example:
+				require 'tmpdir'
+				tempfilename = File.join(Dir.tmpdir, "tempfile.txt")
+				tempfile = File.new(tempfilename, "w")
+				tempfile.puts "This is a temporary file"
+				tempfile.close
+				File.delete(tempfilename)
+			This code creates a temporary file, writes data to it, and then deletes it
+
+			Using Tempfile Library :->
+			Rubys standard library includes the Tempfile class for creating temporary files:
+			Example:
+				require 'tempfile'
+				tempfile = Tempfile.new('my_temp_file')
+				tempfile.puts "Hello"
+				puts tempfile.path  # Prints the path to the temporary file
+				tempfile.close
+				This example creates a temporary file, writes a string to it, and prints its path. 
+				The file is automatically deleted when the Tempfile object is closed.
 
