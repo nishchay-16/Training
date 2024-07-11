@@ -1,9 +1,8 @@
                            RUBY ASSIGNMENT SOLUTIONS
 
-STRING
+<-------------------------------------STRING----------------------------------------->
 
-Q1) Create a function that takes an array of strings and integers, and filters out the array so that it returns an
-    array of integers only.
+Q1) Create a function that takes an array of strings and integers, and filters out the array so that it returns an array of integers only.
 Ans->
     def filter_int(arr)
         arr.select { |x| x.is_a?(Integer) }
@@ -25,8 +24,7 @@ Ans->
     # Output: atpuG yahchsiN ma I
 
 
-Q3) Given a string s, reverse only all the vowels in the string and return it.The vowels are 'a', 'e', 'i', 'o', and 'u',
-    and they can appear in both cases.
+Q3) Given a string s, reverse only all the vowels in the string and return it.The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both cases.
 Ans->
     def reverse_vowels(s)
         vowels = "aeiouAEIOU"
@@ -51,8 +49,7 @@ Ans->
     # Output: Nashchiy
 
 
-Q4) Given an n-digit large number in form of string, check whether it is divisible by 7 or not. Print 1 if divisible
-    by 7, otherwise 0.
+Q4) Given an n-digit large number in form of string, check whether it is divisible by 7 or not. Print 1 if divisible by 7, otherwise 0.
 Ans->
     def check_disivibility(str)
         if str.to_i % 7 == 0
@@ -218,3 +215,142 @@ Ans->
 
     puts destination_city([["London","New York"],["New York","Lima"],["Lima","Sao Paulo"]])
     # Output: Sao Paulo
+
+
+
+<--------------------------------------------ARRAY------------------------------------------->
+
+Q14) Write a function which takes an integer (positive) and return an array of factorials of each index in index position till given number.
+Ans->
+    def factorial(num)
+        fact = 1
+        fact_arr = []
+        for i in 1..num
+            fact = fact * i
+            fact_arr << fact
+        end
+        return fact_arr
+    end
+
+    factorial(5)
+    # Output:  [1, 2, 6, 24, 120]
+
+
+Q15)  Create a function that takes an array of numbers and returns a new array containing only prime numbers.
+Ans->
+    def filter_primes(arr)
+        primes = []
+        for i in arr do
+            if i == 2
+                primes << i
+            elsif i > 2
+                for j in 2..i-1 do
+                    if i % j == 0
+                        break
+                    elsif j == i-1
+                        primes << i
+                    end
+                end
+            end
+        end
+        return primes   
+    end
+
+    puts filter_primes([1, 2, 7 , 9, 3, 9, 10, 11, 27])
+    # Output: [2, 3, 7, 11]
+
+
+Q16) Given an integer limit being the upper limit of the range of interest, implement a function that returns the
+     last 15 palindromes numbers lower or equal to limit as an array sorted ascendingly.
+Ans->  
+    def last_fifteen(limit)
+        arr = []
+        for i in 0..limit do
+            if i.to_s == i.to_s.reverse
+                arr << i
+            end
+        end
+        return arr[-15..-1]
+    end
+
+    puts last_fifteen(100)
+    # Output: [151, 161, 171, 181, 191, 202, 212, 222, 232, 242, 252, 262, 272, 282, 292]
+
+
+Q17) Write a function which takes an integer (positive) and return an array of Fibonacci number of each index in index position till given number
+Ans->
+    def fibonacci(num)
+        init = [0, 1]
+        for i in 2..num
+            init << init[i-1] + init[i-2]
+        end
+        return init
+    end
+
+    puts fibonacci(10)
+    # Output: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+
+Q18) Write a function which takes an array of integers, return how many of them contain an even number of digits.
+Ans->
+    def even_digits(arr)
+        count = 0
+        for i in arr do 
+            if i.to_s.length.even?
+                count += 1
+            end
+        end
+        return count
+    end 
+
+    puts even_digits([12, 345, 2, 6, 7896])
+    # Output: 2
+
+
+Q19) Given an integer array nums, find a contiguous non-empty subarray within the array that has the largest product, and return the product. 
+     Elements can also be negative numbers.
+            Input: nums = [2,3,-2,4]
+            Output: 6
+            Explanation: [2,3] has the largest product 6.
+Ans->
+
+
+Q20) Given an unsorted array Arr of size N of positive integers. One number 'A' from set {1, 2, …N} is missing
+     and one number 'B' occurs twice in array. Find these two numbers.
+Ans->
+    def find_numbers(arr)
+        repeat = arr.find {|i| arr.count(i) > 1}
+        missing = (1..arr.size).find {|i| !arr.include?(i)}
+        return [repeat, missing]
+    end
+
+    puts find_numbers([1, 2, 2, 4])
+    # Output: [2, 3]
+
+
+Q21) Write a function that takes an integer (less than 1000) and return an array of primes till that number.
+Ans->
+    def primes(num)
+        arr=[]
+        if num >= 1000
+            puts "Number should be less than 1000"
+        else
+            for i in 2..num do
+                if i == 2
+                arr << i
+                elsif i > 2
+                    for j in 2..i-1 do
+                        if i % j == 0
+                            break
+                        elsif j == i-1
+                            arr << i
+                        end
+                    end
+                end
+            end 
+        end
+        return arr
+    end
+
+    puts primes(50)
+    # Output: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
