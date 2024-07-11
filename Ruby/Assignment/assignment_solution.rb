@@ -313,6 +313,23 @@ Q19) Given an integer array nums, find a contiguous non-empty subarray within th
             Output: 6
             Explanation: [2,3] has the largest product 6.
 Ans->
+    def max_product(arr)
+        max = arr[0]
+        min = arr[0]
+        max_product = arr[0]
+        for i in 1..arr.length-1 do
+            if arr[i] < 0
+                max, min = min, max
+            end
+            max = [max * arr[i], arr[i]].max
+            min = [min * arr[i], arr[i]].min
+            max_product = [max, max_product].max
+        end
+        return max_product
+    end
+
+    puts max_product([2, 3, -2, -3, -10, 5])
+    # Output: 150
 
 
 Q20) Given an unsorted array Arr of size N of positive integers. One number 'A' from set {1, 2, …N} is missing
@@ -354,3 +371,127 @@ Ans->
 
     puts primes(50)
     # Output: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+
+
+Q22) Given an integer array nums and an integer k, return the number of pairs (i, j) where i < j such that
+        |nums[i] - nums[j]| == k.
+     The value of |x| is defined as:
+        x if x >= 0.
+        -x if x < 0.
+Ans->
+    def pairs(arr, k)
+        pair = []
+        for i in 0..arr.length-1
+            for j in (i+1)..arr.length-1
+                if (arr[i] - arr[j]).abs == k
+                    pair << [arr[i], arr[j]]
+                end
+            end
+        end
+        return pair
+    end
+
+    puts pairs([-1, 1, 2, 3, 4, 5], 2).inspect
+    # Output: [[-1, 1], [1, 3], [2, 4], [3, 5]]
+
+
+Q23) Given an array nums. We define a running sum of an array as running Sum[i] = sum( nums[0]…nums[i]).
+     Return the running sum of nums.
+Ans-> 
+    def running_sum(arr)
+        sum = []
+        for i in 0..arr.length-1
+            sum << arr[0..i].sum
+        end
+        return sum
+    end
+
+    puts running_sum([1, 2, 3, 4])
+    # Output: [1, 3, 6, 10]
+
+
+Q24) Write a function which takes square matrix mat, return the sum of the matrix diagonals.
+     Only include the sum of all the elements on the primary diagonal and 
+     all the elements on the secondary diagonal that are not part of the primary diagonal.
+Ans->
+    def primary_diagonal(mat)
+        sum = 0
+        for i in 0..mat.length-1
+            for j in 0..mat.length-1
+                if i == j || i + j == mat.length - 1
+                    sum += mat[i][j]
+                end
+            end
+        end
+        return sum
+    end
+
+    puts primary_diagonal([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    # Output: 25
+
+
+Q25) Given an array nums of size n, return the majority element. 
+     The majority element is the element that appears more than ⌊n / 2⌋ times. 
+     You may assume that the majority element always exists in the array.
+Ans->
+    def majority_element(arr)
+        return arr.detect {|i| arr.count(i) > (arr.length/2)}
+    end
+
+    puts majority_element([3, 2, 3])
+    # Output: 3
+
+
+Q26) A distinct string is a string that is present only once in an array. 
+     Given an array of strings arr, and an integer k, return the kth distinct string present in arr. 
+     If there are fewer than k distinct strings, return an empty string "".
+     Note that the strings are considered in the order in which they appear in the array.
+Ans->
+    def kth_distinct(arr, k)
+        distinct = arr.select { |item| arr.count(item) == 1 } 
+        if distinct.length >= k
+            return distinct[k-1]
+        else
+            return ""
+        end
+    end
+
+    puts kth_distinct(["1", "2", "3", "1", "3", "2", "4"], 1)
+    # Output: "4"
+
+
+Q27) Given an integer array nums, move all the even integers at the beginning of the array followed by all the  odd integers. 
+     Return any array that satisfies this condition.
+Ans->
+    def rearrange(arr)
+       even , odd = [] , []
+       for i in 0..arr.length-1
+           if arr[i] % 2 == 0
+               even << arr[i]
+           else
+               odd << arr[i]
+           end
+       end
+       return even + odd
+    end
+
+    puts rearrange([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    # Output: [2, 4, 6, 8, 10, 1, 3, 5, 7, 9]
+
+
+Q28) Given an array of integers nums, return the number of good pairs.
+     A pair (i, j) is called good if nums[i] == nums[j] and i < j
+Ans->
+    def good_pairs(arr)
+        count = 0
+        for i in 0..arr.length-1
+            for j in (i+1)..arr.length-1
+                if arr[i] == arr[j] && i < j
+                    count += 1
+                end
+            end
+        end
+        return count
+    end 
+    
+    puts good_pairs([1, 2, 3, 1, 1, 3])
