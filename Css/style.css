@@ -1,0 +1,257 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.index {
+    background-image: url('../Html/Image.jpg'); 
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh; 
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+}
+
+.navbar {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #49acd7;
+    color: white;
+    padding: 10px 20px;
+    z-index: 1;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    cursor: pointer;
+}
+
+.fa-solid.fa-user,
+.fa-solid.fa-book {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8%    
+}
+
+.btn {
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    text-align: center;
+    font-size: large;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.lb-btn {
+    background-color: rgb(238, 49, 49);
+    color: white;
+    font-weight: bold; 
+}
+
+.st-btn {
+    background-color: rgb(44, 145, 57);
+    color: white;
+    font-weight: bold; 
+    margin-left: 20px;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+.go-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 6px 12px; 
+    border-radius: 5px;
+    border: 2px solid black;
+    background-color: #17485d;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+}
+
+.go-back-btn:hover {
+    background-color: #1e6eb9;
+    transform: scale(1.05);
+}
+
+
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 4vw;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px; 
+    border-radius: 10px;
+    display: inline-block;
+    margin: 37% auto 0; 
+}
+
+
+@media screen and (max-width: 768px) {
+    .btn {
+        margin-left: 0; 
+    }
+    
+    .st-btn {
+        margin-left: 10px; 
+    }
+
+    h1 {
+        margin-top: 15vh; 
+        font-size: 6vw; 
+    }
+}
+
+/* login page */
+
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f7f7f7;
+}
+
+.login-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+
+.login-logo {
+    font-size: 50px;
+    color: #007bff;
+    margin-bottom: 15px;
+    margin-top: -19px;
+}
+
+h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.radio-buttons label {
+    margin: 0 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+label {
+    margin-bottom: 5px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 12px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.register-link {
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.register-link a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* signup page */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}

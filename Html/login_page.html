@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/Css/style.css">
+    <script src="/Javascript/script.js" defer></script>
+</head>
+
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-logo">
+            <i class="fa-solid fa-book"></i>
+        </div>
+        <h3>Login Form</h2>
+        <form >
+            <div class="radio-buttons">
+                <label>
+                    <input type="radio" name="role" value="librarian" required>
+                    Librarian
+                </label>
+                <label>
+                    <input type="radio" name="role" value="student" required>
+                    Student
+                </label>
+            </div>
+            <label for="username">Username or Email</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <div class="forgot-password">
+                <a href="#">Forgot your password?</a>
+            </div>
+            <input type="submit" value="Login" class="login-button">
+        </form>
+        <div class="register-link">
+            Don't have an account? <a href="signup.html">Register Now</a>
+        </div>
+    </div>
+    <a href="/Html/index.html" class="go-back-btn">Go Back</a>
+</body>
+
+</html>
