@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashBoard</title>
+    <link rel="stylesheet" href="/Css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="/Javascript/script.js" defer></script>
+</head>
+
+<body>
+    <!--Dashboard Sidebar -->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class="fa-solid fa-chart-simple"></i>
+            <div class="logo-name"><span>Book</span>Manager</div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><a href="#"><i class="fa-solid fa-table-columns"></i>DashBoard</a></li>
+            <li><a href="#"><i class="fa-solid fa-user"></i>Profile</a></li>
+            <li><a href="#"><i class="fa-solid fa-chart-line"></i>Analytics</a></li>
+            <li><a href="#"><i class="fa-solid fa-circle-info"></i>Info</a></li>
+            <li><a href="#"><i class="fa-solid fa-gear"></i>Settings</a></li>
+        </ul>
+        <ul class="side-menu">
+            <li><a href="/Html/index.html" class="logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </a></li>
+        </ul>
+    </div>
+    <!--Dashboard Menubar -->
+    <div class="content">
+        <nav>
+            <i class="fa-solid fa-bars" ></i>
+            <a href="#" class="profile">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </nav>
+        <main>
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, User!</p>
+                </div>
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>Total Books</h3>
+                            <p>1234</p>
+                        </div>
+                        <i class="fa-solid fa-book card-icon"></i>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>Borrowed Books</h3>
+                            <p>567</p>
+                        </div>
+                        <i class="fa-solid fa-book-reader card-icon"></i>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>Returned Books</h3>
+                            <p>789</p>
+                        </div>
+                        <i class="fa-solid fa-book-open card-icon"></i>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>Overdue Books</h3>
+                            <p>42</p>
+                        </div>
+                        <i class="fa-solid fa-exclamation-triangle card-icon"></i>
+                    </div>
+                </div>
+                <div class="recent-activities">
+                    <h2>Recent Activities</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Book Borrowed</td>
+                                <td>2024-07-15</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>Book Returned</td>
+                                <td>2024-07-14</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>Book Overdue</td>
+                                <td>2024-07-13</td>
+                                <td>Pending</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

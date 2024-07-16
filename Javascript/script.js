@@ -1,30 +1,58 @@
-// const loginBtn = document.getElementById('loginBtn');
-
-// loginBtn.addEventListener('click', function() {
-//     window.location.href = '/Html/login_page.html'; // Replace with the path to your login page
-// });
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const loginBtn = document.getElementById('loginBtn');
-    loginBtn.addEventListener('click', function() {
-        window.location.href = '/Html/login.html'; // Replace with the path to your login page
-    });
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function () {
+            window.location.href = '/Html/login.html';
+        });
+    }
 
     const librarianBtn = document.getElementById('librarianBtn');
-    librarianBtn.addEventListener('click', function() {
-        window.location.href = '/Html/login.html?role=librarian';
-    });
+    if (librarianBtn) {
+        librarianBtn.addEventListener('click', function () {
+            window.location.href = '/Html/login.html?role=librarian';
+        });
+    }
 
     const studentBtn = document.getElementById('studentBtn');
-    studentBtn.addEventListener('click', function() {
-        window.location.href = '/Html/login.html?role=student';
-    });
-});
+    if (studentBtn) {
+        studentBtn.addEventListener('click', function () {
+            window.location.href = '/Html/login.html?role=student';
+        });
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     const role = params.get('role');
     if (role) {
-        document.querySelector(`input[name="role"][value="${role}"]`).checked = true;
+        const roleInput = document.querySelector(`input[name="role"][value="${role}"]`);
+        if (roleInput) {
+            roleInput.checked = true;
+        }
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault(); 
+            window.location.href = '/Html/dashboard.html';
+        });
+    }
+
+    const sideLinks = document.querySelectorAll('.sidebar .side-menu li a:not(.logout)');
+    sideLinks.forEach(item => {
+        const li = item.parentElement;
+        item.addEventListener('click', () => {
+            sideLinks.forEach(i => {
+                i.parentElement.classList.remove('active');
+            });
+            li.classList.add('active');
+        });
+    });
+
+    const menuBar = document.querySelector('.content nav .fa-solid.fa-bars');
+    const sideBar = document.querySelector('.sidebar');
+    if (menuBar && sideBar) {
+        menuBar.addEventListener('click', () => {
+            sideBar.classList.toggle('close');
+        });
     }
 });
