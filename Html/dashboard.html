@@ -21,7 +21,8 @@
 			<div class="logo-name"><span>Book</span>Manager</div>
 		</a>
 		<ul class="side-menu">
-			<li class="active"><a href="#" onclick="showDashboard()"><i class="fa-solid fa-table-columns"></i>DashBoard</a></li>
+			<li class="active"><a href="#" onclick="showDashboard()"><i class="fa-solid fa-table-columns"></i>DashBoard</a>
+			</li>
 			<li><a href="#" onclick="showBook()"><i class="fa-solid fa-book"></i>Books</a></li>
 			<li><a href="#" onclick="showAnalytics()"><i class="fa-solid fa-chart-line"></i>Analytics</a></li>
 			<li><a href="#" onclick="showProfile()"><i class="fa-solid fa-user"></i>Profile</a></li>
@@ -113,65 +114,67 @@
 				<div class="dashboard-header">
 					<h1>My Profile</h1>
 				</div>
-					<div class="upper-section">
-							<div class="profile-photo-container">
-									<h2>Profile Photo</h2>
-									<div class="profile-photo">
-											<img src="Image.jpg" alt="Profile Photo">
-											<div class="profile-photo-actions">
-													<a href="#">Change Photo</a>
-											</div>
-									</div>
+				<div class="upper-section">
+					<div class="profile-content-container">
+						<h2>Personal Details</h2>
+						<div class="personal-details-section">
+							<div class="profile-info">
+								<div class="profile-info-field">
+									<label for="first-name">First Name:</label>
+									<span>Nishchay</span>
+								</div>
+								<div class="profile-info-field">
+									<label for="last-name">Last Name:</label>
+									<span>Gupta</span>
+								</div>
+								<div class="profile-info-field">
+									<label for="email">Email:</label>
+									<span>nishchay.gupta@berylsystems.com</span>
+								</div>
+								<div class="profile-info-field">
+									<label for="phone">Contact No:</label>
+									<span>95881XXXXX</span>
+								</div>
+								<div class="profile-info-field">
+									<label for="role">Role:</label>
+									<span>Student</span>
+								</div>
 							</div>
-							<div class="profile-content-container">
-									<h2>Profile Content</h2>
-									<div class="personal-details-section">
-											<div class="profile-info">
-													<div class="profile-info-field">
-															<label for="first-name">First Name:</label>
-															<span>Nishchay</span>
-													</div>
-													<div class="profile-info-field">
-															<label for="last-name">Last Name:</label>
-															<span>Gupta</span>
-													</div>
-													<div class="profile-info-field">
-															<label for="email">Email:</label>
-															<span>nishchay.gupta@berylsystems.com</span>
-													</div>
-													<div class="profile-info-field">
-														<label for="phone">Contact No:</label>
-														<span>95881XXXXX</span>
-												</div>
-													<div class="profile-info-field">
-															<label for="role">Role:</label>
-															<span>Student</span>
-													</div>
-											</div>
-											<div class="profile-actions">
-													<a href="#">Edit Profile</a>
-											</div>
-									</div>
+							<div class="profile-actions">
+								<a href="#">Edit Profile</a>
 							</div>
+						</div>
 					</div>
-					<div class="lower-section">
-							<h2>Change Password</h2>
-							<div class="form-group">
-									<label for="current-password">Current Password:</label>
-									<input type="password" id="current-password" name="current-password">
+					<div class="profile-photo-container">
+						<h2>Profile Photo</h2>
+						<div class="profile-photo">
+							<img src="Image.jpg" alt="Profile Photo">
+							<div class="profile-photo-actions">
+								<a href="#">Change Photo</a>
 							</div>
-							<div class="form-group">
-									<label for="new-password">New Password:</label>
-									<input type="password" id="new-password" name="new-password">
-							</div>
-							<div class="form-group">
-									<label for="confirm-password">Confirm Password:</label>
-									<input type="password" id="confirm-password" name="confirm-password">
-							</div>
-							<button type="submit">Change Password</button>
+						</div>
 					</div>
+				</div>
+				<div class="lower-section">
+					<h2>Change Password</h2>
+					<div class="form-group">
+						<label for="current-password">Current Password:</label>
+						<input type="password" id="current-password" name="current-password">
+					</div>
+					<div class="form-group">
+						<label for="new-password">New Password:</label>
+						<input type="password" id="new-password" name="new-password">
+					</div>
+					<div class="form-group">
+						<label for="confirm-password">Confirm Password:</label>
+						<input type="password" id="confirm-password" name="confirm-password">
+					</div>
+					<div>
+						<button type="submit">Change Password</button>
+					</div>
+				</div>
 			</div>
-			
+
 
 
 			<div id="analytics-content" class="analytics-content" style="display: none;">
@@ -180,124 +183,124 @@
 				</div>
 				<div class="recent-activities">
 					<table>
-							<thead>
-									<tr>
-											<th>Book Title</th>
-											<th>Genre</th>
-											<th>Borrow Date</th>
-											<th>Return Date</th>
-											<th>Status</th>
-											<th>Fine (RS)</th>
-									</tr>
-							</thead>
-							<tbody>
-									<tr>
-											<td>Introduction to Algorithms</td>
-											<td>Computer Science</td>
-											<td>2024-07-10</td>
-											<td>2024-07-15</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>Ready Player One</td>
-											<td>Comedy/Science Fiction</td>
-											<td>2024-07-10</td>
-											<td>2024-07-15</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>The Hobbit</td>
-											<td>Fantasy</td>
-											<td>2024-07-10</td>
-											<td>2024-07-15</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-										<td>The Catcher in the Rye</td>
-										<td>Literature</td>
-										<td>2024-07-15</td>
-										<td>2024-07-22</td>
-										<td>Issued</td>
-										<td>0</td>
-								</tr>
-									<tr>
-											<td>Database Systems: The Complete Book</td>
-											<td>Computer Science</td>
-											<td>2024-07-12</td>
-											<td>2024-07-17</td>
-											<td>Overdue</td>
-											<td>10</td>
-									</tr>
-									<tr>
-											<td>Harry Potter and the Philosopher's Stone</td>
-											<td>Fantasy</td>
-											<td>2024-07-12</td>
-											<td>2024-07-17</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>To Kill a Mockingbird</td>
-											<td>Literature</td>
-											<td>2024-07-10</td>
-											<td>2024-07-15</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>The Name of the Wind</td>
-											<td>Fantasy</td>
-											<td>2024-07-10</td>
-											<td>2024-07-15</td>
-											<td>Overdue</td>
-											<td>5</td>
-									</tr>
-									<tr>
-											<td>Frankenstein</td>
-											<td>Horror</td>
-											<td>2024-07-12</td>
-											<td>2024-07-17</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>The Great Gatsby</td>
-											<td>Literature</td>
-											<td>2024-07-12</td>
-											<td>2024-07-17</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>The Martian</td>
-											<td>Comedy/Science Fiction</td>
-											<td>2024-07-12</td>
-											<td>2024-07-17</td>
-											<td>Returned</td>
-											<td>0</td>
-									</tr>
-									<tr>
-											<td>Dracula</td>
-											<td>Horror</td>
-											<td>2024-07-10</td>
-											<td>2024-07-15</td>
-											<td>Overdue</td>
-											<td>5</td>
-									</tr>
-									<tr>
-											<td>The Shining</td>
-											<td>Horror</td>
-											<td>2024-07-14</td>
-											<td>2024-07-18</td>
-											<td>Overdue</td>
-											<td>10</td>
-									</tr>
-							</tbody>
+						<thead>
+							<tr>
+								<th>Book Title</th>
+								<th>Genre</th>
+								<th>Borrow Date</th>
+								<th>Return Date</th>
+								<th>Status</th>
+								<th>Fine (RS)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Introduction to Algorithms</td>
+								<td>Computer Science</td>
+								<td>2024-07-10</td>
+								<td>2024-07-15</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>Ready Player One</td>
+								<td>Comedy/Science Fiction</td>
+								<td>2024-07-10</td>
+								<td>2024-07-15</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>The Hobbit</td>
+								<td>Fantasy</td>
+								<td>2024-07-10</td>
+								<td>2024-07-15</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>The Catcher in the Rye</td>
+								<td>Literature</td>
+								<td>2024-07-15</td>
+								<td>2024-07-22</td>
+								<td>Issued</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>Database Systems: The Complete Book</td>
+								<td>Computer Science</td>
+								<td>2024-07-12</td>
+								<td>2024-07-17</td>
+								<td>Overdue</td>
+								<td>10</td>
+							</tr>
+							<tr>
+								<td>Harry Potter and the Philosopher's Stone</td>
+								<td>Fantasy</td>
+								<td>2024-07-12</td>
+								<td>2024-07-17</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>To Kill a Mockingbird</td>
+								<td>Literature</td>
+								<td>2024-07-10</td>
+								<td>2024-07-15</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>The Name of the Wind</td>
+								<td>Fantasy</td>
+								<td>2024-07-10</td>
+								<td>2024-07-15</td>
+								<td>Overdue</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td>Frankenstein</td>
+								<td>Horror</td>
+								<td>2024-07-12</td>
+								<td>2024-07-17</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>The Great Gatsby</td>
+								<td>Literature</td>
+								<td>2024-07-12</td>
+								<td>2024-07-17</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>The Martian</td>
+								<td>Comedy/Science Fiction</td>
+								<td>2024-07-12</td>
+								<td>2024-07-17</td>
+								<td>Returned</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>Dracula</td>
+								<td>Horror</td>
+								<td>2024-07-10</td>
+								<td>2024-07-15</td>
+								<td>Overdue</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td>The Shining</td>
+								<td>Horror</td>
+								<td>2024-07-14</td>
+								<td>2024-07-18</td>
+								<td>Overdue</td>
+								<td>10</td>
+							</tr>
+						</tbody>
 					</table>
-				</div>			
+				</div>
 				<!-- <div class="analytics-chart">
 					<h3>Borrowed Books Trend</h3>
 					<img src="borrowed-books-chart.png" alt="Borrowed Books Trend">
@@ -306,11 +309,131 @@
 
 
 			<div id="book-content" class="book-content" style="display: none;">
-				<!-- Analytics content -->
 				<div class="dashboard-header">
 					<h1>Books</h1>
 				</div>
-				<p>Books Avaialablity , data & authors</p>
+				<div class="book-cards">
+					<!-- Book 1 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>Introduction to Algorithms</h3>
+							<p>Author: Thomas H. Cormen</p>
+							<p>Genre: Computer Science</p>
+							<p>Published: 1990</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 2 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>Ready Player One</h3>
+							<p>Author: Ernest Cline</p>
+							<p>Genre: Comedy/Science Fiction</p>
+							<p>Published: 2011</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 3 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>The Hobbit</h3>
+							<p>Author: J.R.R. Tolkien</p>
+							<p>Genre: Fantasy</p>
+							<p>Published: 1937</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 4 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>The Catcher in the Rye</h3>
+							<p>Author: J.D. Salinger</p>
+							<p>Genre: Literature</p>
+							<p>Published: 1951</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 5 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>Database Systems: The Complete Book</h3>
+							<p>Author: Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom</p>
+							<p>Genre: Computer Science</p>
+							<p>Published: 2002</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 6 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>Harry Potter and the Philosopher's Stone</h3>
+							<p>Author: J.K. Rowling</p>
+							<p>Genre: Fantasy</p>
+							<p>Published: 1997</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 7 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>To Kill a Mockingbird</h3>
+							<p>Author: Harper Lee</p>
+							<p>Genre: Literature</p>
+							<p>Published: 1960</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 8 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>The Name of the Wind</h3>
+							<p>Author: Patrick Rothfuss</p>
+							<p>Genre: Fantasy</p>
+							<p>Published: 2007</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 9 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>Frankenstein</h3>
+							<p>Author: Mary Shelley</p>
+							<p>Genre: Horror</p>
+							<p>Published: 1818</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+
+					<!-- Book 10 -->
+					<div class="book-card">
+						<img src="Image.jpg" alt="Book Cover">
+						<div class="book-details">
+							<h3>The Great Gatsby</h3>
+							<p>Author: F. Scott Fitzgerald</p>
+							<p>Genre: Literature</p>
+							<p>Published: 1925</p>
+						</div>
+						<a href="#">View Details</a>
+					</div>
+				</div>
+
 			</div>
 		</main>
 	</div>
