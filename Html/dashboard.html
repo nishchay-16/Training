@@ -21,11 +21,10 @@
 			<div class="logo-name"><span>Book</span>Manager</div>
 		</a>
 		<ul class="side-menu">
-			<li class="active"><a href="#" onclick="showDashboard()"><i class="fa-solid fa-table-columns"></i>DashBoard</a>
-			</li>
-			<li><a href="#" onclick="showProfile()"><i class="fa-solid fa-user"></i>Profile</a></li>
+			<li class="active"><a href="#" onclick="showDashboard()"><i class="fa-solid fa-table-columns"></i>DashBoard</a></li>
+			<li><a href="#" onclick="showBook()"><i class="fa-solid fa-book"></i>Books</a></li>
 			<li><a href="#" onclick="showAnalytics()"><i class="fa-solid fa-chart-line"></i>Analytics</a></li>
-			<li><a href="#" onclick="showInfo()"><i class="fa-solid fa-circle-info"></i>Info</a></li>
+			<li><a href="#" onclick="showProfile()"><i class="fa-solid fa-user"></i>Profile</a></li>
 			<!-- <li><a href="#"><i class="fa-solid fa-gear"></i>Settings</a></li> -->
 		</ul>
 		<ul class="side-menu">
@@ -39,7 +38,7 @@
 	<div class="content">
 		<nav>
 			<i class="fa-solid fa-bars"></i>
-			<a href="#" class="profile">
+			<a id="menu-user-btn" href="#" onclick="showProfile()" class="profile">
 				<i class="fa-solid fa-user"></i>
 			</a>
 		</nav>
@@ -47,7 +46,7 @@
 			<div id="dashboard-content" class="dashboard-content">
 				<div class="dashboard-header">
 					<h1>Dashboard</h1>
-					<p>Welcome back, User!</p>
+					<p>Welcome back, Nishchay!</p>
 				</div>
 				<div class="cards">
 					<div class="card">
@@ -112,43 +111,63 @@
 
 			<div id="profile-content" class="profile-content" style="display: none;">
 				<div class="dashboard-header">
-					<h1>Profile</h1>
+					<h1>My Profile</h1>
 				</div>
-				<!-- Profile Photo Section -->
-				<div class="profile-photo-section">
-					<div class="profile-photo">
-						<img src="Image.jpg" alt="Profile Photo">
+					<div class="upper-section">
+							<div class="profile-photo-container">
+									<h2>Profile Photo</h2>
+									<div class="profile-photo">
+											<img src="Image.jpg" alt="Profile Photo">
+											<div class="profile-photo-actions">
+													<a href="#">Change Photo</a>
+											</div>
+									</div>
+							</div>
+							<div class="profile-content-container">
+									<h2>Profile Content</h2>
+									<div class="personal-details-section">
+											<div class="profile-info">
+													<div class="profile-info-field">
+															<label for="first-name">First Name:</label>
+															<span>Nishchay</span>
+													</div>
+													<div class="profile-info-field">
+															<label for="last-name">Last Name:</label>
+															<span>Gupta</span>
+													</div>
+													<div class="profile-info-field">
+															<label for="email">Email:</label>
+															<span>nishchay.gupta@berylsystems.com</span>
+													</div>
+													<div class="profile-info-field">
+															<label for="role">Role:</label>
+															<span>Student</span>
+													</div>
+											</div>
+											<div class="profile-actions">
+													<a href="#">Edit Profile</a>
+											</div>
+									</div>
+							</div>
 					</div>
-					<div class="profile-photo-actions">
-						<a href="#">Change Photo</a>
+					<div class="lower-section">
+							<h2>Change Password</h2>
+							<div class="form-group">
+									<label for="current-password">Current Password:</label>
+									<input type="password" id="current-password" name="current-password">
+							</div>
+							<div class="form-group">
+									<label for="new-password">New Password:</label>
+									<input type="password" id="new-password" name="new-password">
+							</div>
+							<div class="form-group">
+									<label for="confirm-password">Confirm Password:</label>
+									<input type="password" id="confirm-password" name="confirm-password">
+							</div>
+							<button type="submit">Change Password</button>
 					</div>
-				</div>
-
-				<!-- Personal Details Section -->
-				<div class="personal-details-section">
-					<div class="profile-info">
-						<div class="profile-info-field">
-							<label for="first-name">First Name:</label>
-							<span>Nishchay</span>
-						</div>
-						<div class="profile-info-field">
-							<label for="last-name">Last Name:</label>
-							<span>Gupta</span>
-						</div>
-						<div class="profile-info-field">
-							<label for="email">Email:</label>
-							<span>nishchay.gupta@berylsystems.com</span>
-						</div>
-						<div class="profile-info-field">
-							<label for="role">Role:</label>
-							<span>Student</span>
-						</div>
-					</div>
-					<div class="profile-actions">
-						<a href="#">Edit Profile</a>
-					</div>
-				</div>
 			</div>
+			
 
 
 			<div id="analytics-content" class="analytics-content" style="display: none;">
@@ -282,10 +301,12 @@
 			</div>
 
 
-			<div id="info-content" class="info-content" style="display: none;">
+			<div id="book-content" class="book-content" style="display: none;">
 				<!-- Analytics content -->
-				<h2>Info</h2>
-				<p>Info data...</p>
+				<div class="dashboard-header">
+					<h1>Books</h1>
+				</div>
+				<p>Books Avaialablity , data & authors</p>
 			</div>
 		</main>
 	</div>

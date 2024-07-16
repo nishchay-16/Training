@@ -61,27 +61,27 @@ function showDashboard() {
     document.getElementById('dashboard-content').style.display = 'block';
     document.getElementById('analytics-content').style.display = 'none';
     document.getElementById('profile-content').style.display = 'none';
-    document.getElementById('info-content').style.display = 'none';
+    document.getElementById('book-content').style.display = 'none';
 }
 
 function showAnalytics() {
     document.getElementById('dashboard-content').style.display = 'none';
     document.getElementById('analytics-content').style.display = 'block';
     document.getElementById('profile-content').style.display = 'none';
-    document.getElementById('info-content').style.display = 'none';
+    document.getElementById('book-content').style.display = 'none';
 }
 
 function showProfile() {
     document.getElementById('dashboard-content').style.display = 'none';
     document.getElementById('analytics-content').style.display = 'none';
     document.getElementById('profile-content').style.display = 'block';
-    document.getElementById('info-content').style.display = 'none';
+    document.getElementById('book-content').style.display = 'none';
 }
 
-function showInfo() {
+function showBook() {
     document.getElementById('dashboard-content').style.display = 'none';
     document.getElementById('analytics-content').style.display = 'none';
     document.getElementById('profile-content').style.display = 'none';
-    document.getElementById('info-content').style.display = 'block';
+    document.getElementById('book-content').style.display = 'block';
 }
 
