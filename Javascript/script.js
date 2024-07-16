@@ -7,17 +7,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const loginBtn = document.getElementById('loginBtn');
     loginBtn.addEventListener('click', function() {
-        window.location.href = '/Html/login_page.html'; // Replace with the path to your login page
+        window.location.href = '/Html/login.html'; // Replace with the path to your login page
     });
 
     const librarianBtn = document.getElementById('librarianBtn');
     librarianBtn.addEventListener('click', function() {
-        window.location.href = '/Html/login_page.html?role=librarian';
+        window.location.href = '/Html/login.html?role=librarian';
     });
 
     const studentBtn = document.getElementById('studentBtn');
     studentBtn.addEventListener('click', function() {
-        window.location.href = '/Html/login_page.html?role=student';
+        window.location.href = '/Html/login.html?role=student';
     });
 });
 
