@@ -2,111 +2,293 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashBoard</title>
-    <link rel="stylesheet" href="/Css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="/Javascript/script.js" defer></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>DashBoard</title>
+	<link rel="stylesheet" href="/Css/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	<script src="/Javascript/script.js" defer></script>
+	<style>
+		/* Add your custom styles here */
+	</style>
 </head>
 
 <body>
-    <!--Dashboard Sidebar -->
-    <div class="sidebar">
-        <a href="#" class="logo">
-            <i class="fa-solid fa-chart-simple"></i>
-            <div class="logo-name"><span>Book</span>Manager</div>
-        </a>
-        <ul class="side-menu">
-            <li class="active"><a href="#"><i class="fa-solid fa-table-columns"></i>DashBoard</a></li>
-            <li><a href="#"><i class="fa-solid fa-user"></i>Profile</a></li>
-            <li><a href="#"><i class="fa-solid fa-chart-line"></i>Analytics</a></li>
-            <li><a href="#"><i class="fa-solid fa-circle-info"></i>Info</a></li>
-            <li><a href="#"><i class="fa-solid fa-gear"></i>Settings</a></li>
-        </ul>
-        <ul class="side-menu">
-            <li><a href="/Html/index.html" class="logout">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Logout
-                </a></li>
-        </ul>
-    </div>
-    <!--Dashboard Menubar -->
-    <div class="content">
-        <nav>
-            <i class="fa-solid fa-bars" ></i>
-            <a href="#" class="profile">
-                <i class="fa-solid fa-user"></i>
-            </a>
-        </nav>
-        <main>
-            <div class="dashboard-content">
-                <div class="dashboard-header">
-                    <h1>Dashboard</h1>
-                    <p>Welcome back, User!</p>
-                </div>
-                <div class="cards">
-                    <div class="card">
-                        <div class="card-content">
-                            <h3>Total Books</h3>
-                            <p>1234</p>
-                        </div>
-                        <i class="fa-solid fa-book card-icon"></i>
-                    </div>
-                    <div class="card">
-                        <div class="card-content">
-                            <h3>Borrowed Books</h3>
-                            <p>567</p>
-                        </div>
-                        <i class="fa-solid fa-book-reader card-icon"></i>
-                    </div>
-                    <div class="card">
-                        <div class="card-content">
-                            <h3>Returned Books</h3>
-                            <p>789</p>
-                        </div>
-                        <i class="fa-solid fa-book-open card-icon"></i>
-                    </div>
-                    <div class="card">
-                        <div class="card-content">
-                            <h3>Overdue Books</h3>
-                            <p>42</p>
-                        </div>
-                        <i class="fa-solid fa-exclamation-triangle card-icon"></i>
-                    </div>
-                </div>
-                <div class="recent-activities">
-                    <h2>Recent Activities</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Activity</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Book Borrowed</td>
-                                <td>2024-07-15</td>
-                                <td>Completed</td>
-                            </tr>
-                            <tr>
-                                <td>Book Returned</td>
-                                <td>2024-07-14</td>
-                                <td>Completed</td>
-                            </tr>
-                            <tr>
-                                <td>Book Overdue</td>
-                                <td>2024-07-13</td>
-                                <td>Pending</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
+	<!--Dashboard Sidebar -->
+	<div class="sidebar">
+		<a href="#" class="logo">
+			<i class="fa-solid fa-chart-simple"></i>
+			<div class="logo-name"><span>Book</span>Manager</div>
+		</a>
+		<ul class="side-menu">
+			<li class="active"><a href="#" onclick="showDashboard()"><i class="fa-solid fa-table-columns"></i>DashBoard</a>
+			</li>
+			<li><a href="#" onclick="showProfile()"><i class="fa-solid fa-user"></i>Profile</a></li>
+			<li><a href="#" onclick="showAnalytics()"><i class="fa-solid fa-chart-line"></i>Analytics</a></li>
+			<li><a href="#" onclick="showInfo()"><i class="fa-solid fa-circle-info"></i>Info</a></li>
+			<!-- <li><a href="#"><i class="fa-solid fa-gear"></i>Settings</a></li> -->
+		</ul>
+		<ul class="side-menu">
+			<li><a href="/Html/index.html" class="logout">
+					<i class="fa-solid fa-right-from-bracket"></i>
+					Logout
+				</a></li>
+		</ul>
+	</div>
+	<!--Dashboard Menubar -->
+	<div class="content">
+		<nav>
+			<i class="fa-solid fa-bars"></i>
+			<a href="#" class="profile">
+				<i class="fa-solid fa-user"></i>
+			</a>
+		</nav>
+		<main>
+			<div id="dashboard-content" class="dashboard-content">
+				<div class="dashboard-header">
+					<h1>Dashboard</h1>
+					<p>Welcome back, User!</p>
+				</div>
+				<div class="cards">
+					<div class="card">
+						<div class="card-content">
+							<h3>Total Books</h3>
+							<p>1234</p>
+						</div>
+						<i class="fa-solid fa-book card-icon"></i>
+					</div>
+					<div class="card">
+						<div class="card-content">
+							<h3>Borrowed Books</h3>
+							<p>567</p>
+						</div>
+						<i class="fa-solid fa-book-reader card-icon"></i>
+					</div>
+					<div class="card">
+						<div class="card-content">
+							<h3>Returned Books</h3>
+							<p>789</p>
+						</div>
+						<i class="fa-solid fa-book-open card-icon"></i>
+					</div>
+					<div class="card">
+						<div class="card-content">
+							<h3>Overdue Books</h3>
+							<p>42</p>
+						</div>
+						<i class="fa-solid fa-exclamation-triangle card-icon"></i>
+					</div>
+				</div>
+				<div class="recent-activities">
+					<h2>Recent Activities</h2>
+					<table>
+						<thead>
+							<tr>
+								<th>Activity</th>
+								<th>Date</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Book Borrowed</td>
+								<td>2024-07-15</td>
+								<td>Completed</td>
+							</tr>
+							<tr>
+								<td>Book Returned</td>
+								<td>2024-07-14</td>
+								<td>Completed</td>
+							</tr>
+							<tr>
+								<td>Book Overdue</td>
+								<td>2024-07-13</td>
+								<td>Pending</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div id="profile-content" class="profile-content" style="display: none;">
+				<div class="dashboard-header">
+					<h1>Profile</h1>
+				</div>
+				<!-- Profile Photo Section -->
+				<div class="profile-photo-section">
+					<div class="profile-photo">
+						<img src="Image.jpg" alt="Profile Photo">
+					</div>
+					<div class="profile-photo-actions">
+						<a href="#">Change Photo</a>
+					</div>
+				</div>
+
+				<!-- Personal Details Section -->
+				<div class="personal-details-section">
+					<div class="profile-info">
+						<div class="profile-info-field">
+							<label for="first-name">First Name:</label>
+							<span>Nishchay</span>
+						</div>
+						<div class="profile-info-field">
+							<label for="last-name">Last Name:</label>
+							<span>Gupta</span>
+						</div>
+						<div class="profile-info-field">
+							<label for="email">Email:</label>
+							<span>nishchay.gupta@berylsystems.com</span>
+						</div>
+						<div class="profile-info-field">
+							<label for="role">Role:</label>
+							<span>Student</span>
+						</div>
+					</div>
+					<div class="profile-actions">
+						<a href="#">Edit Profile</a>
+					</div>
+				</div>
+			</div>
+
+
+			<div id="analytics-content" class="analytics-content" style="display: none;">
+				<div class="dashboard-header">
+					<h1>Library Analytics</h1>
+				</div>
+				<div class="recent-activities">
+					<table>
+							<thead>
+									<tr>
+											<th>Book Title</th>
+											<th>Genre</th>
+											<th>Borrow Date</th>
+											<th>Return Date</th>
+											<th>Status</th>
+											<th>Fine (RS)</th>
+									</tr>
+							</thead>
+							<tbody>
+									<tr>
+											<td>Introduction to Algorithms</td>
+											<td>Computer Science</td>
+											<td>2024-07-10</td>
+											<td>2024-07-15</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>Ready Player One</td>
+											<td>Comedy/Science Fiction</td>
+											<td>2024-07-10</td>
+											<td>2024-07-15</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>The Hobbit</td>
+											<td>Fantasy</td>
+											<td>2024-07-10</td>
+											<td>2024-07-15</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+										<td>The Catcher in the Rye</td>
+										<td>Literature</td>
+										<td>2024-07-15</td>
+										<td>2024-07-22</td>
+										<td>Issued</td>
+										<td>0</td>
+								</tr>
+									<tr>
+											<td>Database Systems: The Complete Book</td>
+											<td>Computer Science</td>
+											<td>2024-07-12</td>
+											<td>2024-07-17</td>
+											<td>Overdue</td>
+											<td>10</td>
+									</tr>
+									<tr>
+											<td>Harry Potter and the Philosopher's Stone</td>
+											<td>Fantasy</td>
+											<td>2024-07-12</td>
+											<td>2024-07-17</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>To Kill a Mockingbird</td>
+											<td>Literature</td>
+											<td>2024-07-10</td>
+											<td>2024-07-15</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>The Name of the Wind</td>
+											<td>Fantasy</td>
+											<td>2024-07-10</td>
+											<td>2024-07-15</td>
+											<td>Overdue</td>
+											<td>5</td>
+									</tr>
+									<tr>
+											<td>Frankenstein</td>
+											<td>Horror</td>
+											<td>2024-07-12</td>
+											<td>2024-07-17</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>The Great Gatsby</td>
+											<td>Literature</td>
+											<td>2024-07-12</td>
+											<td>2024-07-17</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>The Martian</td>
+											<td>Comedy/Science Fiction</td>
+											<td>2024-07-12</td>
+											<td>2024-07-17</td>
+											<td>Returned</td>
+											<td>0</td>
+									</tr>
+									<tr>
+											<td>Dracula</td>
+											<td>Horror</td>
+											<td>2024-07-10</td>
+											<td>2024-07-15</td>
+											<td>Overdue</td>
+											<td>5</td>
+									</tr>
+									<tr>
+											<td>The Shining</td>
+											<td>Horror</td>
+											<td>2024-07-14</td>
+											<td>2024-07-18</td>
+											<td>Overdue</td>
+											<td>10</td>
+									</tr>
+							</tbody>
+					</table>
+				</div>			
+				<!-- <div class="analytics-chart">
+					<h3>Borrowed Books Trend</h3>
+					<img src="borrowed-books-chart.png" alt="Borrowed Books Trend">
+				</div> -->
+			</div>
+
+
+			<div id="info-content" class="info-content" style="display: none;">
+				<!-- Analytics content -->
+				<h2>Info</h2>
+				<p>Info data...</p>
+			</div>
+		</main>
+	</div>
 </body>
 
 </html>
