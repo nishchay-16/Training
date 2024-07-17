@@ -1,0 +1,51 @@
+Rails is a web framework.
+Framework is a set of code libraries and data structures that provide generic functionality that can be used , overridden , or further specialized.
+
+There are mainly 3 tasks 
+- Describe and model your application
+- Specify what can happen in domain
+- choose and design he publicly available views of the domain
+
+Based on these tasks, ruby on rails deals with MVC Framework.
+The Model View Controller principle divides the work of an application into three separate but closely cooperative subsystems.
+1) Model (ActiveRecord) ->
+    * It maintains the relationship between the objects and the database and handles validation, association, transactions, and more.
+    * Represents the data and the business logic of the application.
+    * Directly manages the data, logic, and rules of the application.
+    * Responds to requests for information from the view and instructions to update the state (usually from the controller).
+
+2) View (ActionView) ->
+    * It is a presentation of data in a particular format, triggered by a controller's decision to present the data. 
+    * They are script-based template systems like JSP, ASP, PHP, and very easy to integrate with AJAX technology.
+    * Represents the presentation layer of the application.
+    * Displays data from the model to the user.
+    * Sends user commands to the controller.
+
+3) Controller (ActionController) ->
+    * The facility within the application that directs traffic, on the one hand, querying the models for specific data, and on the other hand, organizing that data (searching, sorting, messaging it) into a form that fits the needs of a given view.
+    * Acts as an intermediary between Model and View.
+    * Receives user input from the view, processes it (e.g., validates, applies business logic), and updates the model accordingly.
+    * Updates the view to reflect changes in the model.
+
+      +-------------+
+      |  Controller |
+      +-------------+
+            |
+            v
+      +-------------+
+      |    Model    |
+      +-------------+
+            |
+            v
+      +-------------+
+      |     View    |
+      +-------------+
+            |
+            v
++-------------------------+
+|     User Interaction    |
++-------------------------+
+
+
+
+
