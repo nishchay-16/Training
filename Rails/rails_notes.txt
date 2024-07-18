@@ -94,3 +94,63 @@ Purpose:         Can be created for specific needs or stages in the development 
 Configuration:   Defined by adding custom environment files (e.g., config/environments/custom_environment.rb).
 Characteristics: Tailored settings and configurations to meet unique requirements, such as performance testing, user acceptance testing (UAT), or specialized development needs.
 
+
+
+
+                                             <-------:CREATING NEW RAILS APPLICATION:----->
+Rails comes with a number of scripts called generators that are designed to make your development life easier by creating everything that's necessary to start working on a particular task
+
+* Creating new application with default database (sqllite3)
+  =>  rails new <application_name>
+
+* if you want different database, then
+  => rails new <application_name> -d <database_model_name>
+  Example: rails new library_management system -d postgresql
+
+
+
+                                    <---------:CONFIGURING DATABASE IN RAILS APPLICATION:----------> 
+Configuring database to make the connection of rails with the database present in your system.
+
+For this we have to navigate to :    <application_name>/config/database.yml
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: rails_library_development
+  username: postgres
+  password: 0000
+  host: localhost
+  port: 5432
+
+
+
+                                             <----------:DB commands in RAILS:---------->
+                                             
+1) rails db:create     -> 
+This command creates the database defined in your config/database.yml file.
+
+2) rails db:drop       ->
+Drops the database for your current Rails environment.
+
+3) rails db:setup      -> 
+Creates the database, loads the schema (structure of tables), and initializes with the seed data if you have a db/seeds.rb file.
+
+4) rails db:reset      -> 
+Drops the database, creates a new one, loads the schema, and seeds the database.
+
+5) rails db:migrate    ->
+Runs all pending migrations to update your database schema.
+
+6) rails db:rollback   -> 
+Reverts the last migration.
+
+7) rails db:seed       -> 
+Runs the db/seeds.rb file to populate the database with initial data.
+
+8) rails db:version    ->
+Displays the current version number of the schema.
