@@ -180,6 +180,25 @@ Displays the current version number of the schema.
     end
   end
 
+2) Remove Column Using Migration:
+   => rails generate migration RemovePartNumberFromProducts 
+
+   Entering the migration file that is created and remove column:
+
+   class RemovePartNumberFromProducts < ActiveRecord::Migration[7.1]
+      def change
+        remove_column :<table_name>, :<field_name>>, :string
+      end
+   end
+
+  Example:
+  rails g migration removeColumnFromFines 
+
+  class RemoveColumnFromFines < ActiveRecord::Migration[7.1]
+    def change
+      remove_column :fines, :fine_day, :string
+    end
+  end
   
 
 
