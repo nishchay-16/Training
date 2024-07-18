@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_052501) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_18_072839) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -41,6 +41,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_052501) do
     t.string "payment_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "fine_day"
     t.index ["library_transaction_id"], name: "index_fines_on_library_transaction_id"
   end
 

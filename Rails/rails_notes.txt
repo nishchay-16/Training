@@ -154,3 +154,37 @@ Runs the db/seeds.rb file to populate the database with initial data.
 
 8) rails db:version    ->
 Displays the current version number of the schema.
+
+
+
+
+                                          <-----------:Migrations in Rails DB:------------->
+
+1) Add Column Using Migration:
+   => rails generate migration AddPartNumberToProducts 
+
+   Entering the migration file that is created and add column:
+
+   class AddPartNumberToProducts < ActiveRecord::Migration[7.1]
+      def change
+        add_column :<table_name>, :<field_name>>, :string
+      end
+   end
+
+  Example:
+  rails g migration addColumnToFines
+
+  class AddColumnToFines < ActiveRecord::Migration[7.1]
+    def change
+      add_column :fines, :fine_day, :string
+    end
+  end
+
+  
+
+
+
+
+
+
+
