@@ -138,6 +138,8 @@ This command creates the database defined in your config/database.yml file.
 Drops the database for your current Rails environment.
 
 3) rails db:setup      -> 
+        OR
+   rails db:prepare 
 Creates the database, loads the schema (structure of tables), and initializes with the seed data if you have a db/seeds.rb file.
 
 4) rails db:reset      -> 
@@ -159,8 +161,15 @@ Displays the current version number of the schema.
 
 
                                           <-----------:Migrations in Rails DB:------------->
+1) Generate a Migration:
+    Creates a new migration file in the db/migrate directory. You can specify changes like adding or removing columns.
 
-1) Add Column Using Migration:
+    => rails generate migration <MigrationName>
+
+
+2) Add Column Using Migration:->
+    Generates a migration to remove a column from a specific table. Replace ColumnName, TableName, column_name, and data_type with your desired values.
+
    => rails generate migration AddPartNumberToProducts 
 
    Entering the migration file that is created and add column:
@@ -180,7 +189,8 @@ Displays the current version number of the schema.
     end
   end
 
-2) Remove Column Using Migration:
+
+3) Remove Column Using Migration:->
    => rails generate migration RemovePartNumberFromProducts 
 
    Entering the migration file that is created and remove column:
@@ -200,6 +210,103 @@ Displays the current version number of the schema.
     end
   end
   
+
+4) Check Migration Status:->
+    Displays the status of all migrations (whether they are up or down).
+
+  => rails db:migrate:status
+
+#Output:
+database: rails_library_development
+
+ Status   Migration ID    Migration Name
+--------------------------------------------------
+   up     20240718052415  Create authors
+   up     20240718052419  Create genres
+   up     20240718052423  Create books
+   up     20240718052428  Create members
+   up     20240718052432  Create librarians
+   up     20240718052457  Create library transactions
+   up     20240718052501  Create fines
+   up     20240718072839  Add column to fines
+   up     20240718074526  Remove column from fines
+
+
+5) Migrate to a Specific Version:->
+    Rolls forward or backward to a specific migration version. Replace timestamp with the timestamp of the desired migration.
+
+  => rails db:migrate VERSION=timestamp
+
+
+6) Redo the Last Migration:
+    Rolls back the last migration and then reapplies it.
+
+    => rails db:migrate:redo
+# Output-
+== 20240718074526 RemoveColumnFromFines: reverting ============================
+-- add_column(:fines, :fine_day, :string)
+   -> 0.0015s
+== 20240718074526 RemoveColumnFromFines: reverted (0.0031s) ===================
+
+== 20240718074526 RemoveColumnFromFines: migrating ============================
+-- remove_column(:fines, :fine_day, :string)
+   -> 0.0011s
+== 20240718074526 RemoveColumnFromFines: migrated (0.0011s) ===================
+
+
+7) Redo Multiple Migrations:
+    Rolls back the last n migrations and then reapplies them.
+
+    => rails db:migrate:redo STEP=n
+# Output-
+== 20240718074526 RemoveColumnFromFines: reverting ============================
+-- add_column(:fines, :fine_day, :string)
+   -> 0.0021s
+== 20240718074526 RemoveColumnFromFines: reverted (0.0082s) ===================
+
+== 20240718072839 AddColumnToFines: reverting =================================
+-- remove_column(:fines, :fine_day, :string)
+   -> 0.0016s
+== 20240718072839 AddColumnToFines: reverted (0.0019s) ========================
+
+== 20240718072839 AddColumnToFines: migrating =================================
+-- add_column(:fines, :fine_day, :string)
+   -> 0.0009s
+== 20240718072839 AddColumnToFines: migrated (0.0009s) ========================
+
+== 20240718074526 RemoveColumnFromFines: migrating ============================
+-- remove_column(:fines, :fine_day, :string)
+   -> 0.0008s
+== 20240718074526 RemoveColumnFromFines: migrated (0.0008s) ===================
+
+
+8) Rollback the Last Migration:
+    Reverts the last migration.
+
+  => rails db:rollback
+
+# Output:
+== 20240718074526 RemoveColumnFromFines: reverting ============================
+-- add_column(:fines, :fine_day, :string)
+   -> 0.0072s
+== 20240718074526 RemoveColumnFromFines: reverted (0.0088s) ===================
+
+
+9) Rollback Multiple Migrations:
+    Rolls back the last n migrations. Replace n with the number of migrations you want to roll back.
+
+    => rails db:rollback STEP=n
+
+# Output:
+== 20240718072839 AddColumnToFines: reverting =================================
+-- remove_column(:fines, :fine_day, :string)
+   -> 0.0066s
+== 20240718072839 AddColumnToFines: reverted (0.0082s) ========================
+
+== 20240718052501 CreateFines: reverting ======================================
+-- drop_table(:fines)
+   -> 0.0038s
+== 20240718052501 CreateFines: reverted (0.0038s) =============================
 
 
 
