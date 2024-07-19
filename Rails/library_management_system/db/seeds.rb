@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+Author.delete_all
+
+Author.create([
+  { author_name: 'Nishchay', nationality: 'Indian' },
+  { author_name: 'Naman', nationality: 'British' }
+])
