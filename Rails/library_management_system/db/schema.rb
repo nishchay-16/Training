@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_19_103725) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_19_110610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_103725) do
     t.string "description", limit: 255, default: "No description", collation: "en_US.UTF-8", comment: "Description of the practice"
     t.decimal "rating", precision: 5, scale: 2, comment: "Rating of the practice"
     t.index ["full_name"], name: "index_table_practices_on_full_name"
+    t.check_constraint "rating >= 0::numeric AND rating <= 10::numeric", name: "rating_check"
   end
 
   create_table "transactions", force: :cascade do |t|
