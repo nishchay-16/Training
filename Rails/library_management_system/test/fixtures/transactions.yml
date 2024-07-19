@@ -1,11 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  member: one
   isbn: MyString
-  title: MyString
-  quantity: 1
+  issuedate: 2024-07-19
+  returndate: 2024-07-19
 
 two:
+  member: two
   isbn: MyString
-  title: MyString
-  quantity: 1
+  issuedate: 2024-07-19
+  returndate: 2024-07-19

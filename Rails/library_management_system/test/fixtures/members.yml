@@ -2,14 +2,12 @@
 
 one:
   member_name: MyString
-  dob: 2024-07-18
+  dob: 2024-07-19
   phone_no: MyString
   email: MyString
-  address: MyString
 
 two:
   member_name: MyString
-  dob: 2024-07-18
+  dob: 2024-07-19
   phone_no: MyString
   email: MyString
-  address: MyString

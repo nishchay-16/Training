@@ -1,13 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  library_transaction: one
   fine_amount: 9.99
-  fine_date: 2024-07-18
+  fine_date: 2024-07-19
   payment_status: MyString
 
 two:
-  library_transaction: two
   fine_amount: 9.99
-  fine_date: 2024-07-18
+  fine_date: 2024-07-19
   payment_status: MyString

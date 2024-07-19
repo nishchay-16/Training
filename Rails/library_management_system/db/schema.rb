@@ -10,81 +10,69 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_052501) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_19_071556) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "authors", force: :cascade do |t|
-    t.string "author_name", null: false
+    t.string "author_name"
     t.string "nationality"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "books", primary_key: "isbn", id: :string, force: :cascade do |t|
-    t.string "title", null: false
-    t.bigint "author_id", null: false
-    t.bigint "genre_id", null: false
-    t.integer "quantity", null: false
-    t.integer "available_quantity", null: false
+  create_table "books", force: :cascade do |t|
+    t.string "isbn"
+    t.string "title"
+    t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["author_id"], name: "index_books_on_author_id"
-    t.index ["genre_id"], name: "index_books_on_genre_id"
-    t.index ["isbn"], name: "index_books_on_isbn", unique: true
+    t.integer "available_quantity"
   end
 
   create_table "fines", force: :cascade do |t|
-    t.bigint "library_transaction_id", null: false
-    t.decimal "fine_amount", precision: 10, scale: 2
+    t.decimal "fine_amount"
     t.date "fine_date"
     t.string "payment_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["library_transaction_id"], name: "index_fines_on_library_transaction_id"
   end
 
   create_table "genres", force: :cascade do |t|
-    t.string "genre_name", null: false
+    t.string "genre_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "librarians", force: :cascade do |t|
-    t.string "librarian_name", null: false
+    t.string "librarian_name"
     t.string "email"
     t.string "phone_no"
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "library_transactions", force: :cascade do |t|
-    t.bigint "member_id", null: false
-    t.string "isbn", null: false
-    t.date "issuedate"
-    t.date "returndate"
-    t.bigint "librarian_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["librarian_id"], name: "index_library_transactions_on_librarian_id"
-    t.index ["member_id"], name: "index_library_transactions_on_member_id"
+    t.string "stream"
   end
 
   create_table "members", force: :cascade do |t|
-    t.string "member_name", null: false
+    t.string "member_name"
     t.date "dob"
     t.string "phone_no"
     t.string "email"
-    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "address"
   end
 
-  add_foreign_key "books", "authors"
-  add_foreign_key "books", "genres"
-  add_foreign_key "fines", "library_transactions"
-  add_foreign_key "library_transactions", "books", column: "isbn", primary_key: "isbn"
-  add_foreign_key "library_transactions", "librarians"
-  add_foreign_key "library_transactions", "members"
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "member_id", null: false
+    t.string "isbn"
+    t.date "issuedate"
+    t.date "returndate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_transactions_on_member_id"
+  end
+
+  add_foreign_key "transactions", "members"
 end
