@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_19_112912) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_19_113400) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -82,7 +82,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_112912) do
     t.string "full_name", null: false
     t.string "description", limit: 255, default: "No description", collation: "en_US.UTF-8", comment: "Description of the practice"
     t.decimal "rating", precision: 5, scale: 2, comment: "Rating of the practice"
-    t.index ["full_name"], name: "index_table_practices_on_full_name_renamed"
   end
 
   create_table "transactions", force: :cascade do |t|
