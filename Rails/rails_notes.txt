@@ -311,6 +311,13 @@ database: rails_library_development
 
 
 
+                 <------------COLUMN MODIFIERS------------->
 
-
-
+Column Modifiers
+1) comment: Adds a comment for the column.
+2) collation: Specifies the collation for a string or text column.
+3) default: Allows setting a default value for the column.
+4) limit: Sets the maximum number of characters for a string column and the maximum number of bytes for text/binary/integer columns.
+5) null: Allows or disallows NULL values in the column.
+6) precision: Specifies the precision for decimal/numeric/datetime/time columns.
+7) scale: Specifies the scale for the decimal and numeric columns.
