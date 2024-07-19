@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_19_080026) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_19_085211) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -74,10 +74,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_080026) do
     t.date "returndate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "book_id"
+    t.index ["book_id"], name: "index_transactions_on_book_id"
     t.index ["member_id"], name: "index_transactions_on_member_id"
   end
 
   add_foreign_key "books", "authors"
   add_foreign_key "books", "genres"
+  add_foreign_key "transactions", "books"
   add_foreign_key "transactions", "members"
 end
