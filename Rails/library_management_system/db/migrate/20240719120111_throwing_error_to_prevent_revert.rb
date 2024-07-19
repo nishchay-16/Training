@@ -4,6 +4,6 @@ class ThrowingErrorToPreventRevert < ActiveRecord::Migration[7.1]
   end
 
   def down
-    raise ActiveRecord::IrreversibleMigration, "Cannot reverse the drop of the 'distributors' table"
+    # raise ActiveRecord::IrreversibleMigration, "Cannot reverse the drop of the 'distributors' table"
   end
 end
