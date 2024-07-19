@@ -321,3 +321,116 @@ Column Modifiers
 5) null: Allows or disallows NULL values in the column.
 6) precision: Specifies the precision for decimal/numeric/datetime/time columns.
 7) scale: Specifies the scale for the decimal and numeric columns.
+
+
+                  <-----------CHANGE METHOD----------->
+
+1) add_check_constraint -> Adds a check constraint to a table
+    Example:
+        add_check_constraint :table_name, 'check_condition', name: 'constraint_name'
+
+2) add_column -> Adds a new column to a table.\
+    Example:
+        add_column :table_name, :column_name, :column_type, options
+
+3) add_foreign_key -> Adds a foreign key constraint to a table.
+    Example:
+        add_foreign_key :table_name, :referenced_table, options
+
+4) add_index -> Adds an index to a column or columns in a table.
+    Example:
+        add_index :table_name, :column_name, options
+
+5) add_reference -> Adds a reference column to a table.
+    Example:
+        add_reference :table_name, :referenced_table, options
+
+6) add_timestamps ->  Adds created_at and updated_at timestamp columns to a table.
+    Example:
+        add_timestamps :table_name
+
+7) change_column_comment (must supply :from and :to options) ->  Changes the comment on a column.
+    Example:
+        change_column_comment :table_name, :column_name, from: 'old_comment', to: 'new_comment'
+
+8) change_column_default (must supply :from and :to options) -> Changes the default value of a column.
+    Example:
+        change_column_default :table_name, :column_name, from: 'old_default', to: 'new_default'
+
+9) change_column_null -> Changes whether a column can be NULL or not.
+    Example:
+        change_column_null :table_name, :column_name, false
+
+10) change_table_comment (must supply :from and :to options) -> Changes the comment on a table.
+    Example:
+        change_table_comment :table_name, from: 'old_comment', to: 'new_comment'
+
+11) create_join_table -> Creates a join table for a many-to-many relationship.
+    Example:
+        create_join_table :table1, :table2 do |t|
+            t.index [:table1_id, :table2_id]
+        end
+
+12) create_table -> Creates a new table.
+    Example:
+        create_table :table_name, options do |t|
+            t.column :column_name, :column_type
+        end
+
+13) disable_extension -> Disables a PostgreSQL extension.
+    Example:
+        disable_extension :extension_name
+
+14) drop_join_table -> : Drops a join table
+    Example:
+        drop_join_table :table1, :table2
+
+15) drop_table (must supply table creation options and block) -> Drops an existing table.
+    Example:
+        drop_table :table_name, options do |t|
+            # Block for additional options
+        end
+
+16) enable_extension -> Enables a PostgreSQL extension
+    Example:
+        enable_extension :extension_name
+
+17) remove_check_constraint (must supply original constraint expression) -> Removes a check constraint from a table.
+    Example:
+        remove_check_constraint :table_name, name: 'constraint_name'
+
+18) remove_column (must supply original type and column options) -> Removes a column from a table.
+    Example: 
+        remove_column :table_name, :column_name, :column_type, options
+
+19) remove_columns (must supply original type and column options) -> Removes multiple columns from a table.
+    Example:
+        remove_columns :table_name, :column_name1, :column_name2
+
+20) remove_foreign_key (must supply other table and original options) -> Removes a foreign key constraint from a table.
+    Example:
+        remove_foreign_key :table_name, :referenced_table, options
+
+21) remove_index (must supply columns and original options) -> Removes an index from a column or columns.
+    Example:
+        remove_index :table_name, column: :column_name, options
+
+22) remove_reference (must supply original options) -> Removes a reference column from a table.
+    Example:
+        remove_reference :table_name, :referenced_table, options
+
+23) remove_timestamps (must supply original options) -> Removes created_at and updated_at timestamp columns.
+    Example:
+        remove_timestamps :table_name
+
+24) rename_column -> Renames a column in a table.
+    Example:
+        rename_column :table_name, :old_column_name, :new_column_name
+
+25) rename_index -> Renames an index on a table.
+    Example:
+      rename_index :table_name, :old_index_name, :new_index_name
+
+26) rename_table -> Renames an existing table.
+    Example:
+      rename_table :old_table_name, :new_table_name
