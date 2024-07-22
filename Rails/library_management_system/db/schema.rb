@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_19_125706) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_22_100802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -63,6 +63,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_125706) do
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_confirmation"
+    t.integer "number_of_books"
+    t.integer "year_established"
+    t.string "library_code"
+    t.integer "max_capacity"
+    t.integer "number_of_staff"
+    t.string "status"
   end
 
   create_table "members", force: :cascade do |t|
@@ -97,7 +104,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_125706) do
     t.index ["member_id"], name: "index_transactions_on_member_id"
   end
 
-  add_foreign_key "books", "authors"
   add_foreign_key "books", "genres"
   add_foreign_key "transactions", "books"
   add_foreign_key "transactions", "librarians"
