@@ -96,6 +96,23 @@ Characteristics: Tailored settings and configurations to meet unique requirement
 
 
 
+# Convention over Configuration in Active Record --->
+When using class names composed of two or more words, the model class name should follow the Ruby conventions, using the CamelCase form, while the table name must use the snake_case form. 
+
+    Examples:
+        Model Class - Singular with the first letter of each word capitalized (e.g., BookClub).
+        Database Table - Plural with underscores separating words (e.g., book_clubs).
+
+            Model / Class	         Table / Schema
+                Article	                articles
+                LineItem	            line_items
+                Deer	                deers
+                Mouse	                mice
+                Person	                people
+
+
+
+
 
                                              <-------:CREATING NEW RAILS APPLICATION:----->
 Rails comes with a number of scripts called generators that are designed to make your development life easier by creating everything that's necessary to start working on a particular task
@@ -128,6 +145,80 @@ development:
   port: 5432
 
 
+                                                <--------:CRUD (READ & WRITE DATA)---------->
+                
+CRUD is an acronym for the four verbs we use to operate on data: Create, Read, Update and Delete. 
+Active Record automatically creates methods to allow an application to read and manipulate data stored within its tables.
+
+1) CREATE:-
+    Active Record objects can be created from a hash, a block, or have their attributes manually set after creation
+    The new method will return a new object while create will return the object and save it to the database.
+
+    For Example ->
+    * Using Create Method:
+            user = User.create(name: "Nishchay", occupation: "Web Developer")   
+
+    * Using New Method:
+            user = User.new
+            user.name = "Nishchay"
+            user.occupation = "Web Developer"
+
+    * if a block is provided, both create and new will yield the new object to that block for initialization, 
+      while only create will persist the resulting object to the database
+            user = User.new do |u|
+                u.name = "Nishchay"
+                u.occupation = "Web Developer"
+            end
+
+
+
+2) READ:-
+    Active Record provides a rich API for accessing data within a database.
+
+    For Example ->
+    * return a collection with all users
+        users = User.all
+    
+    * return the first user
+        user = User.first
+
+    * return the first user named Nishchay
+        user = User.find_by(name: 'Nishchay')
+
+    * find all users named Nishchay who are Web Developer and sort by created_at in reverse chronological order
+        users = User.where(name: 'Nishchay', occupation: 'Web Developer').order(created_at: :desc)
+
+
+3) UPDATE:-
+    Once an Active Record object has been retrieved, its attributes can be modified and it can be saved to the database.
+
+    For Example:
+        user = User.find_by(name: 'Nishchay')
+        user.name = 'Naman'
+        user.save
+
+    * A shorthand for this is to use a hash mapping attribute names to the desired value
+            user = User.find_by(name: 'Nishchay')
+            user.update(name: 'Naman')
+
+    * If we want to update several records in bulk without callbacks or validations, We can update the database directly using update_all
+            User.update_all max_login_attempts: 3, must_change_password: true
+
+
+4) DELETE:-
+    Likewise, once retrieved, an Active Record object can be destroyed, which removes it from the database.
+
+    For Example:
+        user = User.find_by(name: 'Nishchay')
+        user.destroy
+
+    * find and delete all users named Nishchay
+            User.destroy_by(name: 'David')
+
+    * delete all users
+            User.destroy_all
+
+
 
                                              <----------:DB commands in RAILS:---------->
                                              
@@ -156,7 +247,7 @@ Runs the db/seeds.rb file to populate the database with initial data.
 
 8) rails db:version    ->
 Displays the current version number of the schema.
-
+s
 
 
 
