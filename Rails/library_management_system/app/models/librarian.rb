@@ -27,19 +27,26 @@ class Librarian < ApplicationRecord
     # validates :number_of_books, comparison: { greater_than: 0, message: "must be greater than 0" }
 
 
-    # -------------->   FORMAT
+    # -------------->   FORMAT VALIDATION
     # validates :librarian_name, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
     # validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
 
 
-    # -------------->   INCLUSION   
+    # -------------->   INCLUSION VALIDATION
     # validates :status, inclusion: { in: ["active", "inactive"] }
     # validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
     
 
 
-    # -------------->   EXCLUSION
+    # -------------->   EXCLUSION VALIDATION
     # validates :subdomain, exclusion: { in: %w(www us ca jp), message: "%{value} is reserved." }
-    validates :status, exclusion: { in: ["active", "inactive"] }
+    # validates :status, exclusion: { in: ["active", "inactive"] }
 
+
+
+    # -------------->   LENGTH VALIDATION
+    # validates :librarian_name, length: { maximum: 10 }
+    # validates :librarian_name, length: { is: 10 }
+    # validates :librarian_name, length: { minimum: 10 }
+    validates :librarian_name, length: { in: 10..20 }
 end

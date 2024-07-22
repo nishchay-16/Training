@@ -176,3 +176,45 @@ validates :status, exclusion: { in: ["active", "inactive"] }
  => "active" 
 3.3.0 :122 > a.save!
 (irb):122:in `<main>': Validation failed: Status is reserved (ActiveRecord::RecordInvalid)
+
+
+
+7) length ->
+This helper validates the length of the attributes' values
+
+Example:
+# validates :librarian_name, length: { maximum: 10 }
+3.3.0 :132 > a.librarian_name= "NishchayGupta"
+ => "NishchayGupta" 
+3.3.0 :133 > a.save!
+(irb):133:in `<main>': Validation failed: Librarian name is too long (maximum is 10 characters) (ActiveRecord::RecordInvalid)
+
+
+# validates :librarian_name, length: { is: 10 }
+3.3.0 :145 > a.librarian_name= "Nishchay111"
+ => "Nishchay111" 
+3.3.0 :146 > a.save!
+(irb):146:in `<main>': Validation failed: Librarian name is the wrong length (should be 10 characters) (ActiveRecord::RecordInvalid)
+
+
+# validates :librarian_name, length: { minimum: 10 }
+3.3.0 :136 > a.librarian_name= "NishchayGupta"
+ => "NishchayGupta" 
+3.3.0 :137 > a.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Librarian Update (1.5ms)  UPDATE "librarians" SET "librarian_name" = $1, "updated_at" = $2 WHERE "librarians"."id" = $3  [["librarian_name", "NishchayGupta"], ["updated_at", "2024-07-22 12:15:18.399638"], ["id", 16]]
+  TRANSACTION (2.0ms)  COMMIT
+ => true 
+3.3.0 :138 
+
+
+# validates :librarian_name, length: { in: 10..20 }
+3.3.0 :153 > a.librarian_name= "Nishchay"
+ => "Nishchay" 
+3.3.0 :154 > a.save!
+(irb):154:in `<main>': Validation failed: Librarian name is too short (minimum is 10 characters) (ActiveRecord::RecordInvalid)
+
+3.3.0 :155 > a.librarian_name= "Nishchay111111111111111111"
+ => "Nishchay111111111111111111" 
+3.3.0 :156 > a.save!
+(irb):156:in `<main>': Validation failed: Librarian name is too long (maximum is 20 characters) (ActiveRecord::RecordInvalid)
