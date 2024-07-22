@@ -21,10 +21,15 @@ class Librarian < ApplicationRecord
     # validates :email, comparison: { greater_than: "a@b.com" }
     # validates :start_date, comparison: { greater_than: :end_date }
     # validates :number_of_books, comparison: { greater_than: 0}
-    validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
+    # validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
     # validates :number_of_books, comparison: { less_than: 1000}
     # validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
     # validates :number_of_books, comparison: { greater_than: 0, message: "must be greater than 0" }
+
+
+    # -------------->   FORMAT
+    # validates :librarian_name, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
+    validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
 
 
 end

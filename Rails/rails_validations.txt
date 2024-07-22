@@ -75,6 +75,7 @@ validates :number_of_books, comparison: { greater_than: 0}
 3.3.0 :038 > a.save!
 (irb):38:in `<main>': Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
 
+
 --> :greater_than_or_equal_to - Specifies the value must be greater than or equal to the supplied value. The default error message for this option is "must be greater than or equal to %{count}".
 Example:
 validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
@@ -83,8 +84,10 @@ validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
 3.3.0 :054 > a.save!
 (irb):54:in `<main>': Validation failed: Number of books must be greater than or equal to 1 (ActiveRecord::RecordInvalid)
 
+
 --> :equal_to - Specifies the value must be equal to the supplied value. The default error message for this option is "must be equal to %{count}".
 Example:
+
 
 :less_than - Specifies the value must be less than the supplied value. The default error message for this option is "must be less than %{count}".
 Example:
@@ -94,6 +97,7 @@ validates :number_of_books, comparison: { less_than: 1000}
 3.3.0 :054 > a.save!
 (irb):54:in `<main>': Validation failed: Number of books must be less than 1000 (ActiveRecord::RecordInvalid)
 
+
 :less_than_or_equal_to - Specifies the value must be less than or equal to the supplied value. The default error message for this option is "must be less than or equal to %{count}".
 Example:
 validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
@@ -102,6 +106,7 @@ validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
 3.3.0 :054 > a.save!
 (irb):54:in `<main>': Validation failed: Number of books must be less than or equal to 1000 (ActiveRecord::RecordInvalid)
 
+
 :other_than - Specifies the value must be other than the supplied value. The default error message for this option is "must be other than %{count}".
 Example:
 validates :number_of_books, comparison: { greater_than: 0, message: "must be greater than 0" }
@@ -109,3 +114,27 @@ validates :number_of_books, comparison: { greater_than: 0, message: "must be gre
  => 0 
 3.3.0 :054 > a.save!
 (irb):54:in `<main>': Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
+
+
+
+4) Format ->
+
+validates :librarian_name, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
+Example:
+#<Librarian:0x0000000121757ac0
+... 
+3.3.0 :061 > a.librarian_name="Nishchay1"
+3.3.0 :062 > 
+ => "Nishchay1" 
+3.3.0 :063 > a.save!
+(irb):63:in `<main>': Validation failed: Librarian name only allows letters (ActiveRecord::RecordInvalid)
+
+
+validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
+Example:
+#<Librarian:0x0000000120e99230
+... 
+3.3.0 :068 > a.librarian_name="Nishchay"
+ => "Nishchay" 
+3.3.0 :069 > a.save!
+(irb):69:in `<main>': Validation failed: Librarian name only allows numbers (ActiveRecord::RecordInvalid
