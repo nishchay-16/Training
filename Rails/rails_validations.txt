@@ -1,0 +1,111 @@
+ACTIVE RECORD VALIDATIONS:-
+
+Validations are used to ensure that only valid data is saved into your database. 
+For example, it may be important to your application to ensure that every user provides a valid email address and mailing address.
+
+class Librarian < ApplicationRecord
+    validates :librarian_name, presence: true
+end
+
+irb> Librarian.create(librarian_name: "Nishchay").valid?
+=> true
+irb> Librarian.create(librarian_name: nil).valid?
+=> false
+
+
+
+WHY WE USE VALIDATIONS:-
+1) Data Integrity:->  Validations ensure that only valid data is saved into the database. 
+    For example, ensuring that email addresses are properly formatted or that required fields are not left blank.
+
+2) Business Logic Enforcement:-> They help enforce business rules. 
+    For instance, an e-commerce application might require that the quantity of items ordered cannot exceed the quantity in stock.
+
+3) Preventing Invalid Data Entry:-> By validating data before saving it to the database, you can prevent invalid or corrupted data from being persisted. 
+    This makes sure that your database contains only valid and meaningful data.
+
+4) User Experience:-> Validations provide feedback to users. 
+    If a user submits a form with invalid data, validations can generate error messages that inform the user what needs to be corrected.
+
+5) Security:->  Validations can help prevent malicious data from being saved. 
+    For example, validating input length and format can help prevent certain types of injection attacks.
+
+6) Database Efficiency:-> By catching errors at the model level, you reduce the risk of encountering database errors, which can be more costly to handle. 
+    This also helps in maintaining the consistency of the database.
+
+7)Simplifies Code Maintenance:-> Centralizing validation logic within models makes the codebase easier to maintain and understand. 
+    This keeps your controllers and views cleaner, adhering to the MVC architecture.
+
+
+
+===>     VALIDATION HELPERS:-
+
+1) acceptance -> This method validates that a checkbox on the user interface was checked when a form was submitted.
+
+
+
+2) confirmation ->
+
+--> validates :email, confirmation: true
+    validates :email_confirmation, presence: true
+Example:
+3.3.0 :112 > a.email_confirmation="Naman@gmail.com"
+ => "Naman@gmail.com" 
+3.3.0 :113 > a.save
+ => false 
+3.3.0 :114 > a.save!
+(irb):114:in `<main>': Validation failed: Email confirmation doesn't match Email (ActiveRecord::RecordInvalid)
+
+
+
+3) comparison ->
+
+--> :greater_than - Specifies the value must be greater than the supplied value. The default error message for this option is "must be greater than %{count}".
+Example:
+validates :number_of_books, comparison: { greater_than: 0}
+3.3.0 :035 > a = Librarian.find_by(email: 'n@g.com')
+  Librarian Load (0.5ms)  SELECT "librarians".* FROM "librarians" WHERE "librarians"."email" = $1 LIMIT $2  [["email", "n@g.com"], ["LIMIT", 1]]
+ => 
+#<Librarian:0x000000012107ff90
+... 
+3.3.0 :036 > a.number_of_books=0
+ => 0 
+3.3.0 :037 > a.save
+ => false 
+3.3.0 :038 > a.save!
+(irb):38:in `<main>': Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
+
+--> :greater_than_or_equal_to - Specifies the value must be greater than or equal to the supplied value. The default error message for this option is "must be greater than or equal to %{count}".
+Example:
+validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
+3.3.0 :053 > a.number_of_books=0
+ => 0 
+3.3.0 :054 > a.save!
+(irb):54:in `<main>': Validation failed: Number of books must be greater than or equal to 1 (ActiveRecord::RecordInvalid)
+
+--> :equal_to - Specifies the value must be equal to the supplied value. The default error message for this option is "must be equal to %{count}".
+Example:
+
+:less_than - Specifies the value must be less than the supplied value. The default error message for this option is "must be less than %{count}".
+Example:
+validates :number_of_books, comparison: { less_than: 1000}
+3.3.0 :053 > a.number_of_books=1001
+ => 1001
+3.3.0 :054 > a.save!
+(irb):54:in `<main>': Validation failed: Number of books must be less than 1000 (ActiveRecord::RecordInvalid)
+
+:less_than_or_equal_to - Specifies the value must be less than or equal to the supplied value. The default error message for this option is "must be less than or equal to %{count}".
+Example:
+validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
+3.3.0 :053 > a.number_of_books=1001
+ => 1001
+3.3.0 :054 > a.save!
+(irb):54:in `<main>': Validation failed: Number of books must be less than or equal to 1000 (ActiveRecord::RecordInvalid)
+
+:other_than - Specifies the value must be other than the supplied value. The default error message for this option is "must be other than %{count}".
+Example:
+validates :number_of_books, comparison: { greater_than: 0, message: "must be greater than 0" }
+3.3.0 :053 > a.number_of_books=0
+ => 0 
+3.3.0 :054 > a.save!
+(irb):54:in `<main>': Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
