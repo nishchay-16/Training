@@ -138,3 +138,41 @@ Example:
  => "Nishchay" 
 3.3.0 :069 > a.save!
 (irb):69:in `<main>': Validation failed: Librarian name only allows numbers (ActiveRecord::RecordInvalid
+
+
+
+5) inclusion ->
+This helper validates that the attributes' values are included in a given set. In fact, this set can be any enumerable object.
+
+Example:
+validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
+
+3.3.0 :114 > a.size="full"
+ => "full" 
+3.3.0 :115 > a.save
+ => false 
+3.3.0 :116 > a.save!
+(irb):116:in `<main>': Validation failed: Size full is not a valid size (ActiveRecord::RecordInvalid)
+
+3.3.0 :117 > a.size="medium"
+ => "medium" 
+3.3.0 :118 > a.save
+  TRANSACTION (0.4ms)  BEGIN
+  Librarian Update (3.1ms)  UPDATE "librarians" SET "updated_at" = $1, "status" = $2, "size" = $3 WHERE "librarians"."id" = $4  [["updated_at", "2024-07-22 11:53:25.271387"], ["status", "full"], ["size", "medium"], ["id", 16]]
+  TRANSACTION (1.2ms)  COMMIT
+ => true 
+
+
+
+6) exclusion ->
+The opposite of inclusion is... exclusion!
+
+Example:
+validates :status, exclusion: { in: ["active", "inactive"] }
+
+#<Librarian:0x0000000121938330
+... 
+3.3.0 :121 > a.status="active"
+ => "active" 
+3.3.0 :122 > a.save!
+(irb):122:in `<main>': Validation failed: Status is reserved (ActiveRecord::RecordInvalid)

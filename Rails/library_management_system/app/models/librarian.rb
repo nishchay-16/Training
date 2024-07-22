@@ -29,7 +29,17 @@ class Librarian < ApplicationRecord
 
     # -------------->   FORMAT
     # validates :librarian_name, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
-    validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
+    # validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
 
+
+    # -------------->   INCLUSION   
+    # validates :status, inclusion: { in: ["active", "inactive"] }
+    # validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
+    
+
+
+    # -------------->   EXCLUSION
+    # validates :subdomain, exclusion: { in: %w(www us ca jp), message: "%{value} is reserved." }
+    validates :status, exclusion: { in: ["active", "inactive"] }
 
 end
