@@ -319,7 +319,9 @@ validates_each :librarian_name, :surname do |record, attr, value|
 
 
 13) validates_with ->
+This helper passes the record to a separate class for validation.
 
+Example:
 class GoodnessValidator < ActiveModel::Validator
     def validate(record)
       if record.librarian_name == "Evil"

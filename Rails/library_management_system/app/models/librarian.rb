@@ -76,7 +76,7 @@ class Librarian < ApplicationRecord
 
     # -------------->   VALIDATES_ASSOCIATION (will do after ACTIVE RECORD ASSOCIATIONS)
 
-    
+
     # -------------->   VALIDATES_EACH
     # validates_each :librarian_name, :surname do |record, attr, value|
     #     record.errors.add(attr, 'must start with upper case') if /\A[[:lower:]]/.match?(value)
@@ -84,7 +84,9 @@ class Librarian < ApplicationRecord
 
 
     # -------------->   VALIDATES_WITH
-     validates_with GoodnessValidator
+    # validates_with GoodnessValidator
+    # # validates_with GoodnessValidator, on: :create    # only on creating new librarian
+    validates_with GoodnessValidator, on: :update    # only on updating existing librarian
 
 end
 
