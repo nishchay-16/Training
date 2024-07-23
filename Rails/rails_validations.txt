@@ -295,3 +295,43 @@ Example:
   Librarian Exists? (1.0ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "12"], ["id", 14], ["LIMIT", 1]]
   TRANSACTION (0.2ms)  ROLLBACK
 (irb):228:in `<main>': Validation failed: Phone no has already been taken (ActiveRecord::RecordInvalid)
+
+
+
+12) validates_each ->
+This helper validates attributes against a block. 
+It doesn't have a predefined validation function. 
+You should create one using a block, and every attribute passed to validates_each will be tested against it.
+
+Example:-
+validates_each :librarian_name, :surname do |record, attr, value|
+        record.errors.add(attr, 'must start with upper case') if /\A[[:lower:]]/.match?(value)
+      end
+
+3.3.0 :248 > a.surname = "gupta"
+ => "gupta" 
+3.3.0 :249 > a.save!
+  TRANSACTION (0.3ms)  BEGIN
+  Librarian Exists? (0.4ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "999999999"], ["id", 14], ["LIMIT", 1]]
+  TRANSACTION (0.2ms)  ROLLBACK
+(irb):249:in `<main>': Validation failed: Surname must start with upper case (ActiveRecord::RecordInvalid)
+
+
+
+13) validates_with ->
+
+class GoodnessValidator < ActiveModel::Validator
+    def validate(record)
+      if record.librarian_name == "Evil"
+        record.errors.add :base, "This librarian is evil"
+      end
+    end
+  end
+
+3.3.0 :261 > a.librarian_name="Evil"
+ => "Evil" 
+3.3.0 :262 > a.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Librarian Exists? (0.4ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "999999999"], ["id", 14], ["LIMIT", 1]]
+  TRANSACTION (0.2ms)  ROLLBACK
+(irb):262:in `<main>': Validation failed: This librarian is evil (ActiveRecord::RecordInvalid)
