@@ -337,3 +337,92 @@ class GoodnessValidator < ActiveModel::Validator
   Librarian Exists? (0.4ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "999999999"], ["id", 14], ["LIMIT", 1]]
   TRANSACTION (0.2ms)  ROLLBACK
 (irb):262:in `<main>': Validation failed: This librarian is evil (ActiveRecord::RecordInvalid)
+
+
+
+
+
+===>    COMMON VALIDATION OPTIONS:-
+
+1) :allow_nil -> Skip validation if the attribute is nil.
+
+Example:
+    VALID_GENRES = %w(fiction non-fiction fantasy mystery romance thriller)
+
+    validates :genre_name, inclusion: { 
+      in: VALID_GENRES, 
+      message: "%{value} is not a valid genre" 
+    }, allow_nil: true
+
+3.3.0 :292 > genre.genre_name="Horror"
+ => "Horror" 
+3.3.0 :293 > genre.save
+ => false 
+3.3.0 :294 > genre.save!
+(irb):294:in `<main>': Validation failed: Genre name Horror is not a valid genre (ActiveRecord::RecordInvalid)
+
+3.3.0 :295 > genre.genre_name=nil
+ => nil 
+3.3.0 :296 > genre.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Genre Update (7.3ms)  UPDATE "genres" SET "genre_name" = $1, "updated_at" = $2 WHERE "genres"."id" = $3  [["genre_name", nil], ["updated_at", "2024-07-23 11:47:27.932684"], ["id", 1]]
+  TRANSACTION (1.1ms)  COMMIT
+ => true 
+
+
+2) :allow_blank -> Skip validation if the attribute is blank. (allow both nil and " ")
+
+Example:
+ validates :genre_name, inclusion: { 
+      in: VALID_GENRES, 
+      message: "%{value} is not a valid genre" },
+      allow_blank: true
+
+3.3.0 :311 > genre.genre_name=""
+ => "" 
+3.3.0 :312 > genre.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Genre Update (2.7ms)  UPDATE "genres" SET "genre_name" = $1, "updated_at" = $2 WHERE "genres"."id" = $3  [["genre_name", ""], ["updated_at", "2024-07-23 11:53:38.686617"], ["id", 1]]
+  TRANSACTION (0.5ms)  COMMIT
+ => true 
+
+
+3) :message -> Specify a custom error message.
+
+Example:
+    validates :genre_name, presence: { message: "must be given please" }
+
+3.3.0 :327 > genre.genre_name=""
+ => "" 
+3.3.0 :328 > genre.save!
+(irb):328:in `<main>': Validation failed: Genre name must be given please (ActiveRecord::RecordInvalid)
+
+
+4) :on -> Specify the contexts where this validation is active.
+
+Example:
+    validates :genre_name, uniqueness: true, on: :create
+
+3.3.0 :335 > genre = Genre.new(genre_name: "fantasy")
+ => #<Genre:0x0000000121214888 id: nil, genre_name: "fantasy", created_at: nil, updated_at: nil> 
+3.3.0 :336 > genre.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Genre Exists? (1.3ms)  SELECT 1 AS one FROM "genres" WHERE "genres"."genre_name" = $1 LIMIT $2  [["genre_name", "fantasy"], ["LIMIT", 1]]
+  TRANSACTION (0.2ms)  ROLLBACK
+(irb):367:in `<main>': Validation failed: Genre name has already been taken (ActiveRecord::RecordInvalid)
+
+
+
+5) :strict          -> Raise an exception when the validation fails.
+
+Example:
+ validates :genre_name, presence: {strict: true}
+
+3.3.0 :351 > genre.genre_name=""
+ => "" 
+3.3.0 :352 > genre.save!
+  TRANSACTION (0.3ms)  BEGIN
+  Genre Exists? (1.2ms)  SELECT 1 AS one FROM "genres" WHERE "genres"."genre_name" = $1 AND "genres"."id" != $2 LIMIT $3  [["genre_name", ""], ["id", 2], ["LIMIT", 1]]
+  TRANSACTION (0.3ms)  ROLLBACK
+(irb):352:in `<main>': Genre name can't be blank (ActiveModel::StrictValidationFailed)
+

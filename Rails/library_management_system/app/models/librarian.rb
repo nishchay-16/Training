@@ -19,7 +19,7 @@ class Librarian < ApplicationRecord
     # -------------->   COMPARISON VALIDATION
     # validates :email, comparison: { greater_than: "a@b.com" }
     # validates :start_date, comparison: { greater_than: :end_date }
-    # validates :number_of_books, comparison: { greater_than: 0}
+    validates :number_of_books, comparison: { greater_than: 0}
     # validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
     # validates :number_of_books, comparison: { less_than: 1000}
     # validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
@@ -78,15 +78,16 @@ class Librarian < ApplicationRecord
 
 
     # -------------->   VALIDATES_EACH
-    # validates_each :librarian_name, :surname do |record, attr, value|
-    #     record.errors.add(attr, 'must start with upper case') if /\A[[:lower:]]/.match?(value)
-    #   end
+    validates_each :librarian_name, :surname do |record, attr, value|
+      record.errors.add(attr, 'must start with upper case') if /\A[[:lower:]]/.match?(value)
+    end
 
 
     # -------------->   VALIDATES_WITH
     # validates_with GoodnessValidator
     # # validates_with GoodnessValidator, on: :create    # only on creating new librarian
     validates_with GoodnessValidator, on: :update    # only on updating existing librarian
+    # validates_with GoodnessValidator, fields: [:librarian_name, :surname]   
 
 end
 
