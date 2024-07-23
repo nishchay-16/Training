@@ -57,6 +57,15 @@ class Librarian < ApplicationRecord
     # validates :phone_no, numericality: { greater_than: 20 }
     # validates :phone_no, numericality: { only_integer: true }
     # validates :phone_no, numericality: { odd: true }
-    validates :phone_no, numericality: { even: true }
+    # validates :phone_no, numericality: { even: true }
+
+    
+    # -------------->   PRESENCE VALIDATION
+    # validates :librarian_name, presence: true
+    # validates :librarian_name, presence: { message: 'must be present' }
+
+
+    # -------------->   ABSENCE VALIDATION
+    validates :librarian_name, absence: true
 
 end

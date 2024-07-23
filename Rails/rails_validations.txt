@@ -250,3 +250,32 @@ Example:
  => "1" 
 3.3.0 :193 > a.save!
 (irb):193:in `<main>': Validation failed: Phone no must be even (ActiveRecord::RecordInvalid)
+
+
+
+9) presence ->
+This helper validates that the specified attributes are not empty. 
+
+Example:
+# validates :librarian_name, presence: true
+3.3.0 :196 > a.librarian_name=""
+ => "" 
+3.3.0 :197 > a.save!
+(irb):197:in `<main>': Validation failed: Librarian name can't be blank (ActiveRecord::RecordInvalid)
+
+#  validates :librarian_name, presence: { message: 'must be present' }
+3.3.0 :201 > a.librarian_name=""
+ => "" 
+3.3.0 :202 > a.save!
+(irb):202:in `<main>': Validation failed: Librarian name must be present (ActiveRecord::RecordInvalid)
+
+
+
+10) absence ->
+This helper validates that the specified attributes are absent.
+
+#  validates :librarian_name, absence: true
+3.3.0 :205 > a.librarian_name="nishu"
+ => "nishu" 
+3.3.0 :206 > a.save!
+(irb):206:in `<main>': Validation failed: Librarian name must be blank (ActiveRecord::RecordInvalid)
