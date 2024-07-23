@@ -8,7 +8,6 @@ class Librarian < ApplicationRecord
     # validates :phone_no, acceptance: { accept: "yes" }
 
 
-
     # -------------->   CONFIRMATION VALIDATION
     # validates :email, confirmation: true
     # validates :email_confirmation, presence: true
@@ -37,16 +36,27 @@ class Librarian < ApplicationRecord
     # validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
     
 
-
     # -------------->   EXCLUSION VALIDATION
     # validates :subdomain, exclusion: { in: %w(www us ca jp), message: "%{value} is reserved." }
     # validates :status, exclusion: { in: ["active", "inactive"] }
-
 
 
     # -------------->   LENGTH VALIDATION
     # validates :librarian_name, length: { maximum: 10 }
     # validates :librarian_name, length: { is: 10 }
     # validates :librarian_name, length: { minimum: 10 }
-    validates :librarian_name, length: { in: 10..20 }
+    # validates :librarian_name, length: { in: 10..20 }
+    # validates :librarian_name, length: { maximum: 10, too_long: "is too long (maximum is %{count} characters)" }
+    # validates :librarian_name, length: { is: 10, wrong_length: "must be exactly %{count} characters" }
+    # validates :librarian_name, length: { minimum: 10, too_short: "is too short (minimum is %{count} characters)" }
+    # validates :librarian_name, length: { in: 10..20, too_short: "is too short (minimum is %{count} characters)", too_long: "is too long (maximum is %{count} characters)" }
+
+
+    # -------------->   NUMERICALITY VALIDATION
+    # validates :phone_no, numericality: true
+    # validates :phone_no, numericality: { greater_than: 20 }
+    # validates :phone_no, numericality: { only_integer: true }
+    # validates :phone_no, numericality: { odd: true }
+    validates :phone_no, numericality: { even: true }
+
 end

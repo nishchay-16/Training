@@ -62,12 +62,10 @@ Example:
 
 --> :greater_than - Specifies the value must be greater than the supplied value. The default error message for this option is "must be greater than %{count}".
 Example:
-validates :number_of_books, comparison: { greater_than: 0}
+# validates :number_of_books, comparison: { greater_than: 0}
 3.3.0 :035 > a = Librarian.find_by(email: 'n@g.com')
   Librarian Load (0.5ms)  SELECT "librarians".* FROM "librarians" WHERE "librarians"."email" = $1 LIMIT $2  [["email", "n@g.com"], ["LIMIT", 1]]
  => 
-#<Librarian:0x000000012107ff90
-... 
 3.3.0 :036 > a.number_of_books=0
  => 0 
 3.3.0 :037 > a.save
@@ -78,7 +76,7 @@ validates :number_of_books, comparison: { greater_than: 0}
 
 --> :greater_than_or_equal_to - Specifies the value must be greater than or equal to the supplied value. The default error message for this option is "must be greater than or equal to %{count}".
 Example:
-validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
+# validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
 3.3.0 :053 > a.number_of_books=0
  => 0 
 3.3.0 :054 > a.save!
@@ -91,7 +89,7 @@ Example:
 
 :less_than - Specifies the value must be less than the supplied value. The default error message for this option is "must be less than %{count}".
 Example:
-validates :number_of_books, comparison: { less_than: 1000}
+# validates :number_of_books, comparison: { less_than: 1000}
 3.3.0 :053 > a.number_of_books=1001
  => 1001
 3.3.0 :054 > a.save!
@@ -100,7 +98,7 @@ validates :number_of_books, comparison: { less_than: 1000}
 
 :less_than_or_equal_to - Specifies the value must be less than or equal to the supplied value. The default error message for this option is "must be less than or equal to %{count}".
 Example:
-validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
+# validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
 3.3.0 :053 > a.number_of_books=1001
  => 1001
 3.3.0 :054 > a.save!
@@ -109,7 +107,7 @@ validates :number_of_books, comparison: { less_than_or_equal_to: 1000}
 
 :other_than - Specifies the value must be other than the supplied value. The default error message for this option is "must be other than %{count}".
 Example:
-validates :number_of_books, comparison: { greater_than: 0, message: "must be greater than 0" }
+# validates :number_of_books, comparison: { greater_than: 0, message: "must be greater than 0" }
 3.3.0 :053 > a.number_of_books=0
  => 0 
 3.3.0 :054 > a.save!
@@ -119,10 +117,8 @@ validates :number_of_books, comparison: { greater_than: 0, message: "must be gre
 
 4) Format ->
 
-validates :librarian_name, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
+# validates :librarian_name, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
 Example:
-#<Librarian:0x0000000121757ac0
-... 
 3.3.0 :061 > a.librarian_name="Nishchay1"
 3.3.0 :062 > 
  => "Nishchay1" 
@@ -130,10 +126,8 @@ Example:
 (irb):63:in `<main>': Validation failed: Librarian name only allows letters (ActiveRecord::RecordInvalid)
 
 
-validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
+# validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
 Example:
-#<Librarian:0x0000000120e99230
-... 
 3.3.0 :068 > a.librarian_name="Nishchay"
  => "Nishchay" 
 3.3.0 :069 > a.save!
@@ -145,7 +139,7 @@ Example:
 This helper validates that the attributes' values are included in a given set. In fact, this set can be any enumerable object.
 
 Example:
-validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
+# validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
 
 3.3.0 :114 > a.size="full"
  => "full" 
@@ -168,10 +162,7 @@ validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is
 The opposite of inclusion is... exclusion!
 
 Example:
-validates :status, exclusion: { in: ["active", "inactive"] }
-
-#<Librarian:0x0000000121938330
-... 
+# validates :status, exclusion: { in: ["active", "inactive"] }
 3.3.0 :121 > a.status="active"
  => "active" 
 3.3.0 :122 > a.save!
@@ -180,7 +171,8 @@ validates :status, exclusion: { in: ["active", "inactive"] }
 
 
 7) length ->
-This helper validates the length of the attributes' values
+This helper validates the length of the attributes' values.
+We can customize these messages using the :wrong_length, :too_long, and :too_short options and %{count} as a placeholder for the number corresponding to the length constraint being used.
 
 Example:
 # validates :librarian_name, length: { maximum: 10 }
@@ -218,3 +210,43 @@ Example:
  => "Nishchay111111111111111111" 
 3.3.0 :156 > a.save!
 (irb):156:in `<main>': Validation failed: Librarian name is too long (maximum is 20 characters) (ActiveRecord::RecordInvalid)
+
+
+
+8) numericality ->
+This helper validates that your attributes have only numeric values. 
+By default, it will match an optional sign followed by an integer or floating point number.
+To specify that only integer numbers are allowed, set :only_integer to true. 
+Then it will use the following regular expression to validate the attribute's value.
+
+Example:
+# validates :phone_no, numericality: true
+3.3.0 :171 > a.phone_no="hi"
+ => "hi" 
+3.3.0 :172 > a.save!
+(irb):172:in `<main>': Validation failed: Phone no is not a number (ActiveRecord::RecordInvalid)
+
+# validates :phone_no, numericality: { only_integer: true }
+3.3.0 :177 > a.phone_no="2.5"
+ => "2.5" 
+3.3.0 :178 > a.save!
+(irb):178:in `<main>': Validation failed: Phone no must be an integer (ActiveRecord::RecordInvalid)
+3.3.0 :179 > a.phone_no="9588169118"
+ => "9588169118" 
+3.3.0 :180 > a.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Librarian Update (2.9ms)  UPDATE "librarians" SET "phone_no" = $1, "updated_at" = $2 WHERE "librarians"."id" = $3  [["phone_no", "9588169118"], ["updated_at", "2024-07-23 06:28:33.560115"], ["id", 16]]
+  TRANSACTION (0.5ms)  COMMIT
+ => true 
+
+# validates :phone_no, numericality: { odd: true }
+3.3.0 :186 > a.phone_no="12"
+ => "12" 
+3.3.0 :187 > a.save!
+(irb):187:in `<main>': Validation failed: Phone no must be odd (ActiveRecord::RecordInvalid)
+
+# validates :phone_no, numericality: { even: true }
+3.3.0 :192 > a.phone_no="1"
+ => "1" 
+3.3.0 :193 > a.save!
+(irb):193:in `<main>': Validation failed: Phone no must be even (ActiveRecord::RecordInvalid)
