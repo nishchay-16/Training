@@ -18,7 +18,7 @@ class Librarian < ApplicationRecord
 
     # -------------->   COMPARISON VALIDATION
     # validates :email, comparison: { greater_than: "a@b.com" }
-    # validates :start_date, comparison: { greater_than: :end_date }
+    validates :start_date, comparison: { greater_than: :end_date }
     # validates :number_of_books, comparison: { greater_than: 0}
     # validates :number_of_books, comparison: { greater_than_or_equal_to: 1}
     # validates :number_of_books, comparison: { less_than: 1000}
@@ -32,12 +32,12 @@ class Librarian < ApplicationRecord
 
 
     # -------------->   INCLUSION VALIDATION
-    # validates :status, inclusion: { in: ["active", "inactive"] }
+    validates :status, inclusion: { in: ["active", "inactive"] }
     # validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
     
 
     # -------------->   EXCLUSION VALIDATION
-    # validates :subdomain, exclusion: { in: %w(www us ca jp), message: "%{value} is reserved." }
+    validates :subdomain, exclusion: { in: %w(www us ca jp), message: "%{value} is reserved." }
     # validates :status, exclusion: { in: ["active", "inactive"] }
 
 
@@ -45,7 +45,7 @@ class Librarian < ApplicationRecord
     # validates :librarian_name, length: { maximum: 10 }
     # validates :librarian_name, length: { is: 10 }
     # validates :librarian_name, length: { minimum: 10 }
-    # validates :librarian_name, length: { in: 10..20 }
+    validates :librarian_name, length: { in: 2..20 }
     # validates :librarian_name, length: { maximum: 10, too_long: "is too long (maximum is %{count} characters)" }
     # validates :librarian_name, length: { is: 10, wrong_length: "must be exactly %{count} characters" }
     # validates :librarian_name, length: { minimum: 10, too_short: "is too short (minimum is %{count} characters)" }
@@ -53,7 +53,7 @@ class Librarian < ApplicationRecord
 
 
     # -------------->   NUMERICALITY VALIDATION
-    # validates :phone_no, numericality: true
+    validates :phone_no, numericality: true
     # validates :phone_no, numericality: { greater_than: 20 }
     # validates :phone_no, numericality: { only_integer: true }
     # validates :phone_no, numericality: { odd: true }
@@ -61,11 +61,15 @@ class Librarian < ApplicationRecord
 
     
     # -------------->   PRESENCE VALIDATION
-    # validates :librarian_name, presence: true
+    validates :librarian_name, presence: true
     # validates :librarian_name, presence: { message: 'must be present' }
 
 
     # -------------->   ABSENCE VALIDATION
-    validates :librarian_name, absence: true
+    # validates :librarian_name, absence: true
+
+
+    # -------------->   UNIQUENESS VALIDATION
+    validates :phone_no , uniqueness: true
 
 end

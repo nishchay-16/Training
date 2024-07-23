@@ -274,8 +274,24 @@ Example:
 10) absence ->
 This helper validates that the specified attributes are absent.
 
+Example:
 #  validates :librarian_name, absence: true
 3.3.0 :205 > a.librarian_name="nishu"
  => "nishu" 
 3.3.0 :206 > a.save!
 (irb):206:in `<main>': Validation failed: Librarian name must be blank (ActiveRecord::RecordInvalid)
+
+
+
+11) uniqueness ->
+This helper validates that the attribute's value is unique right before the object gets saved.
+
+Example:
+# validates :phone_no , uniqueness: true
+3.3.0 :227 > a.phone_no=12
+ => 12 
+3.3.0 :228 > a.save!
+  TRANSACTION (0.3ms)  BEGIN
+  Librarian Exists? (1.0ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "12"], ["id", 14], ["LIMIT", 1]]
+  TRANSACTION (0.2ms)  ROLLBACK
+(irb):228:in `<main>': Validation failed: Phone no has already been taken (ActiveRecord::RecordInvalid)
