@@ -50,3 +50,87 @@ Here are the key advantages of using associations in Rails:
     Associations can be used in conjunction with validations to enforce rules about relationships, ensuring that related records are present and valid.
 
 
+
+
+                                                ===> TYPES OF ASSOCIATIONS <===
+
+1) belongs_to -> 
+A belongs_to association sets up a connection with another model, such that each instance of the declaring model "belongs to" one instance of the other model. 
+
+Example:
+class Book < ApplicationRecord
+  belongs_to :author
+end
+
+
+2) has_one -> 
+A has_one association indicates that one other model has a reference to this model. That model can be fetched through this association.
+
+Example:
+class User < ApplicationRecord
+  has_one :account
+end
+
+
+3) has_many -> 
+A has_many association is similar to has_one, but indicates a one-to-many connection with another model
+This association indicates that each instance of the model has zero or more instances of another model. 
+
+Example:
+class Author < ApplicationRecord
+  has_many :books
+end
+
+
+4) has_many :through -> 
+A has_many :through association is often used to set up a many-to-many connection with another model. 
+This association indicates that the declaring model can be matched with zero or more instances of another model by proceeding through a third model. 
+
+Example:
+class Document < ApplicationRecord
+  has_many :sections
+  has_many :paragraphs, through: :sections
+end
+
+class Section < ApplicationRecord
+  belongs_to :document
+  has_many :paragraphs
+end
+
+class Paragraph < ApplicationRecord
+  belongs_to :section
+end
+
+
+5) has_one :through -> 
+A has_one :through association sets up a one-to-one connection with another model. 
+This association indicates that the declaring model can be matched with one instance of another model by proceeding through a third model.
+
+Example:
+class Supplier < ApplicationRecord
+  has_one :account
+  has_one :account_history, through: :account
+end
+
+class Account < ApplicationRecord
+  belongs_to :supplier
+  has_one :account_history
+end
+
+class AccountHistory < ApplicationRecord
+  belongs_to :account
+end
+
+
+6) has_and_belongs_to_many ->
+A has_and_belongs_to_many association creates a direct many-to-many connection with another model, with no intervening model. 
+This association indicates that each instance of the declaring model refers to zero or more instances of another model.
+
+Example:
+class Assembly < ApplicationRecord
+  has_and_belongs_to_many :parts
+end
+
+class Part < ApplicationRecord
+  has_and_belongs_to_many :assemblies
+end

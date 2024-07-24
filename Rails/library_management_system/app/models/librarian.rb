@@ -1,4 +1,5 @@
 class Librarian < ApplicationRecord
+  has_many :transactions
     # validates :librarian_name, presence: true
     # validates :librarian_name, presence: { message: 'must be present' }
 

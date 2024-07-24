@@ -1,4 +1,5 @@
 class Genre < ApplicationRecord
+    has_many :books
     VALID_GENRES = %w(fiction non-fiction fantasy mystery romance thriller)
 
     # validates :genre_name, inclusion: { 

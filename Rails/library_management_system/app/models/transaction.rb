@@ -1,5 +1,7 @@
 class Transaction < ApplicationRecord
-  # belongs_to :member
+  belongs_to :member
+  belongs_to :book
+  belongs_to :librarian
 
   #          Conditional Validations 
 
