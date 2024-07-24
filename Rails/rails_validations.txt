@@ -426,3 +426,92 @@ Example:
   TRANSACTION (0.3ms)  ROLLBACK
 (irb):352:in `<main>': Genre name can't be blank (ActiveModel::StrictValidationFailed)
 
+
+
+
+===>   CONDITIONAL VALIDATION
+
+1) Using a Symbol with :if and :unless
+
+Example:
+   validates :isbn, presence: true, if: :book_present?
+   def book_present?
+     book_id.present?
+   end
+
+3.3.0 :435 > a = Transaction.new(member_id: 1, book_id: 1, issuedate: Date.today, returndate: Date.today + 14.days)
+ => #<Transaction:0x0000000121a57450 id: nil, member_id: 1, isbn: nil, issuedate: Wed, 24 Jul 2024, returndate: Wed, 07 Aug 2024, created_at: nil, updated_at: nil, book_id: 1, librarian_id: nil> 
+3.3.0 :436 > a.save!
+(irb):436:in `<main>': Validation failed: Isbn can't be blank (ActiveRecord::RecordInvalid)
+
+
+2) Using a Proc with :if and :unless
+Using a Proc object gives you the ability to write an inline condition instead of a separate method. This option is best suited for one-liners.
+
+Example:
+   validates :isbn, presence: true, unless: Proc.new { |t| t.issuedate.blank? }   # using proc
+   validates :isbn, presence: true, unless: -> { issuedate.blank? }               # using lambda
+
+3.3.0 :474 > transaction_without_date = Transaction.new(
+3.3.0 :475 >   member_id: 1,
+3.3.0 :476 >   isbn: "",
+3.3.0 :477 >   issuedate: nil,
+3.3.0 :478 >   returndate: Date.today + 14.days,
+3.3.0 :479 >   book_id: 1,
+3.3.0 :480 >   librarian_id: 17
+3.3.0 :481 > )
+3.3.0 :482 > 
+3.3.0 :483 > puts transaction_without_date.valid?                  # Should return true even if ISBN is blank because issuedate is blank
+3.3.0 :484 > puts transaction_without_date.errors.full_messages    # Should be empty if valid
+true
+ => nil 
+3.3.0 :485 > transaction_without_date.save!
+  TRANSACTION (0.4ms)  BEGIN
+  Transaction Create (4.2ms)  INSERT INTO "transactions" ("member_id", "isbn", "issuedate", "returndate", "created_at", "updated_at", "book_id", "librarian_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["member_id", 1], ["isbn", ""], ["issuedate", nil], ["returndate", "2024-08-07"], ["created_at", "2024-07-24 06:25:24.075343"], ["updated_at", "2024-07-24 06:25:24.075343"], ["book_id", 1], ["librarian_id", 17]]
+  TRANSACTION (0.4ms)  COMMIT
+ => true 
+3.3.0 :486
+
+
+3) Grouping Conditional Validations
+
+Example:
+  def involves_special_member?
+    member_id == 1
+  end
+  with_options if: :involves_special_member? do |transaction|
+    transaction.validates :isbn, presence: true
+    transaction.validates :book_id, presence: true
+    transaction.validates :issuedate, presence: true
+  end
+
+3.3.0 :507 > transaction_special = Transaction.new(
+3.3.0 :508 >   member_id: 1,
+3.3.0 :509 >   isbn: nil,  
+3.3.0 :510 >   issuedate: nil,  
+3.3.0 :511 >   book_id: nil 
+3.3.0 :512 > )
+3.3.0 :515 > transaction_special.save!  
+(irb):515:in `<main>': Validation failed: Isbn can't be blank, Book can't be blank, Issuedate can't be blank (ActiveRecord::RecordInvalid)
+
+
+4) Combining Validation Conditions
+
+Example: (if id=1 & return date present then only validation applies )
+ validates :isbn, :book_id, :issuedate, presence: true,
+    if: -> { member_id == 1 },
+    unless: -> { returndate.present? }
+
+3.3.0 :537 > transaction = Transaction.new(
+3.3.0 :538 >   member_id: 1,
+3.3.0 :539 >   isbn: nil,
+3.3.0 :540 >   issuedate: nil,
+3.3.0 :541 >   book_id: nil
+3.3.0 :542 > )
+3.3.0 :543 > puts transaction.valid?  # Should be false
+3.3.0 :544 > puts transaction.errors.full_messages
+false
+Isbn can't be blank
+Book can't be blank
+Issuedate can't be blank
+ => nil 
