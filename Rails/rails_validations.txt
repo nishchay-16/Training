@@ -515,3 +515,61 @@ Isbn can't be blank
 Book can't be blank
 Issuedate can't be blank
  => nil 
+
+
+
+===>  CUSTOM VALIDATIONS
+
+1) Custom Validators -> 
+Example:
+class EmailValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      unless URI::MailTo::EMAIL_REGEXP.match?(value)
+        record.errors.add attribute, (options[:message] || "is not an email")
+      end
+    end
+  end
+
+validates :email, presence: true, email: true
+
+3.3.0 :554 > a.email = "inva@lid@1"
+ => "inva@lid@1" 
+3.3.0 :555 > a.save!
+(irb):555:in `<main>': Validation failed: Email is not an email (ActiveRecord::RecordInvalid)
+
+
+2) Custom Methods -> 
+Example:
+   validate :check_author_name_format
+    def check_author_name_format
+      unless author_name.match?(/\A[A-Za-z]+\z/)
+        errors.add(:author_name, "must only contain letters")
+      end
+    end
+
+3.3.0 :556 > author_invalid = Author.new(author_name: "John123")
+ => #<Author:0x00000001215d8640 id: nil, author_name: "John123", nationality: nil, created_at: nil, updated_at: nil> 
+3.3.0 :557 > author_invalid.save!
+(irb):557:in `<main>': Validation failed: Author name must only contain letters (ActiveRecord::RecordInvalid)
+
+
+3) Listing Validators ->
+We can now use validators on the "Person" model to list all validators, or even check a specific field using validators_on.
+
+Example:
+3.3.0 :560 > Librarian.validators
+ => 
+[#<ActiveModel::Validations::ComparisonValidator:0x00000001215dd1b8 @attributes=[:number_of_books], @options={:greater_than=>0}>,
+ #<ActiveModel::Validations::InclusionValidator:0x00000001215dc998 @attributes=[:status], @delimiter=["active", "inactive"], @options={:in=>["active", "inactive"]}>,
+ #<ActiveModel::Validations::ExclusionValidator:0x00000001215dbc00 @attributes=[:subdomain], @delimiter=["www", "us", "ca", "jp"], @options={:in=>["www", "us", "ca", "jp"], :message=>"%{value} is reserved."}>,
+ #<ActiveRecord::Validations::LengthValidator:0x00000001215db1d8 @attributes=[:librarian_name], @options={:minimum=>2, :maximum=>20}>,
+ #<ActiveRecord::Validations::PresenceValidator:0x00000001215da080 @attributes=[:librarian_name], @options={}>,
+ #<ActiveModel::BlockValidator:0x00000001215d96d0 @attributes=[:librarian_name, :surname], @block=#<Proc:0x00000001215d9680 /Users/nishchaygupta/Desktop/Training/Rails/library_management_system/app/models/librarian.rb:81>, @options={}>,
+ #<ActiveRecord::Validations::NumericalityValidator:0x00000001215da620 @attributes=[:phone_no], @options={}>,
+ #<ActiveRecord::Validations::UniquenessValidator:0x000000011ff4b5a8
+  @attributes=[:phone_no],
+  @klass=
+   Librarian(id: integer, librarian_name: string, email: string, phone_no: string, address: string, created_at: datetime, updated_at: datetime, email_confirmation: string, number_of_books: integer, year_established: integer, library_code: string, max_capacity: integer, number_of_staff: integer, status: string, size: string, subdomain: string, surname: string),
+  @options={}>,
+ #<GoodnessValidator:0x00000001215d8988 @options={:on=>:update}>] 
+
