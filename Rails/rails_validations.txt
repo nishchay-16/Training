@@ -573,3 +573,132 @@ Example:
   @options={}>,
  #<GoodnessValidator:0x00000001215d8988 @options={:on=>:update}>] 
 
+
+
+====>   VALIDATION ERRORS
+
+1) errors ->
+The gateway through which you can drill down into various details of each error.
+This returns an instance of the class ActiveModel::Errors containing all errors, each error is represented by an ActiveModel::Error object.
+
+Example:
+class Book < ApplicationRecord
+    validates :title, presence: true, length: { minimum: 5 }
+end
+
+3.3.0 :561 > book = Book.new
+ => #<Book:0x0000000120f338a8 id: nil, isbn: nil, title: nil, quantity: nil, created_at: nil, updated_at: nil, available_quantity: nil, author_id: nil, genre_id: nil> 
+3.3.0 :562 > book.valid?
+ => false 
+3.3.0 :563 > book.errors.full_messages
+ => ["Title can't be blank", "Title is too short (minimum is 5 characters)"] 
+
+ 
+2) errors[] ->
+It is used when you want to check the error messages for a specific attribute. 
+It returns an array of strings with all error messages for the given attribute, each string with one error message. 
+If there are no errors related to the attribute, it returns an empty array.
+
+Example:
+3.3.0 :568 > book.title="NG"
+ => "NG" 
+3.3.0 :569 > book.save!
+(irb):569:in `<main>': Validation failed: Title is too short (minimum is 5 characters) (ActiveRecord::RecordInvalid)
+3.3.0 :570 > book.errors[:title]
+ => ["is too short (minimum is 5 characters)"] 
+
+
+3) errors.where and Error Object ->
+
+Example:
+3.3.0 :571 > book.errors.where(:title)
+ => [#<ActiveModel::Error attribute=title, type=too_short, options={:count=>5}>] 
+
+3.3.0 :578 > error = book.errors.where(:title).last
+ => #<ActiveModel::Error attribute=title, type=too_short, options={:count=>5}> 
+3.3.0 :579 > error.attribute
+ => :title 
+3.3.0 :580 > error.options[:count]
+ => 5 
+3.3.0 :581 > error.message
+ => "is too short (minimum is 5 characters)" 
+3.3.0 :582 > error.full_message
+ => "Title is too short (minimum is 5 characters)" 
+
+
+4) errors.add ->
+The add method creates the error object by taking the attribute, the error type and additional options hash. 
+This is useful when writing your own validator, as it lets you define very specific error situations.
+
+Example:
+    validate do |book|
+        errors.add :title, :too_plain, message: "not cool enough"
+    end
+
+3.3.0 :585 > a=Book.create
+ => #<Book:0x000000012117ae90 id: nil, isbn: nil, title: nil, quantity: nil, created_at: nil, updated_at: nil, available_quantity: nil, author_id: nil, genre_id: nil> 
+3.3.0 :586 > a.errors.where(:title).first.type
+ => :too_plain 
+3.3.0 :587 > a.errors.where(:title).first.full_message
+ => "Title not cool enough" 
+
+
+5) errors[:base] ->
+When you add an error to :base, it means the error is general and not related to any single attribute. 
+For example, if the combination of several attributes is invalid, you would add an error to :base
+
+Example:
+    validate do |book|
+        errors.add :base, :invalid, message: "This person is invalid because ..."
+      end
+
+3.3.0 :590 > a=Book.create
+ => #<Book:0x0000000121535fa8 id: nil, isbn: nil, title: nil, quantity: nil, created_at: nil, updated_at: nil, available_quantity: nil, author_id: nil, genre_id: nil> 
+3.3.0 :591 > a.errors.where(:base).first.full_message
+ => "This person is invalid because ..." 
+
+
+6) errors.size ->
+The size method returns the total number of errors for the object.
+
+Example:
+    validates :title, presence: true, length: { minimum: 5 }
+
+3.3.0 :593 > a = Book.create
+ => #<Book:0x000000012101ade8 id: nil, isbn: nil, title: nil, quantity: nil, created_at: nil, updated_at: nil, available_quantity: nil, author_id: nil, genre_id: nil> 
+3.3.0 :594 > a.errors.size
+ => 2 
+
+3.3.0 :599 > a = Book.new(title: "Nishchay")
+ => #<Book:0x0000000121ed3d58 id: nil, isbn: nil, title: "Nishchay", quantity: nil, created_at: nil, updated_at: nil, available_quantity: nil, author_id: nil, genre_id: nil> 
+3.3.0 :600 > a.valid?
+ => true 
+3.3.0 :601 > a.errors.size
+ => 0 
+
+
+
+7) errors.clear ->
+The clear method is used when you intentionally want to clear the errors collection. 
+Of course, calling errors.clear upon an invalid object won't actually make it valid: 
+the errors collection will now be empty, but the next time you call valid? or any method that tries to save this object to the database, 
+the validations will run again.If any of the validations fail, the errors collection will be filled again.
+
+Example:
+
+3.3.0 :603 > a = Book.create
+ => #<Book:0x0000000120a73cf0 id: nil, isbn: nil, title: nil, quantity: nil, created_at: nil, updated_at: nil, available_quantity: nil, author_id: nil, genre_id: nil> 
+3.3.0 :604 > a.valid?
+ => false 
+3.3.0 :605 > a.errors.empty?
+ => false 
+3.3.0 :606 > a.errors.clear
+ => [] 
+3.3.0 :607 > a.errors.empty?
+ => true 
+3.3.0 :608 > a.save
+ => false 
+3.3.0 :609 > a.errors.empty?
+ => false 
+3.3.0 :610 > 
+
