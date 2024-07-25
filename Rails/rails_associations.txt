@@ -138,7 +138,7 @@ end
 
 
 
-====>     TIPS , TRICKS & WARNINGS (for effecient use of association in rails)
+                                ====>     TIPS , TRICKS & WARNINGS (for effecient use of association in rails)    <====
 
 1) Controlling caching ->
 All of the association methods are built around caching, which keeps the result of the most recent query available for further operations. 
@@ -223,6 +223,79 @@ end
 Active Record will attempt to automatically identify that these two models share a bi-directional association based on the association name.
 
 
-
-
 IMPORTANT => For belongs_to associations you need to create foreign keys, and for has_and_belongs_to_many associations you need to create the appropriate join table.
+
+
+
+
+                                      ====> Detailed Association Reference <====
+
+1) belongs_to Association Reference ->
+
+      Methods Added by belongs_to ->
+
+          * association ->
+            The association method returns the associated object, if any. If no associated object is found, it returns nil.
+                Example:
+                  3.3.0 :031 > author = book.author
+                  Author Load (0.4ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+                  => 
+                  #<Author:0x0000000128fd3ad0
+
+                  3.3.0 :037 > author = book.reload_author
+                  Author Load (0.8ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+                  => 
+                  #<Author:0x0000000128fd8350
+
+                  3.3.0 :041 > book.reset_author
+                  => false 
+
+          * association=(associate) ->
+            The association= method assigns an associated object to this object. 
+            Behind the scenes, this means extracting the primary key from the associated object and setting this object's foreign key to the same value.
+                Example:
+                  3.3.0 :039 > book.author = author
+                  => 
+                  #<Author:0x0000000128fd8350
+
+          * build_association(attributes = {}) ->
+            The build_association method returns a new object of the associated type. 
+            This object will be instantiated from the passed attributes, and the link through this object's foreign key will be set, but the associated object will not yet be saved.
+                Example:
+                  3.3.0 :044 > author =  book.build_author(author_name: "HC Verma" , nationality: "Indian")
+                  => #<Author:0x000000011dd1c810 id: nil, author_name: "HC Verma", nationality: "Indian", created_at: nil, updated_at: nil> 
+
+          * create_association(attributes = {}) ->
+            The create_association method returns a new object of the associated type. 
+            This object will be instantiated from the passed attributes, the link through this object's foreign key will be set, 
+            and, once it passes all of the validations specified on the associated model, the associated object will be saved.
+                Example:
+                  3.3.0 :058 > author =  book.create_author(author_name:"MS chauhan", nationality: "Indian")
+                  TRANSACTION (0.6ms)  BEGIN
+                  Author Create (3.4ms)  INSERT INTO "authors" ("author_name", "nationality", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["author_name", "MS chauhan"], ["nationality", "Indian"], ["created_at", "2024-07-25 10:23:50.376919"], ["updated_at", "2024-07-25 10:23:50.376919"]]
+                  TRANSACTION (0.9ms)  COMMIT
+                  => 
+                  #<Author:0x000000012c1df790
+
+          * create_association!(attributes = {}) -> 
+            Does the same as create_association above, but raises ActiveRecord::RecordInvalid if the record is invalid.
+
+          * association_changed? -> 
+            The association_changed? method returns true if a new associated object has been assigned and the foreign key will be updated in the next save.
+                Example:
+                  3.3.0 :059 > book.author_changed?
+                   => true 
+                  3.3.0 :060 > book.save!
+                    TRANSACTION (0.2ms)  BEGIN
+                    Book Update (4.2ms)  UPDATE "books" SET "updated_at" = $1, "author_id" = $2 WHERE "books"."id" = $3  [["updated_at", "2024-07-25 10:27:46.230403"], ["author_id", 12], ["id", 2]]
+                    TRANSACTION (1.5ms)  COMMIT
+                   => true 
+                  3.3.0 :061 > book.author_changed?
+                   => false 
+
+          * association_previously_changed? ->
+            The association_previously_changed? method returns true if the previous save updated the association to reference a new associate object.
+                Example:
+                  3.3.0 :062 > book.author_previously_changed?
+                   => true 
+
