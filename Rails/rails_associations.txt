@@ -134,3 +134,95 @@ end
 class Part < ApplicationRecord
   has_and_belongs_to_many :assemblies
 end
+
+
+
+
+====>     TIPS , TRICKS & WARNINGS (for effecient use of association in rails)
+
+1) Controlling caching ->
+All of the association methods are built around caching, which keeps the result of the most recent query available for further operations. 
+The cache is even shared across methods:-
+
+author.books.load                  # retrieves books from the database
+author.books.size                  # uses the cached copy of books
+author.books.empty?                # uses the cached copy of books
+author.books.reload.empty?         # discards the cached copy of books and goes back to the database
+
+
+2) Avoiding name collisions -> 
+We are not free to use just any name for your associations. 
+Because creating an association adds a method with that name to the model, it is a bad idea to give an association a name that is already used for an instance method of ActiveRecord::Base. 
+The association method would override the base method and break things. 
+For instance, attributes or connection are bad names for associations.
+
+
+3) Updating the schema ->
+Associations are extremely useful, but they are not magic. You are responsible for maintaining your database schema to match your associations.
+   -> Creating Foreign Keys for belongs_to Associations
+        class Book < ApplicationRecord
+          belongs_to :author
+        end
+
+        class AddAuthorToBooks < ActiveRecord::Migration[7.1]
+          def change
+            add_reference :books, :author
+          end
+        end
+
+   -> Creating Join Tables for has_and_belongs_to_many Associations
+        class Assembly < ApplicationRecord
+          has_and_belongs_to_many :parts
+        end
+
+        class Part < ApplicationRecord
+          has_and_belongs_to_many :assemblies
+        end
+
+        class CreateAssembliesPartsJoinTable < ActiveRecord::Migration[7.1]
+          def change
+            create_join_table :assemblies, :parts do |t|
+              t.index :assembly_id
+              t.index :part_id
+            end
+          end
+        end
+
+
+4) Controlling association scope ->
+By default, associations look for objects only within the current module's scope. 
+This can be important when you declare Active Record models within a module. 
+For example:
+module MyApplication
+  module Business
+    class Supplier < ApplicationRecord
+      has_one :account,
+        class_name: "MyApplication::Billing::Account"
+    end
+  end
+
+  module Billing
+    class Account < ApplicationRecord
+      belongs_to :supplier,
+        class_name: "MyApplication::Business::Supplier"
+    end
+  end
+end
+
+
+5) Bi-directional associations ->
+It's normal for associations to work in two directions, requiring declaration on two different models:
+Example:
+class Author < ApplicationRecord
+  has_many :books
+end
+
+class Book < ApplicationRecord
+  belongs_to :author
+end
+Active Record will attempt to automatically identify that these two models share a bi-directional association based on the association name.
+
+
+
+
+IMPORTANT => For belongs_to associations you need to create foreign keys, and for has_and_belongs_to_many associations you need to create the appropriate join table.

@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_23_092958) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_25_085450) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.bigint "supplier_id", null: false
+    t.string "account_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplier_id"], name: "index_accounts_on_supplier_id"
+  end
 
   create_table "authors", force: :cascade do |t|
     t.string "author_name"
@@ -93,6 +101,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_092958) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "suppliers", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.bigint "member_id", null: false
     t.string "isbn"
@@ -107,6 +121,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_092958) do
     t.index ["member_id"], name: "index_transactions_on_member_id"
   end
 
+  add_foreign_key "accounts", "suppliers"
   add_foreign_key "books", "genres"
   add_foreign_key "transactions", "books"
   add_foreign_key "transactions", "librarians"
