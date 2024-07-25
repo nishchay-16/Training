@@ -230,9 +230,9 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
 
                                       ====> Detailed Association Reference <====
 
-1) belongs_to Association Reference ->
+1) belongs_to Association Reference ->                    
 
-      Methods Added by belongs_to ->
+    a) Methods Added by belongs_to ->
 
           * association ->
             The association method returns the associated object, if any. If no associated object is found, it returns nil.
@@ -298,4 +298,145 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
                 Example:
                   3.3.0 :062 > book.author_previously_changed?
                    => true 
+
+
+    b) Options for belongs_to
+
+          * :autosave ->
+            Automatically saves the associated records when the parent record is saved.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, autosave: true
+                  end
+            If you create or update a Book instance and modify its associated Author, the Author will be saved automatically.
+
+          * :class_name ->
+            Specifies the class name of the association, if it is not the default.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :writer, class_name: 'Author'
+                  end
+            Here, Book belongs to Author, but we use writer as the association name. :class_name tells Rails to use the Author model for this association.
+
+          * :counter_cache ->
+             Automatically maintains a count of the number of associated records in the parent record’s table.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, counter_cache: true
+                  end
+            If you add books_count to the authors table, Rails will keep this count updated whenever books are added or removed.
+
+          * :default ->
+            Provides a default value for the association, used when the association is not explicitly set.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, default: -> { Author.first }
+                  end
+            If no author is specified, Rails will assign the first Author record as the default.
+
+          * :dependent ->
+            Specifies what should happen to associated records when the parent record is destroyed.
+                Example:
+                  class Author < ApplicationRecord
+                    has_many :books, dependent: :destroy
+                  end
+            If an Author is destroyed, all associated Books will also be destroyed.
+
+          * :ensuring_owner_was ->
+
+          * :foreign_key ->
+            Specifies the foreign key column in the associated table.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, foreign_key: 'writer_id'
+                  end
+                  class Author < ApplicationRecord                    
+                    has_many :books, foreign_key: 'writer_id'
+                  end
+            The Book model uses writer_id instead of the default author_id to refer to Author.                    
+
+          * :foreign_type ->
+            Used with polymorphic associations to specify the type column.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :owner, polymorphic: true, foreign_type: 'owner_type'
+                  end
+            Here, owner_type is the column that stores the type of the polymorphic association.                   
+
+          * :primary_key ->
+            Specifies the primary key column in the associated table.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, primary_key: 'uuid'
+                  end
+                  class Author < ApplicationRecord                    
+                    self.primary_key = 'uuid'
+                  end
+            If Author uses uuid as its primary key instead of the default id, this option is used.                    
+
+          * :inverse_of ->
+            Specifies the inverse association to avoid redundant database queries and ensure proper object relationships.
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, inverse_of: :books
+                  end
+                  class Author < ApplicationRecord
+                    has_many :books, inverse_of: :author
+                  end
+              This ensures that Rails correctly handles bi-directional associations.
+
+          * :optional ->
+            Allows the association to be optional, meaning the parent record can exist without the associated record
+                Example:
+                  class Book < ApplicationRecord
+                    belongs_to :author, optional: true
+                  end
+            A Book can be created without specifying an Author.
+
+          * :polymorphic ->
+            Allows the association to refer to more than one model type.
+                Example:
+                  class Comment < ApplicationRecord
+                    belongs_to :commentable, polymorphic: true
+                  end
+                  class Book < ApplicationRecord
+                    has_many :comments, as: :commentable
+                    end
+                  class Author < ApplicationRecord
+                    has_many :comments, as: :commentable
+                  end
+            A Comment can belong to either a Book or an Author.
+
+          * :required ->
+             Ensures that the association is required and cannot be nil
+                Example:
+                  class Book < ApplicationRecord
+                      belongs_to :author, required: true
+                  end
+              A Book must have an associated Author and cannot be saved without one.
+
+          * :strict_loading ->
+            Ensures that associated records are always loaded when accessed, helping to prevent N+1 query problems. 
+                  Example:
+                    class Book < ApplicationRecord
+                      belongs_to :author, strict_loading: true
+                    end
+            When accessing @book.author, Rails will ensure that the author is loaded immediately.
+
+          * :touch ->
+            Updates the timestamp of the associated record whenever the parent record is updated.
+                  Example:
+                    class Book < ApplicationRecord
+                      belongs_to :author, touch: true
+                    end
+            Whenever a Book is updated, the updated_at timestamp of its Author will also be updated.
+
+          * :validate ->
+            Specifies whether the associated record should be validated before saving the parent record.
+                  Example:
+                    class Book < ApplicationRecord
+                      belongs_to :author, validate: true
+                    end 
+            When saving a Book, Rails will also validate the associated Author.
+
 
