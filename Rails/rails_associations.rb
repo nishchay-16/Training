@@ -1516,3 +1516,32 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
         #<Part:0x000000012149e108 id: 4, part_number: "Part 1", created_at: Fri, 26 Jul 2024 12:29:43.463083000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:29:43.463083000 UTC +00:00>] 
 
     
+ 
+                                   ====>  ASSOCIATION EXTENSION <======
+
+Association extensions in Rails are a way to add custom methods to ActiveRecord associations. 
+These extensions allow you to define additional query methods or behaviors that are specific to the association.
+How Association Extensions Work
+Define a Module: You create a Ruby module that includes the custom methods you want to add to the association.
+Extend the Association: You use the -> { extending ModuleName } syntax in the association declaration to apply the modules methods to that association
+
+Example:
+module FindRecentExtension
+  def find_recent
+    where("created_at > ?", 2.days.ago)
+  end
+end
+
+class Author < ApplicationRecord
+  has_many :books, -> { extending FindRecentExtension }
+end
+
+3.3.0 :127 > author = Author.last
+  Author Load (0.3ms)  SELECT "authors".* FROM "authors" ORDER BY "authors"."id" DESC LIMIT $1  [["LIMIT", 1]]
+ => 
+#<Author:0x0000000121011590
+... 
+3.3.0 :128 > recent_books = author.books.find_recent
+  Book Load (0.6ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 AND (created_at > '2024-07-24 13:02:22.223167') /* loading for pp */ LIMIT $2  [["author_id", 12], ["LIMIT", 11]]
+ => 
+[#<Book:0x000000011fc1dde0
