@@ -1554,7 +1554,7 @@ Single Table Inheritance (STI) is a pattern in Rails that allows you to use a si
 common attributes but also have some specific attributes or behaviors. 
 It is a way to handle inheritance in your ActiveRecord models where different classes inherit from a single base class and are stored in the same table.
 
-How STI Works
+Hotw STI Works
 Single Table: All classes in the inheritance hierarchy share the same table in the database.
 Type Column: A column, usually named type, is used to differentiate between different types of records in the table. This column stores the name of the subclass.
 Base Class: A base class is defined, and subclasses inherit from this base class. All records, regardless of their subclass, are stored in the same table.
@@ -1607,3 +1607,91 @@ rails generate model truck --parent=Vehicle
   price: 0.5e7,
   created_at: Fri, 26 Jul 2024 13:12:30.698381000 UTC +00:00,
   updated_at: Fri, 26 Jul 2024 13:12:30.698381000 UTC +00:00>] 
+
+
+
+
+
+                                                =====>  Delegated Types <====
+
+Delegated Types is a pattern in Rails that provides a way to handle type-specific behaviors and attributes without relying on Single Table Inheritance (STI). 
+This approach is useful for managing complex or disparate data structures while keeping the database schema clean and normalized.
+
+STI: Uses a single table with a type column to diffeDelegated Types vs. Single Table Inheritance (STI)rentiate between subclasses.
+     All fields for all subclasses are stored in the same table, which can lead to a bloated table and a lot of NULL columns.
+
+Delegated Types: Uses separate tables for different types of records, with a shared interface for common functionality
+                  Each type has its own table, which avoids the issues of table bloat and NULL columns.
+
+                  class CreateVehicles < ActiveRecord::Migration[7.1]
+                    def change
+                      create_table :vehicles do |t|
+                        t.string :vehicle_type
+                        t.timestamps
+                      end
+                    end
+                  end
+
+                  class CreateCars < ActiveRecord::Migration[7.1]
+                    def change
+                      create_table :cars do |t|
+                        t.references :vehicle, foreign_key: true
+                        t.string :make
+                        t.string :model
+                        t.integer :year
+                        t.timestamps
+                      end
+                    end
+                  end
+
+                  class CreateTrucks < ActiveRecord::Migration[7.1]
+                    def change
+                      create_table :trucks do |t|
+                        t.references :vehicle, foreign_key: true
+                        t.string :make
+                        t.string :model
+                        t.integer :year
+                        t.integer :payload_capacity
+                        t.timestamps
+                      end
+                    end
+                  end
+
+                  class Vehicle < ApplicationRecord
+                    self.inheritance_column = :vehicle_type
+                    
+                    has_one :car
+                    has_one :truck
+                  end
+
+                  class Car < ApplicationRecord
+                    belongs_to :vehicle
+                  end
+
+                  class Truck < ApplicationRecord
+                    belongs_to :vehicle
+                  end
+
+3.3.0 :138 > vehicle = Vehicle.create(vehicle_type: 'Car')
+=> #<Vehicle id: 1, vehicle_type: "Car", created_at: "2024-07-26 00:00:00", updated_at: "2024-07-26 00:00:00">
+3.3.0 :139 > car = Car.create(vehicle: vehicle, make: 'Toyota', model: 'Camry', year: 2021)
+=> #<Car:0x0000000120937120
+   id: 1, 
+   vehicle_id: 1, 
+   make: "Toyota", 
+   model: "Camry", 
+   year: 2021, 
+   created_at: "2024-07-26 00:00:00", 
+   updated_at: "2024-07-26 00:00:00">
+3.3.0 :143 > vehicle = Vehicle.create(vehicle_type: 'Truck')
+=> #<Vehicle id: 2, vehicle_type: "Truck", created_at: "2024-07-26 00:00:00", updated_at: "2024-07-26 00:00:00">
+3.3.0 :144 > truck = Truck.create(vehicle: vehicle, make: 'Ford', model: 'F-150', year: 2022, payload_capacity: 2000)
+=> #<Truck:0x0000000121470141  
+    id: 1,  
+    vehicle_id: 2, 
+    make: "Ford", 
+    model: "F-150", 
+    year: 2022, 
+    payload_capacity: 2000, 
+    created_at: "2024-07-26 00:00:00", 
+    updated_at: "2024-07-26 00:00:00">
