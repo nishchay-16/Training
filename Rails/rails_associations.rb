@@ -1545,3 +1545,65 @@ end
   Book Load (0.6ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 AND (created_at > '2024-07-24 13:02:22.223167') /* loading for pp */ LIMIT $2  [["author_id", 12], ["LIMIT", 11]]
  => 
 [#<Book:0x000000011fc1dde0
+
+
+
+                             =======>Single Table Inheritance (STI) <======
+
+Single Table Inheritance (STI) is a pattern in Rails that allows you to use a single database table to manage multiple types of objects that share
+common attributes but also have some specific attributes or behaviors. 
+It is a way to handle inheritance in your ActiveRecord models where different classes inherit from a single base class and are stored in the same table.
+
+How STI Works
+Single Table: All classes in the inheritance hierarchy share the same table in the database.
+Type Column: A column, usually named type, is used to differentiate between different types of records in the table. This column stores the name of the subclass.
+Base Class: A base class is defined, and subclasses inherit from this base class. All records, regardless of their subclass, are stored in the same table.
+
+Example:
+rails generate model vehicle type:string color:string price:decimal{10.2}
+rails generate model car --parent=Vehicle
+rails generate model truck --parent=Vehicle
+
+3.3.0 :131 > Car.create(color: 'Red', price: 10000)
+  TRANSACTION (0.2ms)  BEGIN
+  Car Create (4.8ms)  INSERT INTO "vehicles" ("type", "color", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["type", "Car"], ["color", "Red"], ["price", "10000.0"], ["created_at", "2024-07-26 13:08:58.408674"], ["updated_at", "2024-07-26 13:08:58.408674"]]
+  TRANSACTION (0.5ms)  COMMIT
+ => 
+#<Car:0x0000000120955b48
+ id: 1,
+ type: "Car",
+ color: "Red",
+ price: 0.1e5,
+ created_at: Fri, 26 Jul 2024 13:08:58.408674000 UTC +00:00,
+ updated_at: Fri, 26 Jul 2024 13:08:58.408674000 UTC +00:00> 
+
+ 3.3.0 :135 > Truck.create(color: 'Lavender', price: 5000000)
+  TRANSACTION (0.2ms)  BEGIN
+  Truck Create (2.0ms)  INSERT INTO "vehicles" ("type", "color", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["type", "Truck"], ["color", "Lavender"], ["price", "5000000.0"], ["created_at", "2024-07-26 13:12:30.698381"], ["updated_at", "2024-07-26 13:12:30.698381"]]
+  TRANSACTION (1.3ms)  COMMIT
+ => 
+#<Truck:0x0000000120938840
+ id: 2,
+ type: "Truck",
+ color: "Lavender",
+ price: 0.5e7,
+ created_at: Fri, 26 Jul 2024 13:12:30.698381000 UTC +00:00,
+ updated_at: Fri, 26 Jul 2024 13:12:30.698381000 UTC +00:00> 
+
+ 3.3.0 :136 > Vehicle.all
+  Vehicle Load (1.7ms)  SELECT "vehicles".* FROM "vehicles" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+ => 
+[#<Car:0x0000000120937120
+  id: 1,
+  type: "Car",
+  color: "Red",
+  price: 0.1e5,
+  created_at: Fri, 26 Jul 2024 13:08:58.408674000 UTC +00:00,
+  updated_at: Fri, 26 Jul 2024 13:08:58.408674000 UTC +00:00>,
+ #<Truck:0x0000000121470140
+  id: 2,
+  type: "Truck",
+  color: "Lavender",
+  price: 0.5e7,
+  created_at: Fri, 26 Jul 2024 13:12:30.698381000 UTC +00:00,
+  updated_at: Fri, 26 Jul 2024 13:12:30.698381000 UTC +00:00>] 

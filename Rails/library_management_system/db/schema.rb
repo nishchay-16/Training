@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_26_103106) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_26_130715) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -161,6 +161,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_103106) do
     t.index ["book_id"], name: "index_transactions_on_book_id"
     t.index ["librarian_id"], name: "index_transactions_on_librarian_id"
     t.index ["member_id"], name: "index_transactions_on_member_id"
+  end
+
+  create_table "vehicles", force: :cascade do |t|
+    t.string "type"
+    t.string "color"
+    t.decimal "price", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "accounts", "suppliers"
