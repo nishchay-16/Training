@@ -1327,3 +1327,192 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
           [#<Assembly:0x0000000121b57a80
           ... 
     
+      
+    b) Options for has_and_belongs_to_many ->
+    While Rails uses intelligent defaults that will work well in most situations, there may be times when you want to customize the behavior of
+    the has_and_belongs_to_many association reference. Such customizations can easily be accomplished by passing options when you create the association.
+    The has_and_belongs_to_many association supports these options:
+
+      * :association_foreign_key =>
+        Suppose we have a many-to-many self-join for User where User can have many friends.
+         We can specify custom foreign key names.
+
+      * :autosave => 
+        If we want to automatically save and destroy associated parts when saving an assembly, set :autosave to true.
+        Example:
+        class Assembly < ApplicationRecord
+          has_and_belongs_to_many :parts, autosave: true
+        end
+        # Adding parts to assembly
+        assembly = Assembly.find(1)
+        part = Part.find(2)
+        assembly.parts << part
+        # When saving assembly, associated parts will be saved automatically
+        assembly.save
+        
+      * :class_name => 
+        If Part is associated with a different model than Assembly, you can specify the class name.
+
+      * :foreign_key =>
+        Customizing the foreign key in a many-to-many relationship.
+        Example:
+        class Assembly < ApplicationRecord
+          has_and_belongs_to_many :parts,
+              foreign_key: "assembly_id", 
+              association_foreign_key: "part_id",
+              join_table: "assemblies_parts"
+        end
+        class Part < ApplicationRecord
+          has_and_belongs_to_many :assemblies,
+              foreign_key: "part_id", 
+              association_foreign_key: "assembly_id",
+              join_table: "assemblies_parts"
+        end
+      Here, assembly_id and part_id are custom foreign keys in the assemblies_parts join table.
+
+      * :join_table =>
+        Customizing the join table name.
+        Here, the join table is named custom_assemblies_parts instead of the default assemblies_parts.
+        Example:
+        class Assembly < ApplicationRecord
+          has_and_belongs_to_many :parts,
+              join_table: "custom_assemblies_parts"
+        end
+        class Part < ApplicationRecord
+          has_and_belongs_to_many :assemblies,
+              join_table: "custom_assemblies_parts"
+        end
+
+      * :strict_loading => 
+        Ensures that associated records are always loaded when accessed, helping to prevent N+1 query problems.
+        Example:
+        class Assembly < ApplicationRecord
+          has_and_belongs_to_many :parts, strict_loading: true
+        end
+        # To enforce strict loading when accessing parts
+        assembly = Assembly.find(1)
+        parts = assembly.parts # This will raise an exception if parts are not loaded
+        
+      * :validate =>
+        Bypassing validation for associated objects. Here, :validate: false means that new parts will not be validated when saving the assembly.
+        Example:
+        class Assembly < ApplicationRecord
+          has_and_belongs_to_many :parts, validate: false
+        end
+        # Adding parts to assembly without validating the parts
+        assembly = Assembly.find(1)
+        part = Part.new(part_number: nil) # Assuming part_number is required but not provided
+        assembly.parts << part
+        # Saving assembly without validating the part
+        assembly.save
+        
+
+    c) Scopes for has_and_belongs_to_many ->
+      There may be times when you wish to customize the query used by has_and_belongs_to_many. 
+      Such customizations can be achieved via a scope block.
+      Example:
+        class Parts < ApplicationRecord
+          has_and_belongs_to_many :assemblies, -> { where active: true }
+        end
+      
+      We can use any of the standard querying methods inside the scope block. :-
+      * where =>
+        The where method lets you specify the conditions that the associated object must meet.
+
+      * extending =>
+        The extending method specifies a named module to extend the association proxy. 
+        
+      * group =>
+        The group method supplies an attribute name to group the result set by, using a GROUP BY clause in the finder SQL.
+        Example:
+        part_counts = Part.joins(:assemblies).group('parts.id').count
+        Part Count (15.5ms)  SELECT COUNT(*) AS "count_all", "parts"."id" AS "parts_id" FROM "parts" INNER JOIN "assemblies_parts" ON "assemblies_parts"."part_id" = "parts"."id" INNER JOIN "assemblies" ON "assemblies"."id" = "assemblies_parts"."assembly_id" GROUP BY "parts"."id"
+        => {2=>1, 3=>1, 4=>2, 1=>2} 
+      
+      * includes =>
+      * limit =>
+        The limit method lets you restrict the total number of objects that will be fetched through an association.
+        Example;
+        class Parts < ApplicationRecord
+          has_and_belongs_to_many :assemblies,
+            -> { order("created_at ASC").limit(50) }
+        end
+        3.3.0 :009 > part.assemblies
+        Assembly Load (1.0ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id"
+         WHERE "assemblies_parts"."part_id" = $1 /* loading for pp */ ORDER BY created_at ASC LIMIT $2  [["part_id", 2], ["LIMIT", 3]]
+          => 
+        [#<Assembly:0x000000011ed398d8
+          id: 2,
+          name: "Assembly 2",
+          created_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00,
+          updated_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00>,
+        #<Assembly:0x000000011fb19390 id: 3, name: nil, created_at: Fri, 26 Jul 2024 11:50:14.737271000 UTC +00:00, updated_at: Fri, 26 Jul 2024 11:50:14.737271000 UTC +00:00>] 
+
+       class Parts < ApplicationRecord
+        has_and_belongs_to_many :assemblies,
+          -> { order("created_at DESC").limit(50) }
+        end 
+        3.3.0 :004 > part.assemblies
+        Assembly Load (3.3ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id"
+         WHERE "assemblies_parts"."part_id" = $1 /* loading for pp */ ORDER BY created_at DESC LIMIT $2  [["part_id", 2], ["LIMIT", 3]]
+         => 
+        [#<Assembly:0x0000000120ad0798 id: 3, name: nil, created_at: Fri, 26 Jul 2024 11:50:14.737271000 UTC +00:00, updated_at: Fri, 26 Jul 2024 11:50:14.737271000 UTC +00:00>,
+        #<Assembly:0x0000000120ad0658
+          id: 2,
+          name: "Assembly 2",
+          created_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00,
+          updated_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00>] 
+
+      * offset =>
+        The offset method lets you specify the starting offset for fetching objects via an association. 
+        For example, if you set offset(11), it will skip the first 11 records.
+        Example:
+        3.3.0 :112 > assemblies = Assembly.third
+        Assembly Load (0.6ms)  SELECT "assemblies".* FROM "assemblies" ORDER BY "assemblies"."id" ASC LIMIT $1 OFFSET $2  [["LIMIT", 1], ["OFFSET", 2]]
+         => #<Assembly:0x0000000121476e00 id: 6, name: "Assembly 3", created_at: Fri, 26 Jul 2024 12:10:23.206419000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:10:23.206419000 UTC +00:00> 
+
+      * order =>
+        The order method dictates the order in which associated objects will be received (in the syntax used by an SQL ORDER BY clause)
+        Example:
+        3.3.0 :039 > part = Part.first
+          Part Load (0.4ms)  SELECT "parts".* FROM "parts" ORDER BY "parts"."id" ASC LIMIT $1  [["LIMIT", 1]]
+         => #<Part:0x0000000120eb8590 id: 1, part_number: "Part 1", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00> 
+        3.3.0 :040 > part.assemblies
+          Assembly Load (1.1ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id" 
+          WHERE "assemblies_parts"."part_id" = $1 /* loading for pp */ ORDER BY name ASC LIMIT $2  [["part_id", 1], ["LIMIT", 11]]
+         => 
+        [#<Assembly:0x0000000120bb1720 id: 1, name: "Assembly 1", created_at: Fri, 26 Jul 2024 10:33:19.061477000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:33:19.061477000 UTC +00:00>,
+         #<Assembly:0x000000011dda4940 id: 6, name: "Assembly 3", created_at: Fri, 26 Jul 2024 12:10:23.206419000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:10:23.206419000 UTC +00:00>] 
+
+      * readonly =>
+        If you use the readonly method, then the associated objects will be read-only when retrieved via the association.
+        Example:
+        3.3.0 :059 > assembly = Assembly.find(1)
+          Assembly Load (0.9ms)  SELECT "assemblies".* FROM "assemblies" WHERE "assemblies"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+        => #<Assembly:0x00000001213ded80 id: 1, name: "Assembly 1", created_at: Fri, 26 Jul 2024 10:33:19.061477000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:33:19.061477000 UTC +00:00> 
+        3.3.0 :060 > parts = assembly.parts
+          Part Load (0.6ms)  SELECT "parts".* FROM "parts" INNER JOIN "assemblies_parts" ON "parts"."id" = "assemblies_parts"."part_id" 
+          WHERE "assemblies_parts"."assembly_id" = $1 /* loading for pp */ LIMIT $2  [["assembly_id", 1], ["LIMIT", 11]]
+         => [#<Part:0x0000000102bf35d0 id: 1, part_number: "Updated Part Number", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:24:47.322496000 UTC +00:00>] 
+        3.3.0 :061 > part = parts.first
+        3.3.0 :062 > 
+          Part Load (0.8ms)  SELECT "parts".* FROM "parts" INNER JOIN "assemblies_parts" ON "parts"."id" = "assemblies_parts"."part_id" 
+          WHERE "assemblies_parts"."assembly_id" = $1 ORDER BY "parts"."id" ASC LIMIT $2  [["assembly_id", 1], ["LIMIT", 1]]
+        => #<Part:0x000000012143f518 id: 1, part_number: "Updated Part Number", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:24:47.322496000 UTC +00:00> 
+        3.3.0 :063 > part.update(part_number: 'Part 1')
+        (irb):63:in `<main>`: Part is marked as readonly (ActiveRecord::ReadOnlyRecord)
+
+      * select =>
+        The select method lets you override the SQL SELECT clause that is used to retrieve data about the associated objects. By default, Rails retrieves all columns.
+        
+      * distinct =>
+        Use the distinct method to remove duplicates from the collection.
+        Example:  
+        3.3.0 :073 > assembly.parts
+        Part Load (1.2ms)  SELECT DISTINCT "parts".* FROM "parts" INNER JOIN "assemblies_parts" ON "parts"."id" = "assemblies_parts"."part_id" 
+        WHERE "assemblies_parts"."assembly_id" = $1 /* loading for pp */ LIMIT $2  [["assembly_id", 1], ["LIMIT", 11]]
+          => 
+        [#<Part:0x000000012149e248 id: 1, part_number: "Updated Part Number", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:24:47.322496000 UTC +00:00>,
+        #<Part:0x000000012149e108 id: 4, part_number: "Part 1", created_at: Fri, 26 Jul 2024 12:29:43.463083000 UTC +00:00, updated_at: Fri, 26 Jul 2024 12:29:43.463083000 UTC +00:00>] 
+
+    
