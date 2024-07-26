@@ -6,7 +6,7 @@ These associations help in organizing and querying related data efficiently.
 
 For example, consider a simple Rails application that includes a model for authors and a model for books. Each author can have many books.
 With Active Record associations, we can streamline these - and other - operations by declaratively telling Rails that there is a connection between the two models. 
-Here's the code for setting up authors and books:
+Heres the code for setting up authors and books:
 
 class Author < ApplicationRecord
   has_many :books, dependent: :destroy
@@ -190,7 +190,7 @@ Associations are extremely useful, but they are not magic. You are responsible f
 
 
 4) Controlling association scope ->
-By default, associations look for objects only within the current module's scope. 
+By default, associations look for objects only within the current modules scope. 
 This can be important when you declare Active Record models within a module. 
 For example:
 module MyApplication
@@ -211,7 +211,7 @@ end
 
 
 5) Bi-directional associations ->
-It's normal for associations to work in two directions, requiring declaration on two different models:
+Its normal for associations to work in two directions, requiring declaration on two different models:
 Example:
 class Author < ApplicationRecord
   has_many :books
@@ -252,7 +252,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
 
           * association=(associate) ->
             The association= method assigns an associated object to this object. 
-            Behind the scenes, this means extracting the primary key from the associated object and setting this object's foreign key to the same value.
+            Behind the scenes, this means extracting the primary key from the associated object and setting this objects foreign key to the same value.
                 Example:
                   3.3.0 :039 > book.author = author
                   => 
@@ -260,14 +260,14 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
 
           * build_association(attributes = {}) ->
             The build_association method returns a new object of the associated type. 
-            This object will be instantiated from the passed attributes, and the link through this object's foreign key will be set, but the associated object will not yet be saved.
+            This object will be instantiated from the passed attributes, and the link through this objects foreign key will be set, but the associated object will not yet be saved.
                 Example:
                   3.3.0 :044 > author =  book.build_author(author_name: "HC Verma" , nationality: "Indian")
                   => #<Author:0x000000011dd1c810 id: nil, author_name: "HC Verma", nationality: "Indian", created_at: nil, updated_at: nil> 
 
           * create_association(attributes = {}) ->
             The create_association method returns a new object of the associated type. 
-            This object will be instantiated from the passed attributes, the link through this object's foreign key will be set, 
+            This object will be instantiated from the passed attributes, the link through this objects foreign key will be set, 
             and, once it passes all of the validations specified on the associated model, the associated object will be saved.
                 Example:
                   3.3.0 :058 > author =  book.create_author(author_name:"MS chauhan", nationality: "Indian")
@@ -483,7 +483,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
 
       * association=(associate) -> 
         The association= method assigns an associated object to this object. 
-        Behind the scenes, this means extracting the primary key from this object and setting the associated object's foreign key to the same value.
+        Behind the scenes, this means extracting the primary key from this object and setting the associated objects foreign key to the same value.
         Example:
           3.3.0 :011 > supplier = MyApplication::Business::Supplier.find_by(id: 1)
           3.3.0 :012 > supplier.account = account
@@ -515,7 +515,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
         Example:
          => #<MyApplication::Billing::Account:0x000000011f0830c0 id: nil, supplier_id: nil, account_number: "624752869698", created_at: nil, updated_at: ... 
           3.3.0 :020 > account = supplier.create_account(account_number: "624752869698")
-          (irb):20:in `<main>': You cannot call create unless the parent is saved (ActiveRecord::RecordNotSaved)
+          (irb):20:in `<main>`: You cannot call create unless the parent is saved (ActiveRecord::RecordNotSaved)
           3.3.0 :021 > supplier.save!         
             TRANSACTION (0.6ms)  BEGIN
             MyApplication::Business::Supplier Create (7.9ms)  INSERT INTO "suppliers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Naman dua"], ["created_at", "2024-07-26 06:00:54.564481"], ["updated_at", "2024-07-26 06:00:54.564481"]]
@@ -589,7 +589,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
              => true 
 
       * :class_name -> 
-        Specifies the class name of the associated model if it's different from the default inferred class name.
+        Specifies the class name of the associated model if its different from the default inferred class name.
           Example:
             class Supplier < ApplicationRecord
               belongs_to :supplier,
@@ -757,7 +757,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
            #<MyApplication::Business::Supplier:0x00000001227f86b8
            ... 
            3.3.0 :078 > supplier.account
-           (irb):78:in `<main>': `MyApplication::Business::Supplier` is marked for strict_loading. The MyApplication::Billing::Account association named `:account` cannot be lazily loaded. (ActiveRecord::StrictLoadingViolationError)
+           (irb):78:in `<main>`: `MyApplication::Business::Supplier` is marked for strict_loading. The MyApplication::Billing::Account association named `:account` cannot be lazily loaded. (ActiveRecord::StrictLoadingViolationError)
            3.3.0 :079 > supplier = MyApplication::Business::Supplier.includes(:account).find_by(name: "Naman dua")
            3.3.0 :080 > supplier.account
            3.3.0 :081 > 
@@ -938,7 +938,7 @@ In database terms, this association says that the other class will have a foreig
           The changes are persisted to the database.
           Example:  
             3.3.0 :029 > puts author.books.pluck(:title)
-            Harry Potter and the Philosopher's Stone
+            Harry Potter and the Philosophers Stone
             Harry Potter and the Chamber of Secrets
             Harry Potter and the Prisoner of Azkaban
 
@@ -966,7 +966,7 @@ In database terms, this association says that the other class will have a foreig
              => 0 
 
         * collection.find(...) => 
-          The collection.find method finds objects within the collection's table.
+          The collection.find method finds objects within the collections table.
           Example:
             3.3.0 :008 > available_books = author.books.find(8)
               Book Load (0.9ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 AND "books"."id" = $2 LIMIT $3  [["author_id", 10], ["id", 8], ["LIMIT", 1]]
@@ -989,7 +989,7 @@ In database terms, this association says that the other class will have a foreig
             #<Book:0x0000000120d257a0
 
         * collection.exists?(...) => 
-          The collection.exists? method checks whether an object meeting the supplied conditions exists in the collection's table.
+          The collection.exists? method checks whether an object meeting the supplied conditions exists in the collections table.
           Example:
             3.3.0 :013 > author.books.exists?(title: "Harry Potter and the Chamber of Secrets")
             Book Exists? (2.2ms)  SELECT 1 AS one FROM "books" WHERE "books"."author_id" = $1 AND "books"."title" = $2 LIMIT $3  [["author_id", 10], ["title", "Harry Potter and the Chamber of Secrets"], ["LIMIT", 1]]
@@ -1041,3 +1041,110 @@ In database terms, this association says that the other class will have a foreig
               Book Load (0.8ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1  [["author_id", 10]]
              => 
             [#<Book:0x00000001219912c8
+
+
+    b) Options for has_many ->
+      While Rails uses intelligent defaults that will work well in most situations, there may be times when you want to customize the behavior 
+      of the has_many association reference. Such customizations can easily be accomplished by passing options when you create the association.
+      The has_many association supports these options:
+        * :as
+        * :autosave
+        * :class_name
+        * :counter_cache
+        * :dependent
+        * :disable_joins
+        * :ensuring_owner_was
+        * :extend
+        * :foreign_key
+        * :foreign_type
+        * :inverse_of
+        * :primary_key
+        * :query_constraints
+        * :source
+        * :source_type
+        * :strict_loading
+        * :through
+        * :validate
+
+    
+    c) Scopes for has_many -> 
+     There may be times when you wish to customize the query used by has_many. Such customizations can be achieved via a scope block.
+      Example:
+      class Author < ApplicationRecord
+        has_many :books, -> { where processed: true }
+      end
+
+      We can use any of the standard querying methods inside the scope block. The following ones are discussed below:
+       * where =>
+        The where method lets you specify the conditions that the associated object must meet.
+        Example:
+        class Author < ApplicationRecord
+          has_many :confirmed_books, -> { where "confirmed = 1" },
+            class_name: "Book"
+        end
+
+       * extending => 
+        The extending method specifies a named module to extend the association proxy.
+
+       * group => 
+        The group method supplies an attribute name to group the result set by, using a GROUP BY clause in the finder SQL.
+        Example:
+        class Author < ApplicationRecord
+          has_many :chapters, -> { group 'books.id' },
+                              through: :books
+        end
+
+       * includes => 
+       You can use the includes method to specify second-order associations that should be eager-loaded when this association is used
+       Example:  
+        class Author < ApplicationRecord
+          has_many :books
+        end
+        class Book < ApplicationRecord
+          belongs_to :author
+          has_many :chapters
+        end
+        class Chapter < ApplicationRecord
+          belongs_to :book
+        end
+
+       * limit =>
+       The limit method lets you restrict the total number of objects that will be fetched through an association.
+        Example:  
+        class Author < ApplicationRecord
+          has_many :recent_books,
+            -> { order('published_at desc').limit(100) },
+            class_name: "Book"
+        end
+
+       * offset =>
+       The offset method lets you specify the starting offset for fetching objects via an association. 
+       Example: 
+         -> { offset(11) } will skip the first 11 records
+
+       * order => 
+       The order method dictates the order in which associated objects will be received
+        Example:
+        class Author < ApplicationRecord
+          has_many :books, -> { order "date_confirmed DESC" }
+        end
+
+       * readonly => 
+       If you use the readonly method, then the associated objects will be read-only when retrieved via the association.
+        Example:  
+          3.3.0 :022 > author = Author.readonly.last
+          Author Load (16.1ms)  SELECT "authors".* FROM "authors" ORDER BY "authors"."id" DESC LIMIT $1  [["LIMIT", 1]]
+           => 
+          #<Author:0x0000000121b7e248
+          ... 
+
+       * select =>
+       The select method lets you override the SQL SELECT clause that is used to retrieve data about the associated objects. 
+       By default, Rails retrieves all columns.
+        
+       * distinct =>
+       Use the distinct method to keep the collection free of duplicates. This is mostly useful together with the :through option.
+       
+      
+      
+        

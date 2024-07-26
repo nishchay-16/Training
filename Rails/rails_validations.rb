@@ -54,7 +54,7 @@ Example:
 3.3.0 :113 > a.save
  => false 
 3.3.0 :114 > a.save!
-(irb):114:in `<main>': Validation failed: Email confirmation doesn't match Email (ActiveRecord::RecordInvalid)
+(irb):114:in `<main>`: Validation failed: Email confirmation doesnt match Email (ActiveRecord::RecordInvalid)
 
 
 
@@ -71,7 +71,7 @@ Example:
 3.3.0 :037 > a.save
  => false 
 3.3.0 :038 > a.save!
-(irb):38:in `<main>': Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
+(irb):38:in `<main>`: Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
 
 
 --> :greater_than_or_equal_to - Specifies the value must be greater than or equal to the supplied value. The default error message for this option is "must be greater than or equal to %{count}".
@@ -80,7 +80,7 @@ Example:
 3.3.0 :053 > a.number_of_books=0
  => 0 
 3.3.0 :054 > a.save!
-(irb):54:in `<main>': Validation failed: Number of books must be greater than or equal to 1 (ActiveRecord::RecordInvalid)
+(irb):54:in `<main>`: Validation failed: Number of books must be greater than or equal to 1 (ActiveRecord::RecordInvalid)
 
 
 --> :equal_to - Specifies the value must be equal to the supplied value. The default error message for this option is "must be equal to %{count}".
@@ -93,7 +93,7 @@ Example:
 3.3.0 :053 > a.number_of_books=1001
  => 1001
 3.3.0 :054 > a.save!
-(irb):54:in `<main>': Validation failed: Number of books must be less than 1000 (ActiveRecord::RecordInvalid)
+(irb):54:in `<main>`: Validation failed: Number of books must be less than 1000 (ActiveRecord::RecordInvalid)
 
 
 :less_than_or_equal_to - Specifies the value must be less than or equal to the supplied value. The default error message for this option is "must be less than or equal to %{count}".
@@ -102,7 +102,7 @@ Example:
 3.3.0 :053 > a.number_of_books=1001
  => 1001
 3.3.0 :054 > a.save!
-(irb):54:in `<main>': Validation failed: Number of books must be less than or equal to 1000 (ActiveRecord::RecordInvalid)
+(irb):54:in `<main>`: Validation failed: Number of books must be less than or equal to 1000 (ActiveRecord::RecordInvalid)
 
 
 :other_than - Specifies the value must be other than the supplied value. The default error message for this option is "must be other than %{count}".
@@ -111,7 +111,7 @@ Example:
 3.3.0 :053 > a.number_of_books=0
  => 0 
 3.3.0 :054 > a.save!
-(irb):54:in `<main>': Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
+(irb):54:in `<main>`: Validation failed: Number of books must be greater than 0 (ActiveRecord::RecordInvalid)
 
 
 
@@ -123,7 +123,7 @@ Example:
 3.3.0 :062 > 
  => "Nishchay1" 
 3.3.0 :063 > a.save!
-(irb):63:in `<main>': Validation failed: Librarian name only allows letters (ActiveRecord::RecordInvalid)
+(irb):63:in `<main>`: Validation failed: Librarian name only allows letters (ActiveRecord::RecordInvalid)
 
 
 # validates :librarian_name, format: { without: /\A[a-zA-Z]+\z/, message: "only allows numbers" }
@@ -131,12 +131,12 @@ Example:
 3.3.0 :068 > a.librarian_name="Nishchay"
  => "Nishchay" 
 3.3.0 :069 > a.save!
-(irb):69:in `<main>': Validation failed: Librarian name only allows numbers (ActiveRecord::RecordInvalid
+(irb):69:in `<main>`: Validation failed: Librarian name only allows numbers (ActiveRecord::RecordInvalid
 
 
 
 5) inclusion ->
-This helper validates that the attributes' values are included in a given set. In fact, this set can be any enumerable object.
+This helper validates that the attributes values are included in a given set. In fact, this set can be any enumerable object.
 
 Example:
 # validates :size, inclusion: { in: %w(small medium large),  message: "%{value} is not a valid size" }
@@ -146,7 +146,7 @@ Example:
 3.3.0 :115 > a.save
  => false 
 3.3.0 :116 > a.save!
-(irb):116:in `<main>': Validation failed: Size full is not a valid size (ActiveRecord::RecordInvalid)
+(irb):116:in `<main>`: Validation failed: Size full is not a valid size (ActiveRecord::RecordInvalid)
 
 3.3.0 :117 > a.size="medium"
  => "medium" 
@@ -166,12 +166,12 @@ Example:
 3.3.0 :121 > a.status="active"
  => "active" 
 3.3.0 :122 > a.save!
-(irb):122:in `<main>': Validation failed: Status is reserved (ActiveRecord::RecordInvalid)
+(irb):122:in `<main>`: Validation failed: Status is reserved (ActiveRecord::RecordInvalid)
 
 
 
 7) length ->
-This helper validates the length of the attributes' values.
+This helper validates the length of the attributes values.
 We can customize these messages using the :wrong_length, :too_long, and :too_short options and %{count} as a placeholder for the number corresponding to the length constraint being used.
 
 Example:
@@ -179,14 +179,14 @@ Example:
 3.3.0 :132 > a.librarian_name= "NishchayGupta"
  => "NishchayGupta" 
 3.3.0 :133 > a.save!
-(irb):133:in `<main>': Validation failed: Librarian name is too long (maximum is 10 characters) (ActiveRecord::RecordInvalid)
+(irb):133:in `<main>`: Validation failed: Librarian name is too long (maximum is 10 characters) (ActiveRecord::RecordInvalid)
 
 
 # validates :librarian_name, length: { is: 10 }
 3.3.0 :145 > a.librarian_name= "Nishchay111"
  => "Nishchay111" 
 3.3.0 :146 > a.save!
-(irb):146:in `<main>': Validation failed: Librarian name is the wrong length (should be 10 characters) (ActiveRecord::RecordInvalid)
+(irb):146:in `<main`: Validation failed: Librarian name is the wrong length (should be 10 characters) (ActiveRecord::RecordInvalid)
 
 
 # validates :librarian_name, length: { minimum: 10 }
@@ -204,12 +204,12 @@ Example:
 3.3.0 :153 > a.librarian_name= "Nishchay"
  => "Nishchay" 
 3.3.0 :154 > a.save!
-(irb):154:in `<main>': Validation failed: Librarian name is too short (minimum is 10 characters) (ActiveRecord::RecordInvalid)
+(irb):154:in `<main>`: Validation failed: Librarian name is too short (minimum is 10 characters) (ActiveRecord::RecordInvalid)
 
 3.3.0 :155 > a.librarian_name= "Nishchay111111111111111111"
  => "Nishchay111111111111111111" 
 3.3.0 :156 > a.save!
-(irb):156:in `<main>': Validation failed: Librarian name is too long (maximum is 20 characters) (ActiveRecord::RecordInvalid)
+(irb):156:in `<main>`: Validation failed: Librarian name is too long (maximum is 20 characters) (ActiveRecord::RecordInvalid)
 
 
 
@@ -217,20 +217,20 @@ Example:
 This helper validates that your attributes have only numeric values. 
 By default, it will match an optional sign followed by an integer or floating point number.
 To specify that only integer numbers are allowed, set :only_integer to true. 
-Then it will use the following regular expression to validate the attribute's value.
+Then it will use the following regular expression to validate the attributes value.
 
 Example:
 # validates :phone_no, numericality: true
 3.3.0 :171 > a.phone_no="hi"
  => "hi" 
 3.3.0 :172 > a.save!
-(irb):172:in `<main>': Validation failed: Phone no is not a number (ActiveRecord::RecordInvalid)
+(irb):172:in `<main>`: Validation failed: Phone no is not a number (ActiveRecord::RecordInvalid)
 
 # validates :phone_no, numericality: { only_integer: true }
 3.3.0 :177 > a.phone_no="2.5"
  => "2.5" 
 3.3.0 :178 > a.save!
-(irb):178:in `<main>': Validation failed: Phone no must be an integer (ActiveRecord::RecordInvalid)
+(irb):178:in `<main>`: Validation failed: Phone no must be an integer (ActiveRecord::RecordInvalid)
 3.3.0 :179 > a.phone_no="9588169118"
  => "9588169118" 
 3.3.0 :180 > a.save!
@@ -243,13 +243,13 @@ Example:
 3.3.0 :186 > a.phone_no="12"
  => "12" 
 3.3.0 :187 > a.save!
-(irb):187:in `<main>': Validation failed: Phone no must be odd (ActiveRecord::RecordInvalid)
+(irb):187:in `<main>`: Validation failed: Phone no must be odd (ActiveRecord::RecordInvalid)
 
 # validates :phone_no, numericality: { even: true }
 3.3.0 :192 > a.phone_no="1"
  => "1" 
 3.3.0 :193 > a.save!
-(irb):193:in `<main>': Validation failed: Phone no must be even (ActiveRecord::RecordInvalid)
+(irb):193:in `<main>`: Validation failed: Phone no must be even (ActiveRecord::RecordInvalid)
 
 
 
@@ -261,13 +261,13 @@ Example:
 3.3.0 :196 > a.librarian_name=""
  => "" 
 3.3.0 :197 > a.save!
-(irb):197:in `<main>': Validation failed: Librarian name can't be blank (ActiveRecord::RecordInvalid)
+(irb):197:in `<main>`: Validation failed: Librarian name cant be blank (ActiveRecord::RecordInvalid)
 
 #  validates :librarian_name, presence: { message: 'must be present' }
 3.3.0 :201 > a.librarian_name=""
  => "" 
 3.3.0 :202 > a.save!
-(irb):202:in `<main>': Validation failed: Librarian name must be present (ActiveRecord::RecordInvalid)
+(irb):202:in `<main>`: Validation failed: Librarian name must be present (ActiveRecord::RecordInvalid)
 
 
 
@@ -279,12 +279,12 @@ Example:
 3.3.0 :205 > a.librarian_name="nishu"
  => "nishu" 
 3.3.0 :206 > a.save!
-(irb):206:in `<main>': Validation failed: Librarian name must be blank (ActiveRecord::RecordInvalid)
+(irb):206:in `<main>`: Validation failed: Librarian name must be blank (ActiveRecord::RecordInvalid)
 
 
 
 11) uniqueness ->
-This helper validates that the attribute's value is unique right before the object gets saved.
+This helper validates that the attributes value is unique right before the object gets saved.
 
 Example:
 # validates :phone_no , uniqueness: true
@@ -294,13 +294,13 @@ Example:
   TRANSACTION (0.3ms)  BEGIN
   Librarian Exists? (1.0ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "12"], ["id", 14], ["LIMIT", 1]]
   TRANSACTION (0.2ms)  ROLLBACK
-(irb):228:in `<main>': Validation failed: Phone no has already been taken (ActiveRecord::RecordInvalid)
+(irb):228:in `<main>`: Validation failed: Phone no has already been taken (ActiveRecord::RecordInvalid)
 
 
 
 12) validates_each ->
 This helper validates attributes against a block. 
-It doesn't have a predefined validation function. 
+It doesnt have a predefined validation function. 
 You should create one using a block, and every attribute passed to validates_each will be tested against it.
 
 Example:-
@@ -314,7 +314,7 @@ validates_each :librarian_name, :surname do |record, attr, value|
   TRANSACTION (0.3ms)  BEGIN
   Librarian Exists? (0.4ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "999999999"], ["id", 14], ["LIMIT", 1]]
   TRANSACTION (0.2ms)  ROLLBACK
-(irb):249:in `<main>': Validation failed: Surname must start with upper case (ActiveRecord::RecordInvalid)
+(irb):249:in `<main>`: Validation failed: Surname must start with upper case (ActiveRecord::RecordInvalid)
 
 
 
@@ -336,7 +336,7 @@ class GoodnessValidator < ActiveModel::Validator
   TRANSACTION (0.4ms)  BEGIN
   Librarian Exists? (0.4ms)  SELECT 1 AS one FROM "librarians" WHERE "librarians"."phone_no" = $1 AND "librarians"."id" != $2 LIMIT $3  [["phone_no", "999999999"], ["id", 14], ["LIMIT", 1]]
   TRANSACTION (0.2ms)  ROLLBACK
-(irb):262:in `<main>': Validation failed: This librarian is evil (ActiveRecord::RecordInvalid)
+(irb):262:in `<main>`: Validation failed: This librarian is evil (ActiveRecord::RecordInvalid)
 
 
 
@@ -359,7 +359,7 @@ Example:
 3.3.0 :293 > genre.save
  => false 
 3.3.0 :294 > genre.save!
-(irb):294:in `<main>': Validation failed: Genre name Horror is not a valid genre (ActiveRecord::RecordInvalid)
+(irb):294:in `<main>`: Validation failed: Genre name Horror is not a valid genre (ActiveRecord::RecordInvalid)
 
 3.3.0 :295 > genre.genre_name=nil
  => nil 
@@ -395,7 +395,7 @@ Example:
 3.3.0 :327 > genre.genre_name=""
  => "" 
 3.3.0 :328 > genre.save!
-(irb):328:in `<main>': Validation failed: Genre name must be given please (ActiveRecord::RecordInvalid)
+(irb):328:in `<main>`: Validation failed: Genre name must be given please (ActiveRecord::RecordInvalid)
 
 
 4) :on -> Specify the contexts where this validation is active.
@@ -409,7 +409,7 @@ Example:
   TRANSACTION (0.4ms)  BEGIN
   Genre Exists? (1.3ms)  SELECT 1 AS one FROM "genres" WHERE "genres"."genre_name" = $1 LIMIT $2  [["genre_name", "fantasy"], ["LIMIT", 1]]
   TRANSACTION (0.2ms)  ROLLBACK
-(irb):367:in `<main>': Validation failed: Genre name has already been taken (ActiveRecord::RecordInvalid)
+(irb):367:in `<main>`: Validation failed: Genre name has already been taken (ActiveRecord::RecordInvalid)
 
 
 
@@ -424,7 +424,7 @@ Example:
   TRANSACTION (0.3ms)  BEGIN
   Genre Exists? (1.2ms)  SELECT 1 AS one FROM "genres" WHERE "genres"."genre_name" = $1 AND "genres"."id" != $2 LIMIT $3  [["genre_name", ""], ["id", 2], ["LIMIT", 1]]
   TRANSACTION (0.3ms)  ROLLBACK
-(irb):352:in `<main>': Genre name can't be blank (ActiveModel::StrictValidationFailed)
+(irb):352:in `<main>`: Genre name cant be blank (ActiveModel::StrictValidationFailed)
 
 
 
@@ -442,7 +442,7 @@ Example:
 3.3.0 :435 > a = Transaction.new(member_id: 1, book_id: 1, issuedate: Date.today, returndate: Date.today + 14.days)
  => #<Transaction:0x0000000121a57450 id: nil, member_id: 1, isbn: nil, issuedate: Wed, 24 Jul 2024, returndate: Wed, 07 Aug 2024, created_at: nil, updated_at: nil, book_id: 1, librarian_id: nil> 
 3.3.0 :436 > a.save!
-(irb):436:in `<main>': Validation failed: Isbn can't be blank (ActiveRecord::RecordInvalid)
+(irb):436:in `<main>`: Validation failed: Isbn cant be blank (ActiveRecord::RecordInvalid)
 
 
 2) Using a Proc with :if and :unless
@@ -492,7 +492,7 @@ Example:
 3.3.0 :511 >   book_id: nil 
 3.3.0 :512 > )
 3.3.0 :515 > transaction_special.save!  
-(irb):515:in `<main>': Validation failed: Isbn can't be blank, Book can't be blank, Issuedate can't be blank (ActiveRecord::RecordInvalid)
+(irb):515:in `<main>`: Validation failed: Isbn cant be blank, Book cant be blank, Issuedate cant be blank (ActiveRecord::RecordInvalid)
 
 
 4) Combining Validation Conditions
@@ -511,9 +511,9 @@ Example: (if id=1 & return date present then only validation applies )
 3.3.0 :543 > puts transaction.valid?  # Should be false
 3.3.0 :544 > puts transaction.errors.full_messages
 false
-Isbn can't be blank
-Book can't be blank
-Issuedate can't be blank
+Isbn cant be blank
+Book cant be blank
+Issuedate cant be blank
  => nil 
 
 
@@ -535,7 +535,7 @@ validates :email, presence: true, email: true
 3.3.0 :554 > a.email = "inva@lid@1"
  => "inva@lid@1" 
 3.3.0 :555 > a.save!
-(irb):555:in `<main>': Validation failed: Email is not an email (ActiveRecord::RecordInvalid)
+(irb):555:in `<main>`: Validation failed: Email is not an email (ActiveRecord::RecordInvalid)
 
 
 2) Custom Methods -> 
@@ -550,7 +550,7 @@ Example:
 3.3.0 :556 > author_invalid = Author.new(author_name: "John123")
  => #<Author:0x00000001215d8640 id: nil, author_name: "John123", nationality: nil, created_at: nil, updated_at: nil> 
 3.3.0 :557 > author_invalid.save!
-(irb):557:in `<main>': Validation failed: Author name must only contain letters (ActiveRecord::RecordInvalid)
+(irb):557:in `<main>`: Validation failed: Author name must only contain letters (ActiveRecord::RecordInvalid)
 
 
 3) Listing Validators ->
@@ -603,7 +603,7 @@ Example:
 3.3.0 :568 > book.title="NG"
  => "NG" 
 3.3.0 :569 > book.save!
-(irb):569:in `<main>': Validation failed: Title is too short (minimum is 5 characters) (ActiveRecord::RecordInvalid)
+(irb):569:in `<main>`: Validation failed: Title is too short (minimum is 5 characters) (ActiveRecord::RecordInvalid)
 3.3.0 :570 > book.errors[:title]
  => ["is too short (minimum is 5 characters)"] 
 
@@ -680,7 +680,7 @@ Example:
 
 7) errors.clear ->
 The clear method is used when you intentionally want to clear the errors collection. 
-Of course, calling errors.clear upon an invalid object won't actually make it valid: 
+Of course, calling errors.clear upon an invalid object wont actually make it valid: 
 the errors collection will now be empty, but the next time you call valid? or any method that tries to save this object to the database, 
 the validations will run again.If any of the validations fail, the errors collection will be filled again.
 
