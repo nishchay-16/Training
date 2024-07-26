@@ -456,6 +456,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
  
 
 
+
 2) has_one Association Reference ->
   The has_one association creates a one-to-one match with another model. 
   In database terms, this association says that the other class contains the foreign key. 
@@ -835,3 +836,208 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
 
           * select ->
             The select method lets you override the SQL SELECT clause that is used to retrieve data about the associated object. By default, Rails retrieves all columns
+
+
+
+
+3) has_many Association Reference ->
+The has_many association creates a one-to-many relationship with another model. 
+In database terms, this association says that the other class will have a foreign key that refers to instances of this class.
+
+    a) Methods Added by has_many ->
+
+        * collection =>
+          The collection method returns a Relation of all of the associated objects. If there are no associated objects, it returns an empty Relation.
+          Example:
+            3.3.0 :251 > author = Author.last
+              Author Load (0.5ms)  SELECT "authors".* FROM "authors" ORDER BY "authors"."id" DESC LIMIT $1  [["LIMIT", 1]]
+             => 
+            #<Author:0x00000001229f7d10
+            ... 
+            3.3.0 :252 > books = author.books
+              Book Load (1.2ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 /* loading for pp */ LIMIT $2  [["author_id", 12], ["LIMIT", 11]]
+             => 
+            [#<Book:0x00000001221918d8
+            ... puts book2.valid? puts author.books
+
+        * collection<<(object, ...)  =>
+          The collection<< method adds one or more objects to the collection by setting their foreign keys to the primary key of the calling model.
+          Example:
+            3.3.0 :261 > book2 = Book.create(title: "Harry Potter and the Chamber of Secres", author: author)
+             => 
+            #<Book:0x00000001229dab48
+            ... 
+            3.3.0 :262 > puts author.books
+            #<Book:0x00000001229b5780>
+            #<Book:0x0000000122376cc0>
+            #<Book:0x00000001229dcf88>
+             => nil 
+            3.3.0 :263 > author.books << book2
+             => nil 
+            3.3.0 :264 > puts author.books
+            #<Book:0x00000001229b5780>
+            #<Book:0x0000000122376cc0>
+            #<Book:0x00000001229dcf88>
+            #<Book:0x00000001229dab48>
+             => nil 
+
+        * collection.delete(object, ...)  =>
+          The collection.delete method removes one or more objects from the collection by setting their foreign keys to NULL.
+          Example:
+            3.3.0 :265 > author.books.delete(book2)
+             => 
+            [#<Book:0x00000001229dab48
+              id: nil,
+              isbn: nil,
+              title: "Harry Potter and the Chamber of Secres",
+              quantity: nil,
+              created_at: nil,
+              updated_at: nil,
+              available_quantity: nil,
+              author_id: 12,
+              genre_id: nil>] 
+
+  IMP: Additionally, objects will be destroyed if they're associated with dependent: :destroy, and deleted if they're associated with dependent: :delete_all.
+
+        * collection.destroy(object, ...) =>
+          The collection.destroy method removes one or more objects from the collection by running destroy on each object.
+          Example:
+            3.3.0 :006 > author.books.destroy(book2)
+              TRANSACTION (0.4ms)  BEGIN
+              Book Destroy (6.3ms)  DELETE FROM "books" WHERE "books"."id" = $1  [["id", 3]]
+              Author Update All (0.6ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) - $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 12]]
+              TRANSACTION (0.9ms)  COMMIT
+             => 
+            [#<Book:0x000000011e73ac98
+              id: 3,
+              isbn: nil,
+              title: "Harry Potter and the Chamber of Secrets",
+              quantity: nil,
+              created_at: Fri, 26 Jul 2024 09:10:47.753480000 UTC +00:00,
+              updated_at: Fri, 26 Jul 2024 09:10:47.753480000 UTC +00:00,
+              available_quantity: nil,
+              author_id: 12,
+              genre_id: 2>] 
+
+        * collection=(objects) =>
+          The collection= method makes the collection contain only the supplied objects, by adding and deleting as appropriate. The changes are persisted to the database.
+          Example:
+            3.3.0 :007 > author.books.pluck(:title)
+              Book Pluck (0.7ms)  SELECT "books"."title" FROM "books" WHERE "books"."author_id" = $1  [["author_id", 12]]
+             => ["Fundamental of physics"]
+
+        * collection_singular_ids =>
+          The collection_singular_ids method returns an array of the ids of the objects in the collection.
+          Example:
+            3.3.0 :009 > book_ids = author.book_ids
+              Book Pluck (0.6ms)  SELECT "books"."id" FROM "books" WHERE "books"."author_id" = $1  [["author_id", 12]]
+             => [2] 
+
+        * collection_singular_ids=(ids) =>
+          The collection_singular_ids= method makes the collection contain only the objects identified by the supplied primary key values, by adding and deleting as appropriate. 
+          The changes are persisted to the database.
+          Example:  
+            3.3.0 :029 > puts author.books.pluck(:title)
+            Harry Potter and the Philosopher's Stone
+            Harry Potter and the Chamber of Secrets
+            Harry Potter and the Prisoner of Azkaban
+
+        * collection.clear =>
+          The collection.clear method removes all objects from the collection according to the strategy specified by the dependent option. 
+          If no option is given, it follows the default strategy. 
+          The default strategy for has_many :through associations is delete_all, and for has_many associations is to set the foreign keys to NULL.
+          Example:
+            3.3.0 :034 > author.books.clear
+            3.3.0 :035 > 
+              Book Delete All (2.3ms)  DELETE FROM "books" WHERE "books"."author_id" = $1  [["author_id", 10]]
+              Author Update All (0.5ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) - $1 WHERE "authors"."id" = $2  [["books_count", 3], ["id", 10]]
+             => [] 
+
+        * collection.empty? => 
+          The collection.empty? method returns true if the collection does not contain any associated objects.
+          Example:
+            3.3.0 :036 > author.books.empty?
+             => true 
+
+        * collection.size => 
+          The collection.size method returns the number of objects in the collection.
+          Example:
+            3.3.0 :037 > book_count = author.books.size
+             => 0 
+
+        * collection.find(...) => 
+          The collection.find method finds objects within the collection's table.
+          Example:
+            3.3.0 :008 > available_books = author.books.find(8)
+              Book Load (0.9ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 AND "books"."id" = $2 LIMIT $3  [["author_id", 10], ["id", 8], ["LIMIT", 1]]
+             => 
+            #<Book:0x0000000120c6bcd8
+            ... 
+
+        * collection.where(...) => 
+          The collection.where method finds objects within the collection based on the conditions supplied but the objects are loaded lazily 
+          meaning that the database is queried only when the object(s) are accessed.
+          Example:
+            3.3.0 :009 > available_books = author.books.where(genre_id:2)
+              Book Load (0.7ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 AND "books"."genre_id" = $2 /* loading for pp */ LIMIT $3  [["author_id", 10], ["genre_id", 2], ["LIMIT", 11]]
+             => 
+            [#<Book:0x0000000120d299e0
+            ... 
+            3.3.0 :010 > available_book = available_books.first
+              Book Load (0.8ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 AND "books"."genre_id" = $2 ORDER BY "books"."id" ASC LIMIT $3  [["author_id", 10], ["genre_id", 2], ["LIMIT", 1]]
+             => 
+            #<Book:0x0000000120d257a0
+
+        * collection.exists?(...) => 
+          The collection.exists? method checks whether an object meeting the supplied conditions exists in the collection's table.
+          Example:
+            3.3.0 :013 > author.books.exists?(title: "Harry Potter and the Chamber of Secrets")
+            Book Exists? (2.2ms)  SELECT 1 AS one FROM "books" WHERE "books"."author_id" = $1 AND "books"."title" = $2 LIMIT $3  [["author_id", 10], ["title", "Harry Potter and the Chamber of Secrets"], ["LIMIT", 1]]
+           => true 
+
+        * collection.build(attributes = {}) => 
+          The collection.build method returns a single or array of new objects of the associated type. 
+          The object(s) will be instantiated from the passed attributes, and the link through their foreign key will be created, but the associated objects will not yet be saved.
+          Example:
+            3.3.0 :014 > author.books.size
+             => 7 
+             3.3.0 :015 > books= author.books.build([{title: "The Casual Vacancy", genre_id:1},{title:"The Shining", genre_id:1}])
+             => 
+            [#<Book:0x0000000121a51050
+            ... 
+            3.3.0 :017 > author.books.size
+             => 7 
+
+        * collection.create(attributes = {}) => 
+          The collection.create method returns a single or array of new objects of the associated type.
+          Example:
+            3.3.0 :019 > author = Author.find_by(id:10)
+              Author Load (0.5ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+             => 
+            #<Author:0x0000000121757200
+            ... 
+            3.3.0 :020 > books= author.books.create([{title: "The Casual Vacancy", genre_id:1},{title:"The Shining", genre_id:1}])
+              TRANSACTION (0.2ms)  BEGIN
+              Genre Load (0.4ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+              Book Create (0.8ms)  INSERT INTO "books" ("isbn", "title", "quantity", "created_at", "updated_at", "available_quantity", "author_id", "genre_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["isbn", nil], ["title", "The Casual Vacancy"], ["quantity", nil], ["created_at", "2024-07-26 09:46:40.502867"], ["updated_at", "2024-07-26 09:46:40.502867"], ["available_quantity", nil], ["author_id", 10], ["genre_id", 1]]
+              Author Update All (0.3ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) + $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 10]]
+              TRANSACTION (1.3ms)  COMMIT
+              TRANSACTION (0.1ms)  BEGIN
+              Genre Load (0.2ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+              Book Create (0.5ms)  INSERT INTO "books" ("isbn", "title", "quantity", "created_at", "updated_at", "available_quantity", "author_id", "genre_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["isbn", nil], ["title", "The Shining"], ["quantity", nil], ["created_at", "2024-07-26 09:46:40.507857"], ["updated_at", "2024-07-26 09:46:40.507857"], ["available_quantity", nil], ["author_id", 10], ["genre_id", 1]]
+              Author Update All (0.3ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) + $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 10]]
+              TRANSACTION (0.3ms)  COMMIT
+             => 
+            [#<Book:0x0000000121832918
+
+        * collection.create!(attributes = {}) =>
+          Does the same as collection.create above, but raises ActiveRecord::RecordInvalid if the record is invalid
+
+        * collection.reload =>
+          The collection.reload method returns a Relation of all of the associated objects, forcing a database read. 
+                      If there are no associated objects, it returns an empty Relation. 
+          Example:
+            3.3.0 :021 > books = author.books.reload
+              Book Load (0.8ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1  [["author_id", 10]]
+             => 
+            [#<Book:0x00000001219912c8
