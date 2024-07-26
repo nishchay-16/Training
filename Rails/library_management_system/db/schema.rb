@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_25_121600) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_26_065726) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_25_121600) do
     t.string "account_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "accountable_type"
+    t.bigint "accountable_id"
+    t.index ["accountable_type", "accountable_id"], name: "index_accounts_on_accountable"
     t.index ["supplier_id"], name: "index_accounts_on_supplier_id"
   end
 
@@ -41,6 +44,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_25_121600) do
     t.bigint "genre_id", null: false
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["genre_id"], name: "index_books_on_genre_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.string "commentable_type", null: false
+    t.bigint "commentable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
   end
 
   create_table "distributions", force: :cascade do |t|
@@ -102,6 +115,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_25_121600) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "supplier_accounts", force: :cascade do |t|
+    t.bigint "supplier_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_supplier_accounts_on_account_id"
+    t.index ["supplier_id"], name: "index_supplier_accounts_on_supplier_id"
+  end
+
   create_table "suppliers", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -124,6 +146,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_25_121600) do
 
   add_foreign_key "accounts", "suppliers"
   add_foreign_key "books", "genres"
+  add_foreign_key "supplier_accounts", "accounts"
+  add_foreign_key "supplier_accounts", "suppliers"
   add_foreign_key "transactions", "books"
   add_foreign_key "transactions", "librarians"
   add_foreign_key "transactions", "members"

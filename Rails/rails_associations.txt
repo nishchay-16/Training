@@ -442,6 +442,20 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
             When saving a Book, Rails will also validate the associated Author.
 
 
+    c) Scopes for belongs_to
+      There may be times when you wish to customize the query used by belongs_to. Such customizations can be achieved via a scope block
+
+      * where ->
+        The where method lets you specify the conditions that the associated object must meet.
+      * includes ->
+        You can use the includes method to specify second-order associations that should be eager-loaded when this association is used.
+      * readonly -> 
+        If you use readonly, then the associated object will be read-only when retrieved via the association.
+      * select -> 
+        The select method lets you override the SQL SELECT clause that is used to retrieve data about the associated object. By default, Rails retrieves all columns.
+ 
+
+
 2) has_one Association Reference ->
   The has_one association creates a one-to-one match with another model. 
   In database terms, this association says that the other class contains the foreign key. 
@@ -525,4 +539,268 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
         Example:
           3.3.0 :024 > supplier.reset_account
            => nil
+
+
+    b) Options for has_one
+
+      * :as -> 
+        Allows the association to be polymorphic. Use this option to set up polymorphic associations where one model can be associated with multiple other models.
+        Example:
+          class Comment < ApplicationRecord
+            belongs_to :commentable, polymorphic: true
+          end
+          class Supplier < ApplicationRecord
+            has_one :comment, as: :commentable
+          end
+
+          3.3.0 :001 > supplier = MyApplication::Business::Supplier.find(1)
+          3.3.0 :002 > supplier.create_comment(content: "This is a comment")
+            MyApplication::Business::Supplier Load (0.6ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+            MyApplication::Business::Comment Load (1.4ms)  SELECT "comments".* FROM "comments" WHERE "comments"."commentable_id" = $1 AND "comments"."commentable_type" = $2 LIMIT $3  [["commentable_id", 1], ["commentable_type", "MyApplication::Business::Supplier"], ["LIMIT", 1]]
+            TRANSACTION (0.1ms)  BEGIN
+            MyApplication::Business::Comment Create (1.6ms)  INSERT INTO "comments" ("content", "commentable_type", "commentable_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["content", "This is a comment"], ["commentable_type", "MyApplication::Business::Supplier"], ["commentable_id", 1], ["created_at", "2024-07-26 06:42:25.035439"], ["updated_at", "2024-07-26 06:42:25.035439"]]
+            TRANSACTION (1.1ms)  COMMIT
+             => 
+          #<MyApplication::Business::Comment:0x0000000120884ac0
+           id: 1,
+           content: "This is a comment",
+           commentable_type: "MyApplication::Business::Supplier",
+           commentable_id: 1,
+           created_at: Fri, 26 Jul 2024 06:42:25.035439000 UTC +00:00,
+           updated_at: Fri, 26 Jul 2024 06:42:25.035439000 UTC +00:00> 
+  
+
+      * :autosave -> 
+        Determines whether the associated record should be automatically saved when the parent record is saved.
+          Example:
+          class Supplier < ApplicationRecord
+            belongs_to :supplier,
+              class_name: "MyApplication::Billing::Account"
+          end
+            3.3.0 :023 > supplier = MyApplication::Business::Supplier.new(name: "Vaibhav")
+             => #<MyApplication::Business::Supplier:0x000000012131c5a0 id: nil, name: "Vaibhav", created_at: nil, updated_at: nil> 
+            3.3.0 :024 > supplier.build_account(account_number: "1234567890")
+            3.3.0 :025 > supplier.save
+              TRANSACTION (0.7ms)  BEGIN
+              MyApplication::Business::Supplier Create (4.7ms)  INSERT INTO "suppliers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Vaibhav"], ["created_at", "2024-07-26 06:50:23.197746"], ["updated_at", "2024-07-26 06:50:23.197746"]]
+              MyApplication::Billing::Account Create (2.2ms)  INSERT INTO "accounts" ("supplier_id", "account_number", "created_at", "updated_at", "accountable_type", "accountable_id") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["supplier_id", 3], ["account_number", "1234567890"], ["created_at", "2024-07-26 06:50:23.205914"], ["updated_at", "2024-07-26 06:50:23.205914"], ["accountable_type", nil], ["accountable_id", nil]]
+              TRANSACTION (0.5ms)  COMMIT
+             => true 
+
+      * :class_name -> 
+        Specifies the class name of the associated model if it's different from the default inferred class name.
+          Example:
+            class Supplier < ApplicationRecord
+              belongs_to :supplier,
+                class_name: "MyApplication::Billing::Account"
+            end
+
+      * :dependent -> 
+        Specifies what should happen to the associated record when the parent record is destroyed.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, dependent: :destroy,
+                class_name: "MyApplication::Billing::Account"
+            end
+            3.3.0 :027 > supplier = MyApplication::Business::Supplier.find_by(name: "Vaibhav")
+             MyApplication::Business::Supplier Load (0.6ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."name" = $1 LIMIT $2  [["name", "Vaibhav"], ["LIMIT", 1]]
+            => 
+           #<MyApplication::Business::Supplier:0x0000000120b406d8
+           ... 
+           3.3.0 :028 > supplier.destroy
+             TRANSACTION (0.4ms)  BEGIN
+             MyApplication::Billing::Account Load (0.5ms)  SELECT "accounts".* FROM "accounts" WHERE "accounts"."supplier_id" = $1 LIMIT $2  [["supplier_id", 3], ["LIMIT", 1]]
+             MyApplication::Billing::Account Destroy (3.6ms)  DELETE FROM "accounts" WHERE "accounts"."id" = $1  [["id", 3]]
+             MyApplication::Business::Supplier Destroy (0.9ms)  DELETE FROM "suppliers" WHERE "suppliers"."id" = $1  [["id", 3]]
+             TRANSACTION (0.5ms)  COMMIT
+            => 
+           #<MyApplication::Business::Supplier:0x0000000120b406d8
+            id: 3,
+            name: "Vaibhav",
+            created_at: Fri, 26 Jul 2024 06:50:23.197746000 UTC +00:00,
+            updated_at: Fri, 26 Jul 2024 06:50:23.197746000 UTC +00:00> 
+           3.3.0 :029 > 
+
+
+
+      * :disable_joins -> 
+        Disables automatic joins in queries for this association.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, disable_joins: true,
+                class_name: "MyApplication::Billing::Account"
+            end
+            3.3.0 :029 > MyApplication::Business::Supplier.joins(:account)   #(working because disable_joins: true)
+             MyApplication::Business::Supplier Load (2.5ms)  SELECT "suppliers".* FROM "suppliers" INNER JOIN "accounts" ON "accounts"."supplier_id" = "suppliers"."id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+            => 
+           [#<MyApplication::Business::Supplier:0x0000000121378d50
+             id: 1,
+             name: "Paarth Arora",
+             created_at: Thu, 25 Jul 2024 09:02:49.323378000 UTC +00:00,
+             updated_at: Thu, 25 Jul 2024 09:02:49.323378000 UTC +00:00>,
+            #<MyApplication::Business::Supplier:0x0000000121378c10
+             id: 2,
+             name: "Naman dua",
+             created_at: Fri, 26 Jul 2024 06:00:54.564481000 UTC +00:00,
+             updated_at: Fri, 26 Jul 2024 06:00:54.564481000 UTC +00:00>] 
+
+
+      * :ensuring_owner_was -> 
+        Ensures that the owner record was not destroyed before saving the associated record.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, ensuring_owner_was: true,,
+                class_name: "MyApplication::Billing::Account"
+            end
+        
+      * :foreign_key -> 
+        Specifies a custom foreign key for the association.
+          Example:  
+            class Supplier < ApplicationRecord
+              has_one :account, foreign_key: "supplier_id",
+                class_name: "MyApplication::Billing::Account"
+            end
+          3.3.0 :038 > supplier = MyApplication::Business::Supplier.find_by(name: "Naman dua")
+             MyApplication::Business::Supplier Load (0.5ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."name" = $1 LIMIT $2  [["name", "Naman dua"], ["LIMIT", 1]]
+            => 
+           #<MyApplication::Business::Supplier:0x00000001208ea320
+           ... 
+           3.3.0 :039 > supplier.create_account(account_number: "1234567890")
+             TRANSACTION (0.2ms)  BEGIN
+             MyApplication::Business::Supplier Load (0.4ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."id" = $1 LIMIT $2  [["id", 2], ["LIMIT", 1]]
+             MyApplication::Billing::Account Create (2.4ms)  INSERT INTO "accounts" ("supplier_id", "account_number", "created_at", "updated_at", "accountable_type", "accountable_id") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["supplier_id", 2], ["account_number", "1234567890"], ["created_at", "2024-07-26 07:19:37.694900"], ["updated_at", "2024-07-26 07:19:37.694900"], ["accountable_type", nil], ["accountable_id", nil]]
+             TRANSACTION (1.3ms)  COMMIT
+             MyApplication::Billing::Account Load (0.3ms)  SELECT "accounts".* FROM "accounts" WHERE "accounts"."supplier_id" = $1 LIMIT $2  [["supplier_id", 2], ["LIMIT", 1]]
+
+      * :inverse_of -> 
+        Specifies the inverse association to ensure proper loading and consistency.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, inverse_of: :supplier,
+                class_name: "MyApplication::Billing::Account"
+            end
+
+            class Account < ApplicationRecord
+              belongs_to :supplier, inverse_of: :account,
+                class_name: "MyApplication::Business::Supplier"
+            end
+
+            3.3.0 :041 > supplier = MyApplication::Business::Supplier.new(name: "Vaibhav")
+            => #<MyApplication::Business::Supplier:0x0000000122773878 id: nil, name: "Vaibhav", created_at: nil, updated_at: nil> 
+           3.3.0 :044 > supplier.save!
+             TRANSACTION (0.4ms)  BEGIN
+             MyApplication::Business::Supplier Create (4.2ms)  INSERT INTO "suppliers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Vaibhav"], ["created_at", "2024-07-26 07:26:37.973560"], ["updated_at", "2024-07-26 07:26:37.973560"]]
+             MyApplication::Billing::Account Load (0.4ms)  SELECT "accounts".* FROM "accounts" WHERE "accounts"."supplier_id" = $1 LIMIT $2  [["supplier_id", 4], ["LIMIT", 1]]
+             TRANSACTION (0.8ms)  COMMIT
+            => true 
+           3.3.0 :045 > account = supplier.create_account(account_number: "1234567890")
+             TRANSACTION (0.4ms)  BEGIN
+             MyApplication::Billing::Account Create (1.9ms)  INSERT INTO "accounts" ("supplier_id", "account_number", "created_at", "updated_at", "accountable_type", "accountable_id") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["supplier_id", 4], ["account_number", "1234567890"], ["created_at", "2024-07-26 07:26:49.833961"], ["updated_at", "2024-07-26 07:26:49.833961"], ["accountable_type", nil], ["accountable_id", nil]]
+             TRANSACTION (1.0ms)  COMMIT
+            => 
+           #<MyApplication::Billing::Account:0x0000000120be9d78
+           ... 
+           3.3.0 :046 > puts account.supplier == supplier 
+           true
+            => nil
+        
+      * :primary_key -> 
+        Specifies a custom primary key for the association.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, primary_key: "custom_id",
+                class_name: "MyApplication::Billing::Account"
+            end
+        
+      * :query_constraints -> 
+        Specifies constraints to be applied when querying the association.
+          Example:  
+            class Supplier < ApplicationRecord
+              has_one :account, query_constraints: ->(relation) { relation.where("accounts.active = ?", true) },
+                class_name: "MyApplication::Billing::Account"
+            end
+
+      * :required -> 
+        Specifies whether the associated record must be present
+          Example;
+            class Supplier < ApplicationRecord
+              has_one :account, required: true,
+                class_name: "MyApplication::Billing::Account"
+            end
+
+      * :source -> 
+        Specifies the source association when using :through.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, through: :supplier_accounts, source: :account
+                class_name: "MyApplication::Billing::Account"
+            end
+
+      * :source_type -> 
+        Specifies the source type for polymorphic associations
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :comment, as: :commentable, source_type: "Supplier"
+            end
+
+      * :strict_loading ->
+        Ensures that the association is loaded eagerly to avoid potential N+1 query issues.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, strict_loading: true,
+                class_name: "MyApplication::Billing::Account"
+            end
+            3.3.0 :077 > supplier = MyApplication::Business::Supplier.find_by(name: "Naman dua")
+             MyApplication::Business::Supplier Load (0.2ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."name" = $1 LIMIT $2  [["name", "Naman dua"], ["LIMIT", 1]]
+            => 
+           #<MyApplication::Business::Supplier:0x00000001227f86b8
+           ... 
+           3.3.0 :078 > supplier.account
+           (irb):78:in `<main>': `MyApplication::Business::Supplier` is marked for strict_loading. The MyApplication::Billing::Account association named `:account` cannot be lazily loaded. (ActiveRecord::StrictLoadingViolationError)
+           3.3.0 :079 > supplier = MyApplication::Business::Supplier.includes(:account).find_by(name: "Naman dua")
+           3.3.0 :080 > supplier.account
+           3.3.0 :081 > 
+             MyApplication::Business::Supplier Load (0.6ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."name" = $1 LIMIT $2  [["name", "Naman dua"], ["LIMIT", 1]]
+             MyApplication::Billing::Account Load (0.3ms)  SELECT "accounts".* FROM "accounts" WHERE "accounts"."supplier_id" = $1  [["supplier_id", 2]]
+            => 
+           #<MyApplication::Billing::Account:0x0000000120ca5dc0
+            id: 2,
+            supplier_id: 2,
+            account_number: "624752869698",
+            created_at: Fri, 26 Jul 2024 06:00:54.575831000 UTC +00:00,
+            updated_at: Fri, 26 Jul 2024 06:00:54.575831000 UTC +00:00,
+            accountable_type: nil,
+            accountable_id: nil> 
+           3.3.0 :082 > 
+
+      * :through ->   
+        Specifies an intermediate association to set up the has_one :through relationship.
+          Example;
+            class Supplier < ApplicationRecord
+              has_one :account, through: :supplier_account,
+                class_name: "MyApplication::Billing::Account"
+            end
+
+      * :touch -> 
+        Updates the timestamp on the parent record when the associated record is updated.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, touch: true,
+                class_name: "MyApplication::Billing::Account"
+            end
+          3.3.0 :088 > supplier = MyApplication::Business::Supplier.find_by(name: "Naman dua")
+             MyApplication::Business::Supplier Load (0.5ms)  SELECT "suppliers".* FROM "suppliers" WHERE "suppliers"."name" = $1 LIMIT $2  [["name", "Naman dua"], ["LIMIT", 1]]
+            => 
+           #<MyApplication::Business::Supplier:0x0000000122b15350
+           ... 
+           3.3.0 :089 > supplier.updated_at
+            => Fri, 26 Jul 2024 06:00:54.564481000 UTC +00:00            
+
+      * :validate -> 
+        Specifies whether the associated record should be validated before saving.
+          Example:
+            class Supplier < ApplicationRecord
+              has_one :account, validate: true,
+                class_name: "MyApplication::Billing::Account"
+            end
 
