@@ -343,7 +343,9 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
             If an Author is destroyed, all associated Books will also be destroyed.
 
           * :ensuring_owner_was ->
-
+            Specifies an instance method to be called on the owner. 
+            The method must return true in order for the associated records to be deleted in a background job.
+            
           * :foreign_key ->
             Specifies the foreign key column in the associated table.
                 Example:
@@ -401,7 +403,7 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
                   end
                   class Book < ApplicationRecord
                     has_many :comments, as: :commentable
-                    end
+                  end
                   class Author < ApplicationRecord
                     has_many :comments, as: :commentable
                   end
@@ -439,4 +441,88 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
                     end 
             When saving a Book, Rails will also validate the associated Author.
 
+
+2) has_one Association Reference ->
+  The has_one association creates a one-to-one match with another model. 
+  In database terms, this association says that the other class contains the foreign key. 
+  If this class contains the foreign key, then we should use belongs_to instead.
+
+    a) Methods Added by has_one 
+
+      * association -> 
+        The association method returns the associated object, if any. If no associated object is found, it returns nil.
+        Example:
+          3.3.0 :001 > supplier = MyApplication::Business::Supplier.find_by(id: 1)
+          3.3.0 :009 > account = supplier.account
+           => 
+          #<MyApplication::Billing::Account:0x000000011e2ea530
+          ... 
+          3.3.0 :010 > account
+           => 
+          #<MyApplication::Billing::Account:0x000000011e2ea530
+           id: 1,
+           supplier_id: 1,
+           account_number: "1234567890",
+           created_at: Fri, 26 Jul 2024 05:43:58.867819000 UTC +00:00,
+           updated_at: Fri, 26 Jul 2024 05:43:58.867819000 UTC +00:00> 
+
+      * association=(associate) -> 
+        The association= method assigns an associated object to this object. 
+        Behind the scenes, this means extracting the primary key from this object and setting the associated object's foreign key to the same value.
+        Example:
+          3.3.0 :011 > supplier = MyApplication::Business::Supplier.find_by(id: 1)
+          3.3.0 :012 > supplier.account = account
+           => 
+          #<MyApplication::Billing::Account:0x000000011e2ea530
+          ... 
+          3.3.0 :013 > account
+           => 
+          #<MyApplication::Billing::Account:0x000000011e2ea530
+           id: 1,
+           supplier_id: 1,
+           account_number: "1234567890",
+           created_at: Fri, 26 Jul 2024 05:43:58.867819000 UTC +00:00,
+           updated_at: Fri, 26 Jul 2024 05:43:58.867819000 UTC +00:00> 
+
+      * build_association(attributes = {}) -> 
+        The build_association method returns a new object of the associated type. 
+        This object will be instantiated from the passed attributes, and the link through its foreign key will be set, but the associated object will not yet be saved.
+        Example:
+          3.3.0 :017 > supplier = MyApplication::Business::Supplier.new(name: "Naman dua")
+           => #<MyApplication::Business::Supplier:0x000000011f10ec60 id: nil, name: "Naman dua", created_at: nil, updated_at: nil> 
+          3.3.0 :018 > account = supplier.build_account(account_number: "624752869698")
+           => #<MyApplication::Billing::Account:0x000000011f0830c0 id: nil, supplier_id: nil, account_number: "624752869698", created_at: nil, updated_at: ... 
+
+      * create_association(attributes = {}) -> 
+        The create_association method returns a new object of the associated type. 
+        This object will be instantiated from the passed attributes, the link through its foreign key will be set, and, 
+        once it passes all of the validations specified on the associated model, the associated object will be saved.
+        Example:
+         => #<MyApplication::Billing::Account:0x000000011f0830c0 id: nil, supplier_id: nil, account_number: "624752869698", created_at: nil, updated_at: ... 
+          3.3.0 :020 > account = supplier.create_account(account_number: "624752869698")
+          (irb):20:in `<main>': You cannot call create unless the parent is saved (ActiveRecord::RecordNotSaved)
+          3.3.0 :021 > supplier.save!         
+            TRANSACTION (0.6ms)  BEGIN
+            MyApplication::Business::Supplier Create (7.9ms)  INSERT INTO "suppliers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Naman dua"], ["created_at", "2024-07-26 06:00:54.564481"], ["updated_at", "2024-07-26 06:00:54.564481"]]
+            MyApplication::Billing::Account Create (1.6ms)  INSERT INTO "accounts" ("supplier_id", "account_number", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["supplier_id", 2], ["account_number", "624752869698"], ["created_at", "2024-07-26 06:00:54.575831"], ["updated_at", "2024-07-26 06:00:54.575831"]]
+            TRANSACTION (1.1ms)  COMMIT
+           => true 
+
+      * create_association!(attributes = {}) ->
+        Does the same as create_association above, but raises ActiveRecord::RecordInvalid if the record is invalid.
+
+      * reload_association ->
+        If the associated object has already been retrieved from the database for this object, the cached version will be returned
+        Example:
+          3.3.0 :023 > account = supplier.reload_account
+           MyApplication::Billing::Account Load (0.6ms)  SELECT "accounts".* FROM "accounts" WHERE "accounts"."supplier_id" = $1 LIMIT $2  [["supplier_id", 2], ["LIMIT", 1]]
+           => 
+          #<MyApplication::Billing::Account:0x000000011f0c99d0
+          ... 
+
+      * reset_association ->
+        To unload the cached version of the associated object—forcing the next access, if any, to query it from the database—call #reset_association on the parent object.
+        Example:
+          3.3.0 :024 > supplier.reset_account
+           => nil
 
