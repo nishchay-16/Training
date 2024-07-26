@@ -804,3 +804,34 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
                 class_name: "MyApplication::Billing::Account"
             end
 
+
+    c) Scopes for has_one
+        There may be times when you wish to customize the query used by has_one. Such customizations can be achieved via a scope block. 
+          For example:  
+            class Supplier < ApplicationRecord
+              has_one :account, -> { where active: true }
+            end
+
+        You can use any of the standard querying methods inside the scope block.
+          * where -> 
+            The where method lets you specify the conditions that the associated object must meet.
+
+          * includes -> 
+            We can use the includes method to specify second-order associations that should be eager-loaded when this association is used
+              Example:
+                class Supplier < ApplicationRecord
+                  has_one :account, -> { includes :representative }
+                end
+                class Account < ApplicationRecord
+                  belongs_to :supplier
+                  belongs_to :representative
+                end
+                class Representative < ApplicationRecord
+                  has_many :accounts
+                end
+
+          * readonly -> 
+            If we use the readonly method, then the associated object will be read-only when retrieved via the association.
+
+          * select ->
+            The select method lets you override the SQL SELECT clause that is used to retrieve data about the associated object. By default, Rails retrieves all columns

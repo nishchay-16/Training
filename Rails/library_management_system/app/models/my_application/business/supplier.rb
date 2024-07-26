@@ -2,7 +2,7 @@ module MyApplication
     module Business
       class Supplier < ApplicationRecord
         # has_one :account,
-        # has_one :account, autosave: true,
+        has_one :account, autosave: true,
         # has_one :account, dependent: :destroy,
         # has_one :account, disable_joins: true,
         # has_one :account, ensuring_owner_was: true,
@@ -14,7 +14,7 @@ module MyApplication
         # has_one :account, strict_loading: true,
         # has_one :account, through: :supplier_account,
         # has_one :account, through: :supplier_accounts, source: :account,
-        has_one :account, touch: true,
+        # has_one :account, touch: true,
         # has_one :account, validate: true,
           class_name: "MyApplication::Billing::Account"
 
