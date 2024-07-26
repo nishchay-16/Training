@@ -841,8 +841,8 @@ IMPORTANT => For belongs_to associations you need to create foreign keys, and fo
 
 
 3) has_many Association Reference ->
-The has_many association creates a one-to-many relationship with another model. 
-In database terms, this association says that the other class will have a foreign key that refers to instances of this class.
+    The has_many association creates a one-to-many relationship with another model. 
+    In database terms, this association says that the other class will have a foreign key that refers to instances of this class.
 
     a) Methods Added by has_many ->
 
@@ -1144,7 +1144,186 @@ In database terms, this association says that the other class will have a foreig
         
        * distinct =>
        Use the distinct method to keep the collection free of duplicates. This is mostly useful together with the :through option.
-       
+
       
       
         
+4) has_and_belongs_to_many Association Reference ->
+    The has_and_belongs_to_many association creates a many-to-many relationship with another model. 
+    In database terms, this associates two classes via an intermediate join table that includes foreign keys referring to each of the classes.
+
+    a) Methods Added by has_and_belongs_to_many ->
+      * collection =>
+        The collection method returns a Relation of all of the associated objects. If there are no associated objects, it returns an empty Relation.
+        Example:
+          3.3.0 :033 > part = Part.first
+            Part Load (0.7ms)  SELECT "parts".* FROM "parts" ORDER BY "parts"."id" ASC LIMIT $1  [["LIMIT", 1]]
+          => #<Part:0x0000000121b77088 id: 1, part_number: "Part 1", created_at: Fri, 26 Jul 2024 10:34:19.647603000 
+          UTC +00:00, updated_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC... 
+          3.3.0 :034 > assemblies = part.assemblies
+            Assembly Load (0.7ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id" 
+            WHERE "assemblies_parts"."part_id" = $1 /* loading for pp */ LIMIT $2  [["part_id", 1], ["LIMIT", 11]]
+          => 
+          [#<Assembly:0x00000001215f6e38
+          ... 
+      
+      * collection<<(object, ...) =>
+        The collection<< method adds one or more objects to the collection by creating records in the join table.
+        Example:
+          3.3.0 :029 > part1 = Part.create(part_number: 'Part 1')
+            TRANSACTION (0.2ms)  BEGIN
+            Part Create (4.5ms)  INSERT INTO "parts" ("part_number", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["part_number", "Part 1"], 
+            ["created_at", "2024-07-26 10:34:19.647603"], ["updated_at", "2024-07-26 10:34:19.647603"]]
+            TRANSACTION (0.3ms)  COMMIT
+            => #<Part:0x0000000121d58870 id: 1, part_number: "Part 1", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC... 
+          3.3.0 :030 > assembly1.parts << part1
+            TRANSACTION (0.4ms)  BEGIN
+            Assembly::HABTM_Parts Create (1.9ms)  INSERT INTO "assemblies_parts" ("assembly_id", "part_id") VALUES ($1, $2)  [["assembly_id", 1], ["part_id", 1]]
+            TRANSACTION (0.5ms)  COMMIT
+            Part Load (0.8ms)  SELECT "parts".* FROM "parts" INNER JOIN "assemblies_parts" ON "parts"."id" = "assemblies_parts"."part_id" 
+            WHERE "assemblies_parts"."assembly_id" = $1 /* loading for pp */ LIMIT $2  [["assembly_id", 1], ["LIMIT", 11]]
+            => [#<Part:0x000000012199ca88 id: 1, part_number: "Part 1", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00>] 
+
+      * collection.delete(object, ...) =>
+        The collection.delete method removes one or more objects from the collection by deleting records in the join table. This does not destroy the objects.
+        Example:
+          3.3.0 :043 > assembly2 = Assembly.create(name: 'Assembly 2')
+            TRANSACTION (0.9ms)  BEGIN
+            Assembly Create (3.8ms)  INSERT INTO "assemblies" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Assembly 2"], 
+            ["created_at", "2024-07-26 11:05:51.496763"], ["updated_at", "2024-07-26 11:05:51.496763"]]
+            TRANSACTION (1.7ms)  COMMIT
+           => #<Assembly:0x000000012199c588 id: 2, name: "Assembly 2", created_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00, updated_at: Fri, 26 Jul 2024 11:05:51.496763000 UT... 
+          3.3.0 :044 > part.assemblies.delete(assembly2)
+            TRANSACTION (0.3ms)  BEGIN
+            Part::HABTM_Assemblies Delete All (1.8ms)  DELETE FROM "assemblies_parts" WHERE "assemblies_parts"."part_id" = $1 AND 
+            "assemblies_parts"."assembly_id" = $2  [["part_id", 1], ["assembly_id", 2]]
+             TRANSACTION (0.3ms)  COMMIT
+          => 
+          [#<Assembly:0x000000012199c588
+          id: 2,
+          name: "Assembly 2",
+          created_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00,
+          updated_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00>] 
+
+      * collection.destroy(object, ...) =>
+        The collection.destroy method removes one or more objects from the collection by deleting records in the join table. This does not destroy the objects.
+        Example:
+        3.3.0 :045 > part.assemblies.destroy(assembly2)
+        3.3.0 :046 > 
+          TRANSACTION (0.8ms)  BEGIN
+          HABTM_Assemblies Load (0.8ms)  SELECT "assemblies_parts".* FROM "assemblies_parts" WHERE "assemblies_parts"."part_id" = $1 AND "assemblies_parts"."assembly_id" = $2  [["part_id", 1], ["assembly_id", 2]]
+          Part::HABTM_Assemblies Delete All (0.7ms)  DELETE FROM "assemblies_parts" WHERE "assemblies_parts"."part_id" = $1 AND "assemblies_parts"."assembly_id" = $2  [["part_id", 1], ["assembly_id", 2]]
+          TRANSACTION (0.2ms)  COMMIT
+         => 
+        [#<Assembly:0x000000012199c588
+          id: 2,
+          name: "Assembly 2",
+          created_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00,
+          updated_at: Fri, 26 Jul 2024 11:05:51.496763000 UTC +00:00>] 
+
+      * collection=(objects) =>
+        The collection= method makes the collection contain only the supplied objects, by adding and deleting as appropriate. The changes are persisted to the database.
+
+      * collection_singular_ids => 
+        The collection_singular_ids method returns an array of the ids of the objects in the collection.
+        Example:
+          3.3.0 :045 > part = Part.first
+            Part Load (0.7ms)  SELECT "parts".* FROM "parts" ORDER BY "parts"."id" ASC LIMIT $1  [["LIMIT", 1]]
+          => #<Part:0x0000000121b77088 id: 1, part_number: "Part 1", created_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:34:19.647603000 UTC...
+          3.3.0 :046 > assembly_ids = part.assembly_ids
+          => [1] 
+
+      * collection_singular_ids=(ids) =>
+        The collection_singular_ids= method makes the collection contain only the objects identified by the supplied primary key values, 
+        by adding and deleting as appropriate. The changes are persisted to the database.
+
+      * collection.clear =>
+        The collection.clear method removes every object from the collection by deleting the rows from the joining table. 
+        This does not destroy the associated objects.
+        Example:
+        3.3.0 :047 > assembly2.parts.clear
+          Part Load (1.4ms)  SELECT "parts".* FROM "parts" INNER JOIN "assemblies_parts" ON "parts"."id" = "assemblies_parts"."part_id" 
+          WHERE "assemblies_parts"."assembly_id" = $1  [["assembly_id", 2]]
+          Assembly::HABTM_Parts Delete All (0.9ms)  DELETE FROM "assemblies_parts" WHERE "assemblies_parts"."assembly_id" = $1 AND 1=0  [["assembly_id", 2]]
+        => [] 
+
+      * collection.empty? =>
+        The collection.empty? method returns true if the collection does not contain any associated objects.
+        Example:
+          3.3.0 :035 > part.assemblies.empty?
+            Assembly Exists? (4.1ms)  SELECT 1 AS one FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id" 
+            WHERE "assemblies_parts"."part_id" = $1 LIMIT $2  [["part_id", 1], ["LIMIT", 1]]
+          => false 
+
+      * collection.size => 
+        The collection.size method returns the number of objects in the collection.
+        Example:
+          3.3.0 :036 > assembly_count = part.assemblies.count
+            Assembly Count (2.6ms)  SELECT COUNT(*) FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id" 
+            WHERE "assemblies_parts"."part_id" = $1  [["part_id", 1]]
+          => 1 
+      
+      * collection.find(...) => 
+        The collection.find method finds objects within the collections table.
+        Example:
+          3.3.0 :037 > assembly = part.assemblies.find(1)
+            Assembly Load (0.9ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id"
+            WHERE "assemblies_parts"."part_id" = $1 AND "assemblies"."id" = $2 LIMIT $3  [["part_id", 1], ["id", 1], ["LIMIT", 1]]
+          => #<Assembly:0x0000000121b7e108 id: 1, name: "Assembly 1", created_at: Fri, 26 Jul 2024 10:33:19.061477000 UTC +00:00, updated_at: Fri, 26 Jul 2024 10:33:19.061477000 UT...
+
+      * collection.where(...) =>  
+        The collection.where method finds objects within the collection based on the conditions supplied but the objects 
+        are loaded lazily meaning that the database is queried only when the object(s) are accessed.
+        Example:
+          3.3.0 :038 > new_assemblies = part.assemblies.where("created_at > ?", 2.days.ago)
+            Assembly Load (4.9ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id" 
+            WHERE "assemblies_parts"."part_id" = $1 AND (created_at > '2024-07-24 10:55:15.203821') /* loading for pp */ LIMIT $2  [["part_id", 1], ["LIMIT", 11]]
+          => 
+          [#<Assembly:0x0000000121af7e50
+          ... 
+
+      * collection.exists?(...) => 
+        The collection.exists? method checks whether an object meeting the supplied conditions exists in the collections table.
+        Example:
+          3.3.0 :041 > Assembly.exists?(name: 'Assembly 1')
+            Assembly Exists? (2.0ms)  SELECT 1 AS one FROM "assemblies" WHERE "assemblies"."name" = $1 LIMIT $2  [["name", "Assembly 1"], ["LIMIT", 1]]
+          => true 
+
+      * collection.build(attributes = {}) => 
+        The collection.build method returns a new object of the associated type. 
+        This object will be instantiated from the passed attributes, and the link through the join table will be created, but the associated object will not yet be saved.
+        Example:
+        3.3.0 :048 > part = assembly2.parts.build(part_number: 'Part 3')
+         => #<Part:0x0000000121995c88 id: nil, part_number: "Part 3", created_at: nil, updated_at: nil> 
+        3.3.0 :049 > part.new_record?
+         => true 
+
+      * collection.create(attributes = {}) => 
+        The collection.create method returns a new object of the associated type. 
+        This object will be instantiated from the passed attributes, the link through the join table will be created,
+        and, once it passes all of the validations specified on the associated model, the associated object will be saved.
+        Example:
+        3.3.0 :050 > part = assembly2.parts.create(part_number: 'Part 4')
+          TRANSACTION (0.9ms)  BEGIN
+          Part Create (4.1ms)  INSERT INTO "parts" ("part_number", "created_at", "updated_at") VALUES ($1, $2, $3) 
+          RETURNING "id"  [["part_number", "Part 4"], ["created_at", "2024-07-26 11:11:49.428690"], ["updated_at", "2024-07-26 11:11:49.428690"]]
+          Assembly::HABTM_Parts Create (0.4ms)  INSERT INTO "assemblies_parts" ("assembly_id", "part_id") VALUES ($1, $2)  [["assembly_id", 2], ["part_id", 2]]
+          TRANSACTION (1.5ms)  COMMIT
+         => #<Part:0x0000000121b7fc88 id: 2, part_number: "Part 4", created_at: Fri, 26 Jul 2024 11:11:49.428690000 UTC +00:00, updated_at: Fri, 26 Jul 2024 11:11:49.428690000 UTC... 
+        3.3.0 :051 > part.persisted?
+         => true 
+
+      * collection.create!(attributes = {}) => 
+        Does the same as collection.create, but raises ActiveRecord::RecordInvalid if the record is invalid
+
+      * collection.reload =>
+        The collection.reload method returns a Relation of all of the associated objects, forcing a database read. 
+        If there are no associated objects, it returns an empty Relation.
+        Example:
+          3.3.0 :039 > assemblies = part.assemblies.reload
+            Assembly Load (1.1ms)  SELECT "assemblies".* FROM "assemblies" INNER JOIN "assemblies_parts" ON "assemblies"."id" = "assemblies_parts"."assembly_id"
+            WHERE "assemblies_parts"."part_id" = $1  [["part_id", 1]]
+           => 
+          [#<Assembly:0x0000000121b57a80
+          ... 
+    
