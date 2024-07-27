@@ -457,3 +457,121 @@ Before Save: Halting save because title is 'Invalid'
 
 IMPORTANT NOTE: If an ActiveRecord::RecordNotDestroyed is raised within after_destroy, before_destroy or around_destroy     
                 callback, it will not be re-raised and the destroy method will return false.
+
+
+
+
+===> Relational Callbacks
+In Rails, relational callbacks are callbacks that involve interactions between associated models. 
+They allow you to execute code in response to changes in related records, ensuring that your applications state remains consistent across related models.
+Callbacks work through model relationships, and can even be defined by them.
+
+Example:
+3.3.0 :315 > genre = Genre.find_by(id:3)
+  Genre Load (0.8ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 3], ["LIMIT", 1]]
+ => #<Genre:0x00000001216f8700 id: 3, genre_name: "literature", created_at: Sat, 27 Jul 2024 10:29:43.465751000 UTC +00:00, updated_at: Sat, 27 Jul 2024 10:29:43.465751000 UTC +00:00> 
+3.3.0 :316 > book = genre.books.create(title: "Three men in a Boat" , author_id: 12)
+  TRANSACTION (0.6ms)  BEGIN
+  Author Load (0.3ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 12], ["LIMIT", 1]]
+  Book Create (5.0ms)  INSERT INTO "books" ("isbn", "title", "quantity", "created_at", "updated_at", "available_quantity", "author_id", "genre_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["isbn", nil], ["title", "Three men in a Boat"], ["quantity", nil], ["created_at", "2024-07-27 10:32:11.795965"], ["updated_at", "2024-07-27 10:32:11.795965"], ["available_quantity", nil], ["author_id", 12], ["genre_id", 3]]
+  Author Update All (0.7ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) + $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 12]]
+  Genre Update (0.4ms)  UPDATE "genres" SET "updated_at" = $1 WHERE "genres"."id" = $2  [["updated_at", "2024-07-27 10:32:11.804774"], ["id", 3]]
+Book/Genre was touched
+  TRANSACTION (1.3ms)  COMMIT
+ => 
+#<Book:0x0000000120ad7958
+... 
+3.3.0 :317 > genre.destroy
+  TRANSACTION (0.4ms)  BEGIN
+  Book Load (1.8ms)  SELECT "books".* FROM "books" WHERE "books"."genre_id" = $1  [["genre_id", 3]]
+  Book Destroy (2.2ms)  DELETE FROM "books" WHERE "books"."id" = $1  [["id", 11]]
+  Author Update All (0.3ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) - $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 12]]
+Book destroyed
+  Genre Destroy (0.5ms)  DELETE FROM "genres" WHERE "genres"."id" = $1  [["id", 3]]
+  TRANSACTION (1.0ms)  COMMIT
+ => #<Genre:0x00000001216f8700 id: 3, genre_name: "literature", created_at: Sat, 27 Jul 2024 10:29:43.465751000 UTC +00:00, updated_at: Sat, 27 Jul 2024 10:32:55.801353000 UTC +00:00> 
+
+
+
+
+===> Association Callbacks
+Association callbacks are similar to normal callbacks, but they are triggered by events in the life cycle of a collection. There are four available association callbacks:
+
+1) before_add
+2) after_add
+3) before_remove
+4) after_remove
+
+Example:
+class Author < ApplicationRecord
+  has_many :books, before_add: :check_book_limit, after_add: :update_books_count, after_remove: :update_books_count
+
+  private
+
+  def check_book_limit(book)
+    if books_count >= 2
+      Rails.logger.info "Cannot add book: Limit of 2 books reached."
+      throw(:abort) 
+    end
+  end
+
+  def update_books_count(book)
+    update(books_count: books.count)
+  end
+end
+
+3.3.0 :320 > author = Author.create!(author_name: "John Doe", nationality: "American")
+  TRANSACTION (0.2ms)  BEGIN
+  Author Create (2.8ms)  INSERT INTO "authors" ("author_name", "nationality", "created_at", "updated_at", "books_count") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["author_name", "John Doe"], ["nationality", "American"], ["created_at", "2024-07-27 10:47:49.391915"], ["updated_at", "2024-07-27 10:47:49.391915"], ["books_count", 0]]
+  TRANSACTION (1.2ms)  COMMIT
+ => 
+#<Author:0x0000000120ebb100
+... 
+3.3.0 :321 > book1 = Book.create!(isbn: "1234567890", title: "Book One", quantity: 5, available_quantity: 5, author: author, genre_id: 1)
+3.3.0 :322 > book2 = Book.create!(isbn: "0987654321", title: "Book Two", quantity: 10, available_quantity: 10, author: author, genre_id: 1)
+  TRANSACTION (0.2ms)  BEGIN
+  Genre Load (0.5ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+  Book Create (0.7ms)  INSERT INTO "books" ("isbn", "title", "quantity", "created_at", "updated_at", "available_quantity", "author_id", "genre_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["isbn", "1234567890"], ["title", "Book One"], ["quantity", 5], ["created_at", "2024-07-27 10:48:15.978257"], ["updated_at", "2024-07-27 10:48:15.978257"], ["available_quantity", 5], ["author_id", 13], ["genre_id", 1]]
+  Author Update All (0.3ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) + $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 13]]
+  Book Count (1.2ms)  SELECT COUNT(*) FROM "books" WHERE "books"."author_id" = $1  [["author_id", 13]]
+  Genre Update (0.3ms)  UPDATE "genres" SET "updated_at" = $1 WHERE "genres"."id" = $2  [["updated_at", "2024-07-27 10:48:15.980864"], ["id", 1]]
+Book/Genre was touched
+  TRANSACTION (0.7ms)  COMMIT
+  TRANSACTION (0.1ms)  BEGIN
+  Genre Load (0.2ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+  Book Create (0.5ms)  INSERT INTO "books" ("isbn", "title", "quantity", "created_at", "updated_at", "available_quantity", "author_id", "genre_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["isbn", "0987654321"], ["title", "Book Two"], ["quantity", 10], ["created_at", "2024-07-27 10:48:15.986145"], ["updated_at", "2024-07-27 10:48:15.986145"], ["available_quantity", 10], ["author_id", 13], ["genre_id", 1]]
+  Author Update All (0.3ms)  UPDATE "authors" SET "books_count" = COALESCE("books_count", 0) + $1 WHERE "authors"."id" = $2  [["books_count", 1], ["id", 13]]
+  Book Count (0.3ms)  SELECT COUNT(*) FROM "books" WHERE "books"."author_id" = $1  [["author_id", 13]]
+  Genre Update (0.3ms)  UPDATE "genres" SET "updated_at" = $1 WHERE "genres"."id" = $2  [["updated_at", "2024-07-27 10:48:15.987849"], ["id", 1]]
+Book/Genre was touched
+  TRANSACTION (0.3ms)  COMMIT
+ => 
+#<Book:0x0000000120f912c8
+... 
+3.3.0 :323 > new_book = Book.new(isbn: "1111111111", title: "Book Three", quantity: 3,available_quantity: 3, author: author, genre_id: 1)
+3.3.0 :324 > 
+ => #<Book:0x000000012145f2a0 id: nil, isbn: "1111111111", title: "Book Three", quantity: 3, created_at: nil, updated_at: nil, available_quantity: 3, author_id: 13, genre_id: 1> 
+3.3.0 :325 > author.books << new_book 
+Cannot add book: Limit of 2 books reached.
+  Book Load (1.1ms)  SELECT "books".* FROM "books" WHERE "books"."author_id" = $1 /* loading for pp */ LIMIT $2  [["author_id", 13], ["LIMIT", 11]]
+ => 
+[#<Book:0x0000000121456f60
+  id: 12,
+  isbn: "1234567890",
+  title: "Book One",
+  quantity: 5,
+  created_at: Sat, 27 Jul 2024 10:48:15.978257000 UTC +00:00,
+  updated_at: Sat, 27 Jul 2024 10:48:15.978257000 UTC +00:00,
+  available_quantity: 5,
+  author_id: 13,
+  genre_id: 1>,
+ #<Book:0x0000000121456e20
+  id: 13,
+  isbn: "0987654321",
+  title: "Book Two",
+  quantity: 10,
+  created_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+  updated_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+  available_quantity: 10,
+  author_id: 13,
+  genre_id: 1>] 

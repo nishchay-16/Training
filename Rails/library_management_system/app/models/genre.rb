@@ -1,5 +1,5 @@
 class Genre < ApplicationRecord
-  has_many :books
+  has_many :books , dependent: :destroy
   after_touch :log_when_books_or_library_touched
   VALID_GENRES = %w(fiction non-fiction fantasy mystery romance thriller)
 
