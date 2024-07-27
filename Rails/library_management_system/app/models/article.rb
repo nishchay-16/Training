@@ -1,5 +1,5 @@
 class Article < ApplicationRecord
-  # validates :title, presence: true
+  validates :title, presence: true
   validates :content, length: { minimum: 10 }
 
   # before_validation :normalize_title                   # before_validation callback
@@ -9,7 +9,12 @@ class Article < ApplicationRecord
   # after_save :update_search_index                      # after_save callback
   # before_create :set_published_at                      # before_create callback
   # around_create :log_create_actions                    # around_create callback
-  after_create :send_notification                      # after_create callback
+  # after_create :send_notification                      # after_create callback
+  # after_commit :commit_log, on: [:create, :update]     # after_commit callback
+  # after_rollback :rollback_log                         # after_rollback callback
+  # before_update :log_before_update                     # before_update callback
+  # around_update :log_around_update                     # around_update callback
+  after_update :log_after_update                       # after_update callback
 
   private
 
@@ -46,8 +51,31 @@ class Article < ApplicationRecord
   #   puts "Around Create: After Create"
   # end
 
-  def send_notification
-    puts "After Create: Notification sent to the author"
+  # def send_notification
+  #   puts "After Create: Notification sent to the author"
+  # end
+
+
+  # def commit_log
+  #   puts "After Commit: Changes have been committed"
+  # end
+
+  # def rollback_log
+  #   puts "After Rollback: Transaction rolled back"
+  # end
+
+  def log_before_update
+    puts "Before Update: Log before update"
+  end
+
+  def log_around_update
+    puts "Around Update: Before update"
+    yield
+    puts "Around Update: After update"
+  end
+
+  def log_after_update
+    puts "After Update: Log after update"
   end
 
 end
