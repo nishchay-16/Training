@@ -201,3 +201,74 @@ With callbacks it is possible to write code that will run whenever an Active Rec
       After Update: Log after update
         TRANSACTION (0.4ms)  COMMIT
       => true 
+
+
+
+===>  Destroying an Object
+
+1) before_destroy -> Registers a callback to be called before a record is destroyed.
+      Example:
+      3.3.0 :276 > article = Article.find_by(id: 7)
+      Article Load (0.6ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = $1 LIMIT $2  [["id", 7], ["LIMIT", 1]]
+     => 
+      #<Article:0x0000000120bd69d0
+      ... 
+      3.3.0 :277 > article.destroy
+      Before Destroy: Destroyed the article no 7 at 2024-07-27 09:26:25 UTC
+        TRANSACTION (0.3ms)  BEGIN
+        Article Destroy (1.3ms)  DELETE FROM "articles" WHERE "articles"."id" = $1  [["id", 7]]
+        TRANSACTION (1.4ms)  COMMIT
+      => 
+      #<Article:0x0000000120bd69d0
+       id: 7,
+       title: "test title",
+       content: "Updated content",
+       created_at: Sat, 27 Jul 2024 08:35:56.426429000 UTC +00:00,
+       updated_at: Sat, 27 Jul 2024 08:36:09.163225000 UTC +00:00,
+       published_at: nil> 
+
+2) after_destroy -> Registers a callback to be called after a record is destroyed.
+      Example:
+      3.3.0 :279 > article = Article.find_by(id: 6)
+      Article Load (0.4ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = $1 LIMIT $2  [["id", 6], ["LIMIT", 1]]
+       => 
+      #<Article:0x0000000120c17b38
+      ... 
+      3.3.0 :280 > article.destroy
+      Before Destroy: Destroyed the article no 6 at 2024-07-27 09:28:55 UTC
+        TRANSACTION (0.2ms)  BEGIN
+        Article Destroy (0.9ms)  DELETE FROM "articles" WHERE "articles"."id" = $1  [["id", 6]]
+      After Destroy: Successfully destroyed the article test title
+        TRANSACTION (1.0ms)  COMMIT
+       => 
+      #<Article:0x0000000120c17b38
+       id: 6,
+       title: "test title",
+       content: "This is some content.",
+       created_at: Sat, 27 Jul 2024 08:32:01.190514000 UTC +00:00,
+       updated_at: Sat, 27 Jul 2024 08:32:01.190514000 UTC +00:00,
+       published_at: nil> 
+
+3) around_destroy -> Registers a callback to be called around a record is destroyed.
+      Example:
+      3.3.0 :282 > article = Article.find_by(id: 5)
+      Article Load (0.4ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = $1 LIMIT $2  [["id", 5], ["LIMIT", 1]]
+     => 
+      #<Article:0x0000000121696b68
+      ... 
+      3.3.0 :283 > article.destroy
+      Before Destroy: Destroyed the article no 5 at 2024-07-27 09:31:54 UTC
+      Around Destroy: Started Destroying the article no 5
+        TRANSACTION (0.4ms)  BEGIN
+        Article Destroy (1.4ms)  DELETE FROM "articles" WHERE "articles"."id" = $1  [["id", 5]]
+      Around Destroy: The article no 5 has been destroyed
+      After Destroy: Successfully destroyed the article Test Title
+        TRANSACTION (2.7ms)  COMMIT
+       => 
+      #<Article:0x0000000121696b68
+       id: 5,
+       title: "Test Title",
+       content: "This is some content.",
+       created_at: Sat, 27 Jul 2024 08:21:39.070703000 UTC +00:00,
+       updated_at: Sat, 27 Jul 2024 08:21:39.070703000 UTC +00:00,
+       published_at: Sat, 27 Jul 2024 08:21:39.071149000 UTC +00:00> 

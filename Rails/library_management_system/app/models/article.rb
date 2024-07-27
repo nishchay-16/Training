@@ -14,7 +14,10 @@ class Article < ApplicationRecord
   # after_rollback :rollback_log                         # after_rollback callback
   # before_update :log_before_update                     # before_update callback
   # around_update :log_around_update                     # around_update callback
-  after_update :log_after_update                       # after_update callback
+  # after_update :log_after_update                       # after_update callback
+  before_destroy :log_before_destroy                   # before_destroy callback
+  after_destroy :log_after_destroy                     # after_destroy callback
+  around_destroy :log_around_destroy                   # around_destroy callback
 
   private
 
@@ -64,18 +67,32 @@ class Article < ApplicationRecord
   #   puts "After Rollback: Transaction rolled back"
   # end
 
-  def log_before_update
-    puts "Before Update: Log before update"
+  # def log_before_update
+  #   puts "Before Update: Log before update"
+  # end
+
+  # def log_around_update
+  #   puts "Around Update: Before update"
+  #   yield
+  #   puts "Around Update: After update"
+  # end
+
+  # def log_after_update
+  #   puts "After Update: Log after update"
+  # end
+
+  def log_before_destroy
+    puts "Before Destroy: Destroyed the article no #{id} at #{Time.current}"
   end
 
-  def log_around_update
-    puts "Around Update: Before update"
+  def log_after_destroy
+    puts "After Destroy: Successfully destroyed the article #{title}"
+  end
+
+  def log_around_destroy
+    puts "Around Destroy: Started Destroying the article no #{id}"
     yield
-    puts "Around Update: After update"
-  end
-
-  def log_after_update
-    puts "After Update: Log after update"
+    puts "Around Destroy: The article no #{id} has been destroyed"
   end
 
 end
