@@ -510,7 +510,7 @@ class Author < ApplicationRecord
 
   def check_book_limit(book)
     if books_count >= 2
-      Rails.logger.info "Cannot add book: Limit of 2 books reached."
+      puts "Cannot add book: Limit of 2 books reached."
       throw(:abort) 
     end
   end
@@ -763,3 +763,124 @@ File deleted: Image.jpg
   TRANSACTION (0.7ms)  COMMIT
  => #<PictureFile:0x000000011fff08a0 id: 4, filepath: "Image.jpg", created_at: Sat, 27 Jul 2024 11:56:32.921527000 UTC +00:00, updated_at: Sat, 27 Jul 2024 11:56:32.921527000 UTC +00:00> 
 3.3.0 :372 > 
+
+
+
+
+====> Transaction Callbacks
+
+1) after_commit and after_rollback ->
+There are two additional callbacks that are triggered by the completion of a database transaction: after_commit and after_rollback
+
+Example:
+class PictureFile < ApplicationRecord
+  after_commit :delete_picture_file_from_disk, on: :destroy
+  after_rollback :rollback_picture_file_deletion, on: :destroy
+
+  def delete_picture_file_from_disk
+    if File.exist?(filepath)
+      File.delete(filepath)
+    end
+  end
+
+  def rollback_picture_file_deletion
+    puts "Transaction rolled back, did not delete: #{filepath}"
+  end
+end
+
+3.3.0 :374 > picture_file = PictureFile.create(filepath: "documents/images.jpg")
+  TRANSACTION (0.2ms)  BEGIN
+  PictureFile Create (1.8ms)  INSERT INTO "picture_files" ("filepath", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["filepath", "documents/images.jpg"], ["created_at", "2024-07-27 12:01:26.408878"], ["updated_at", "2024-07-27 12:01:26.408878"]]
+  TRANSACTION (1.5ms)  COMMIT
+ => #<PictureFile:0x0000000120bd2f60 id: 5, filepath: "documents/images.jpg", created_at: Sat, 27 Jul 2024 12:01:26.408878000 UTC +00:00, updated_at: Sat, 27 Jul 2024 12:01:26.408878000 UTC +00:00> 
+3.3.0 :375 > PictureFile.transaction do
+3.3.0 :376 >   picture_file.destroy
+3.3.0 :377 >   raise ActiveRecord::Rollback
+3.3.0 :378 > end
+  TRANSACTION (0.5ms)  BEGIN
+  PictureFile Destroy (1.3ms)  DELETE FROM "picture_files" WHERE "picture_files"."id" = $1  [["id", 5]]
+  TRANSACTION (0.2ms)  ROLLBACK
+Transaction rolled back, did not delete: documents/images.jpg
+ => nil 
+
+
+2) Aliases for after_commit ->
+  a) after_create_commit
+    This callback will be triggered after the record is created and the transaction is committed
+    Example:
+    3.3.0 :380 > doc = Document.create(title: "New Document", content: "This is a new document.")
+    TRANSACTION (0.2ms)  BEGIN
+    Document Create (2.3ms)  INSERT INTO "documents" ("title", "content", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["title", "New Document"], ["content", "This is a new document."], ["created_at", "2024-07-27 12:08:15.851595"], ["updated_at", "2024-07-27 12:08:15.851595"]]
+    TRANSACTION (0.2ms)  COMMIT
+    Document with ID 1 has been created.
+     => #<Document:0x000000011f3f59d8 id: 1, title: "New Document", content: "This is a new document.", created_at: Sat, 27 Jul 2024 12:08:15.851595000 UTC +00:00, updated_at: Sat, 27 Jul 2024 12:08:15.851595000 UTC... 
+  
+  b) after_update_commit
+    This callback will be triggered after the record is updated and the transaction is committed
+      Example:
+      3.3.0 :381 > doc.update(title: "Updated Document")
+      TRANSACTION (0.4ms)  BEGIN
+      Document Update (1.7ms)  UPDATE "documents" SET "title" = $1, "updated_at" = $2 WHERE "documents"."id" = $3  [["title", "Updated Document"], ["updated_at", "2024-07-27 12:08:21.116887"], ["id", 1]]
+      TRANSACTION (1.0ms)  COMMIT
+      Document with ID 1 has been updated.
+       => true 
+
+  c) after_destroy_commit
+    This callback will be triggered after the record is destroyed and the transaction is committed
+    Example:
+    3.3.0 :382 > doc.destroy
+    TRANSACTION (0.4ms)  BEGIN
+    Document Destroy (1.5ms)  DELETE FROM "documents" WHERE "documents"."id" = $1  [["id", 1]]
+    TRANSACTION (0.8ms)  COMMIT
+    Document with ID 1 has been destroyed.
+     => 
+    #<Document:0x000000011f3f59d8
+     id: 1,
+     title: "Updated Document",
+     content: "This is a new document.",
+     created_at: Sat, 27 Jul 2024 12:08:15.851595000 UTC +00:00,
+     updated_at: Sat, 27 Jul 2024 12:08:21.116887000 UTC +00:00> 
+
+  
+3) after_save_commit
+  There is also after_save_commit, which is an alias for using the after_commit callback for both create and update together:
+    Example:
+    class Document < ApplicationRecord
+      after_save_commit :log_document_saved_to_db
+    
+      private
+    
+      def log_document_saved_to_db
+        puts 'Document was saved to database'
+      end
+    end
+    
+    3.3.0 :384 > document = Document.create(title: "Sample Document", content: "This is a sample document.")
+      TRANSACTION (0.2ms)  BEGIN
+      Document Create (1.8ms)  INSERT INTO "documents" ("title", "content", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["title", "Sample Document"], ["content", "This is a sample document."], ["created_at", "2024-07-27 12:11:47.193468"], ["updated_at", "2024-07-27 12:11:47.193468"]]
+      TRANSACTION (1.3ms)  COMMIT
+    Document with ID 2 has been created.
+    Document was saved to database
+     => 
+    #<Document:0x000000011f912b50
+  
+
+4) Transactional Callback Ordering
+By default, callbacks will run in the order they are defined. 
+However, when defining multiple transactional after_ callbacks (after_commit, after_rollback, etc), the order could be reversed from when they are defined.
+
+This order can be set via configuration:
+config.active_record.run_after_transaction_callbacks_in_order_defined = false
+
+When set to true (the default from Rails 7.1), callbacks are executed in the order they are defined. 
+When set to false, the order is reversed.
+
+Example:
+class User < ActiveRecord::Base
+  after_commit { puts("this actually gets called second") }
+  after_commit { puts("this actually gets called first") }
+end
+
+Output:
+this actually gets called first
+this actually gets called second
