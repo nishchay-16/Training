@@ -63,3 +63,60 @@ With callbacks it is possible to write code that will run whenever an Active Rec
       After Save: Updated search index
         TRANSACTION (1.4ms)  COMMIT
        => true     
+
+6) before_create -> Registers a callback to be called before a record is created.
+      Example:
+      3.3.0 :189 > article = Article.new(title: "test title", content: "This is some content.")
+      3.3.0 :190 > 
+       => #<Article:0x0000000120bd7128 id: nil, title: "test title", content: "This is some content.", created_at: nil, updated_at: nil, published_at: nil> 
+      3.3.0 :191 > article.save
+      3.3.0 :192 > 
+      Around Save: Before Save
+        TRANSACTION (0.3ms)  BEGIN
+        Article Create (2.0ms)  INSERT INTO "articles" ("title", "content", "created_at", "updated_at", "published_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["title", "Test Title"], ["content", "This is some content."], ["created_at", "2024-07-27 08:18:55.752351"], ["updated_at", "2024-07-27 08:18:55.752351"], ["published_at", "2024-07-27 08:18:55.752567"]]
+      Around Save: After Save
+      After Save: Updated search index
+        TRANSACTION (1.6ms)  COMMIT
+       => true 
+      3.3.0 :193 > article.reload
+        Article Load (0.5ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = $1 LIMIT $2  [["id", 4], ["LIMIT", 1]]
+       => 
+      #<Article:0x0000000120bd7128
+       id: 4,
+       title: "Test Title",
+       content: "This is some content.",
+       created_at: Sat, 27 Jul 2024 08:18:55.752351000 UTC +00:00,
+       updated_at: Sat, 27 Jul 2024 08:18:55.752351000 UTC +00:00,
+       published_at: Sat, 27 Jul 2024 08:18:55.752567000 UTC +00:00> 
+      3.3.0 :194 > article.published_at
+       => Sat, 27 Jul 2024 08:18:55.752567000 UTC +00:00 
+
+7) around_create -> Registers a callback to be called around the creation of a record.
+      Example:
+      3.3.0 :198 > article = Article.new(title: "test title", content: "This is some content.")
+      3.3.0 :199 > 
+       => #<Article:0x0000000120e37698 id: nil, title: "test title", content: "This is some content.", created_at: nil, updated_at: nil, published_at: nil> 
+      3.3.0 :200 > 
+      3.3.0 :201 > article.save
+      3.3.0 :202 > 
+      Around Save: Before Save
+      Around Create: Before Create
+        TRANSACTION (0.3ms)  BEGIN
+        Article Create (3.1ms)  INSERT INTO "articles" ("title", "content", "created_at", "updated_at", "published_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["title", "Test Title"], ["content", "This is some content."], ["created_at", "2024-07-27 08:21:39.070703"], ["updated_at", "2024-07-27 08:21:39.070703"], ["published_at", "2024-07-27 08:21:39.071149"]]
+      Around Create: After Create
+      Around Save: After Save
+      After Save: Updated search index
+        TRANSACTION (0.9ms)  COMMIT
+       => true 
+      
+8) after_create -> Registers a callback to be called after a record is created.
+      Example:
+      => #<Article:0x0000000121697b80 id: nil, title: "test title", content: "This is some content.", created_at: nil, updated_at: nil, published_at: nil> 
+      3.3.0 :206 > article.save
+      3.3.0 :207 > 
+        TRANSACTION (0.4ms)  BEGIN
+        Article Create (3.2ms)  INSERT INTO "articles" ("title", "content", "created_at", "updated_at", "published_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["title", "test title"], ["content", "This is some content."], ["created_at", "2024-07-27 08:32:01.190514"], ["updated_at", "2024-07-27 08:32:01.190514"], ["published_at", nil]]
+      After Create: Notification sent to the author
+        TRANSACTION (1.1ms)  COMMIT
+       => true 
+      
