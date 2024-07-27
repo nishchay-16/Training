@@ -300,3 +300,66 @@ A new article is initialized!
 ... 
 
   Note:- The after_initialize and after_find callbacks have no before_* counterparts.
+
+
+
+
+===> after_touch Callback
+
+The after_touch callback is triggered whenever an Active Record object is touched. 
+This is typically done using the touch method, which updates the updated_at timestamp (or a custom timestamp column if specified) without changing any other attributes.
+The after_touch callback is executed after the record is touched using the touch method.
+
+class Article < ApplicationRecord
+  after_touch do |article|
+    puts "You have touched article #{article.title}"
+  end
+end
+
+3.3.0 :296 > article = Article.find_by(id: 2)
+  Article Load (0.4ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = $1 LIMIT $2  [["id", 2], ["LIMIT", 1]]
+You have found an article!
+A new article is initialized!
+ => 
+#<Article:0x000000011ec13120
+... 
+3.3.0 :297 > article.touch
+  TRANSACTION (0.4ms)  BEGIN
+  Article Update (1.5ms)  UPDATE "articles" SET "updated_at" = $1 WHERE "articles"."id" = $2  [["updated_at", "2024-07-27 09:54:46.557943"], ["id", 2]]
+You have touched article Test Title
+  TRANSACTION (2.4ms)  COMMIT
+ => true 
+
+
+Example 2:
+class Book < ApplicationRecord
+  belongs_to :genre, touch: true
+  after_touch do
+    puts 'A Book was touched'
+  end
+end
+
+class Genre < ApplicationRecord
+  has_many :books
+  after_touch :log_when_books_or_library_touched
+
+  private
+    def log_when_books_or_library_touched
+      puts 'Book/Library was touched'
+    end
+end
+
+3.3.0 :298 > book = Book.last
+  Book Load (0.3ms)  SELECT "books".* FROM "books" ORDER BY "books"."id" DESC LIMIT $1  [["LIMIT", 1]]
+ => 
+#<Book:0x0000000120976fc8
+... 
+3.3.0 :299 > book.touch
+  TRANSACTION (0.4ms)  BEGIN
+  Book Update (4.0ms)  UPDATE "books" SET "updated_at" = $1 WHERE "books"."id" = $2  [["updated_at", "2024-07-27 09:57:12.914858"], ["id", 10]]
+  Genre Load (1.0ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+A Book was touched
+  Genre Update (0.4ms)  UPDATE "genres" SET "updated_at" = $1 WHERE "genres"."id" = $2  [["updated_at", "2024-07-27 09:57:12.942200"], ["id", 1]]
+Book/Genre was touched
+  TRANSACTION (1.4ms)  COMMIT
+ => true 

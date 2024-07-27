@@ -10,6 +10,10 @@ class Article < ApplicationRecord
     puts "You have found an article!"
   end
 
+  after_touch do |article|
+    puts "You have touched article #{article.title}"
+  end
+
   # before_validation :normalize_title                   # before_validation callback
   # after_validation :set_default_content                # after_validation callback
   # before_save :ensure_title_has_a_value                # before_save callback
