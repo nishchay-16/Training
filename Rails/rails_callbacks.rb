@@ -575,3 +575,191 @@ Cannot add book: Limit of 2 books reached.
   available_quantity: 10,
   author_id: 13,
   genre_id: 1>] 
+
+
+
+
+===> Conditional Callbacks
+
+Conditional callbacks in Rails allow you to execute callback methods based on specific conditions. These conditions are specified using the :if and :unless options, 
+which can take symbols representing method names, Procs, or arrays of methods and Procs. Heres a detailed guide on how to use them:
+
+1)Using :if and :unless with a Symbol
+
+Example:
+class Item < ApplicationRecord
+  before_save :apply_discount, if: :expensive?
+  before_save :notify_low_stock, unless: :in_stock?
+
+  def apply_discount
+    if price > 100
+      self.price -= 10
+      puts "Discount applied to item: #{name}"
+    end
+  end
+  def notify_low_stock
+    if stock < 10
+      puts "Low stock warning for item: #{name}"
+    end
+  end
+
+  private
+
+  def expensive?
+    price > 50
+  end
+
+  def in_stock?
+    stock > 0
+  end
+end
+
+3.3.0 :328 > item = Item.new(name: "Luxury Item", price: 120, stock: 5, available: true)
+ => #<Item:0x0000000121633c98 id: nil, name: "Luxury Item", price: 0.12e3, stock: 5, available: true, created_at: nil, updated_at: nil> 
+3.3.0 :329 > item.save
+3.3.0 :330 > 
+Discount applied to item: Luxury Item
+  TRANSACTION (0.4ms)  BEGIN
+  Item Create (4.1ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "Luxury Item"], ["price", "110.0"], ["stock", 5], ["available", true], ["created_at", "2024-07-27 11:15:13.510127"], ["updated_at", "2024-07-27 11:15:13.510127"]]
+  TRANSACTION (0.4ms)  COMMIT
+ => true 
+
+
+2)Using :if and :unless with a Proc
+
+Example:
+ class Item < ApplicationRecord
+  before_save :apply_discount, if: Proc.new { price > 50 }
+
+  def apply_discount
+    if price > 50
+      self.price -= 10
+      puts "Discount applied to item: #{name}"
+    end
+  end
+end
+
+3.3.0 :332 > item2 = Item.new(name: "Cheap Item", price: 40, stock: 5, available: true)
+3.3.0 :333 > item2.save
+  TRANSACTION (0.2ms)  BEGIN
+  Item Create (1.8ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "Cheap Item"], ["price", "40.0"], ["stock", 5], ["available", true], ["created_at", "2024-07-27 11:17:28.658859"], ["updated_at", "2024-07-27 11:17:28.658859"]]
+  TRANSACTION (1.2ms)  COMMIT
+ => true 
+3.3.0 :334 > item3 = Item.new(name: "Expensive Item", price: 120, stock: 5, available: true)
+3.3.0 :335 > item3.save
+3.3.0 :336 > 
+Discount applied to item: Expensive Item
+  TRANSACTION (0.4ms)  BEGIN
+  Item Create (1.5ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "Expensive Item"], ["price", "110.0"], ["stock", 5], ["available", true], ["created_at", "2024-07-27 11:17:33.303071"], ["updated_at", "2024-07-27 11:17:33.303071"]]
+  TRANSACTION (0.8ms)  COMMIT
+ => true 
+
+
+3) Multiple Callback Conditions
+
+Example:
+class Item < ApplicationRecord
+  before_save :filter_content, if: [:expensive?, Proc.new { stock < 10 }]
+
+  def filter_content
+    if price > 100
+      self.name = "[FILTERED] #{name}"
+     puts "Content filtered for item: #{name}"
+    end
+  end
+
+  def expensive?
+    price > 50
+  end
+end
+
+3.3.0 :338 > item1 = Item.new(name: "Luxury Item", price: 120, stock: 5, available: true)
+3.3.0 :339 > item1.save
+Content filtered for item: [FILTERED] Luxury Item
+  TRANSACTION (0.2ms)  BEGIN
+  Item Create (1.0ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "[FILTERED] Luxury Item"], ["price", "120.0"], ["stock", 5], ["available", true], ["created_at", "2024-07-27 11:20:21.395820"], ["updated_at", "2024-07-27 11:20:21.395820"]]
+  TRANSACTION (1.3ms)  COMMIT
+ => true 
+3.3.0 :340 > item2 = Item.new(name: "Affordable Item", price: 40, stock: 5, available: true)
+3.3.0 :341 > item2.save
+  TRANSACTION (0.4ms)  BEGIN
+  Item Create (1.5ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "Affordable Item"], ["price", "40.0"], ["stock", 5], ["available", true], ["created_at", "2024-07-27 11:20:25.540650"], ["updated_at", "2024-07-27 11:20:25.540650"]]
+  TRANSACTION (1.7ms)  COMMIT
+ => true 
+3.3.0 :342 > item3 = Item.new(name: "Regular Item", price: 70, stock: 15, available: true)
+3.3.0 :343 > item3.save
+  TRANSACTION (0.3ms)  BEGIN
+  Item Create (0.9ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "Regular Item"], ["price", "70.0"], ["stock", 15], ["available", true], ["created_at", "2024-07-27 11:20:30.581363"], ["updated_at", "2024-07-27 11:20:30.581363"]]
+  TRANSACTION (0.6ms)  COMMIT
+ => true 
+
+
+4) Using Both :if and :unless
+
+Example:
+class Item < ApplicationRecord
+  before_save :adjust_price, if: Proc.new { price > 100 }, unless: :in_stock?
+
+  def adjust_price
+    self.price -= 10
+    puts "Price adjusted for item: #{name}. New price: #{price}"
+  end
+  
+  def in_stock?
+    stock > 0
+  end
+end
+
+3.3.0 :345 > item1 = Item.new(name: "High-End Item", price: 150, stock: 0, available: true)
+3.3.0 :346 > item1.save
+Price adjusted for item: High-End Item. New price: 140.0
+  TRANSACTION (0.2ms)  BEGIN
+  Item Create (2.0ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "High-End Item"], ["price", "140.0"], ["stock", 0], ["available", true], ["created_at", "2024-07-27 11:22:40.614121"], ["updated_at", "2024-07-27 11:22:40.614121"]]
+  TRANSACTION (1.6ms)  COMMIT
+ => true 
+3.3.0 :347 > item2 = Item.new(name: "High-End Item in Stock", price: 120, stock: 10, available: true)
+3.3.0 :348 > item2.save
+  TRANSACTION (0.3ms)  BEGIN
+  Item Create (1.1ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "High-End Item in Stock"], ["price", "120.0"], ["stock", 10], ["available", true], ["created_at", "2024-07-27 11:22:44.942192"], ["updated_at", "2024-07-27 11:22:44.942192"]]
+  TRANSACTION (1.0ms)  COMMIT
+ => true 
+3.3.0 :349 > item3 = Item.new(name: "Standard Item", price: 90, stock: 0, available: true)
+3.3.0 :350 > item3.save
+  TRANSACTION (0.3ms)  BEGIN
+  Item Create (0.9ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["name", "Standard Item"], ["price", "90.0"], ["stock", 0], ["available", true], ["created_at", "2024-07-27 11:22:48.996696"], ["updated_at", "2024-07-27 11:22:48.996696"]]
+  TRANSACTION (0.5ms)  COMMIT
+ => true 
+
+
+
+
+
+ ===>  Callback Classes
+ Sometimes the callback methods that youll write will be useful enough to be reused by other models. 
+ Active Record makes it possible to create classes that encapsulate the callback methods, so they can be reused.
+
+ Example:
+ class FileDestroyerCallback
+  def after_destroy(picture_file)
+    puts "File deleted: #{picture_file.filepath}"
+    if File.exist?(picture_file.filepath)
+      File.delete(picture_file.filepath)
+    end
+  end
+
+class PictureFile < ApplicationRecord
+  after_destroy FileDestroyerCallback.new
+end
+  
+ 3.3.0 :370 > picture_file = PictureFile.create(filepath: "Image.jpg")
+  TRANSACTION (0.2ms)  BEGIN
+  PictureFile Create (1.3ms)  INSERT INTO "picture_files" ("filepath", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["filepath", "Image.jpg"], ["created_at", "2024-07-27 11:56:32.921527"], ["updated_at", "2024-07-27 11:56:32.921527"]]
+  TRANSACTION (1.0ms)  COMMIT
+ => #<PictureFile:0x000000011fff08a0 id: 4, filepath: "Image.jpg", created_at: Sat, 27 Jul 2024 11:56:32.921527000 UTC +00:00, updated_at: Sat, 27 Jul 2024 11:56:32.921527000 UTC +00:00> 
+3.3.0 :371 >  picture_file.destroy
+  TRANSACTION (0.3ms)  BEGIN
+  PictureFile Destroy (1.2ms)  DELETE FROM "picture_files" WHERE "picture_files"."id" = $1  [["id", 4]]
+File deleted: Image.jpg
+  TRANSACTION (0.7ms)  COMMIT
+ => #<PictureFile:0x000000011fff08a0 id: 4, filepath: "Image.jpg", created_at: Sat, 27 Jul 2024 11:56:32.921527000 UTC +00:00, updated_at: Sat, 27 Jul 2024 11:56:32.921527000 UTC +00:00> 
+3.3.0 :372 > 
