@@ -16,7 +16,7 @@ class Article < ApplicationRecord
 
   # before_validation :normalize_title                   # before_validation callback
   # after_validation :set_default_content                # after_validation callback
-  # before_save :ensure_title_has_a_value                # before_save callback
+  before_save :ensure_title_has_a_value                # before_save callback
   # around_save :log_save_actions                        # around_save callback
   # after_save :update_search_index                      # after_save callback
   # before_create :set_published_at                      # before_create callback
@@ -43,7 +43,10 @@ class Article < ApplicationRecord
   end
 
   def ensure_title_has_a_value
-    self.title = "Untitled" if title.blank?
+    if title == "Invalid"
+      puts "Before Save: Halting save because title is 'Invalid'"
+      # throw(:abort)
+    end
   end
 
   def log_save_actions

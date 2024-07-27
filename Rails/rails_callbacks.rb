@@ -363,3 +363,97 @@ A Book was touched
 Book/Genre was touched
   TRANSACTION (1.4ms)  COMMIT
  => true 
+
+
+
+===> Methods that help in Running Callbacks
+
+The following methods trigger callbacks:->
+1) create
+2) create!
+3) destroy
+4) destroy!
+5) destroy_all
+6) destroy_by
+7) save
+8) save!
+9) save(validate: false)
+10) save!(validate: false)
+11) toggle!
+12) touch
+13) update_attribute
+14) update
+15) update!
+16) valid?
+
+Additionally, the after_find callback is triggered by the following finder methods:
+1) all
+2) first
+3) find
+4) find_by
+5) find_by_*
+6) find_by_*!
+7) find_by_sql
+8) last
+
+The after_initialize callback is triggered every time a new object of the class is initialized.
+
+
+
+===> Skipping Callbacks
+These methods should be used with caution, however, because important business rules and application logic may be kept in callbacks. 
+Bypassing them without understanding the potential implications may lead to invalid data.
+
+Just as with validations, it is also possible to skip callbacks by using the following methods:
+1) decrement!
+2) decrement_counter
+3) delete
+4) delete_all
+5) delete_by
+6) increment!
+7) increment_counter
+8) insert
+9) insert!
+10) insert_all
+11) insert_all!
+12) touch_all
+13) update_column
+14) update_columns
+15) update_all
+16) update_counters
+17) upsert
+18) upsert_all
+
+
+
+===> Halting Execution
+We can halt the execution of a callback chain by using throw(:abort). When a callback throws :abort, it stops the execution of 
+subsequent callbacks and prevents the associated action (like save, update, or destroy) from completing.
+  throw :abort
+The whole callback chain is wrapped in a transaction. 
+If any callback raises an exception, the execution chain gets halted and a ROLLBACK is issued. To intentionally stop a chain use:
+
+Example:
+
+class Article < ApplicationRecord
+  validates :title, presence: true
+  validates :content, length: { minimum: 10 }
+  before_save :check_title
+  private
+  def check_title
+    if title == "Invalid"
+      puts "Before Save: Halting save because title is 'Invalid'"
+      throw(:abort)
+    end
+  end
+end
+
+3.3.0 :301 > article = Article.new(title: "Invalid", content: "This content is valid.")
+A new article is initialized!
+ => #<Article:0x00000001214d4190 id: nil, title: "Invalid", content: "This content is valid.", created_at: nil, updated_at: nil, published_at: nil> 
+3.3.0 :302 > article.save
+Before Save: Halting save because title is 'Invalid'
+ => false 
+
+IMPORTANT NOTE: If an ActiveRecord::RecordNotDestroyed is raised within after_destroy, before_destroy or around_destroy     
+                callback, it will not be re-raised and the destroy method will return false.
