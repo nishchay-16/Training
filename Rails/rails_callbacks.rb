@@ -272,3 +272,31 @@ With callbacks it is possible to write code that will run whenever an Active Rec
        created_at: Sat, 27 Jul 2024 08:21:39.070703000 UTC +00:00,
        updated_at: Sat, 27 Jul 2024 08:21:39.070703000 UTC +00:00,
        published_at: Sat, 27 Jul 2024 08:21:39.071149000 UTC +00:00> 
+
+  IMPORTANT: 
+    * Callbacks are executed in the order they were registered.
+    * before_destroy callbacks should be placed before dependent: :destroy associations (or use the prepend: true option), 
+      to ensure they execute before the records are deleted by dependent: :destroy.
+
+
+
+
+===> after_initialize and after_find callbacks
+
+Whenever an Active Record object is instantiated the after_initialize callback will be called, either by directly using new or when a record is loaded from the database. 
+It can be useful to avoid the need to directly override your Active Record initialize method.
+When loading a record from the database the after_find callback will be called. after_find is called before after_initialize if both are defined.
+
+Example:
+3.3.0 :293 > Article.new
+A new article is initialized!
+ => #<Article:0x0000000120e98380 id: nil, title: nil, content: nil, created_at: nil, updated_at: nil, published_at: nil> 
+3.3.0 :294 > article = Article.find_by(id: 2)
+  Article Load (0.5ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = $1 LIMIT $2  [["id", 2], ["LIMIT", 1]]
+You have found an article!
+A new article is initialized!
+ => 
+#<Article:0x00000001216f3ac0
+... 
+
+  Note:- The after_initialize and after_find callbacks have no before_* counterparts.
