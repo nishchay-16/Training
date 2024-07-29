@@ -1566,3 +1566,110 @@ Example:
     Item Load (0.8ms)  SELECT "items".* FROM "items" WHERE "items"."stock" = $1 AND "items"."price" = $2 LIMIT $3  [["stock", 100], ["price", "90.0"], ["LIMIT", 1]]
    => nil 
 
+
+
+
+====> ENUMS
+An enum lets you define an Array of values for an attribute and refer to them by name. 
+The actual value stored in the database is an integer that has been mapped to one of the values.
+
+Declaring an enum will:
+* Create scopes that can be used to find all objects that have or do not have one of the enum values
+* Create an instance method that can be used to determine if an object has a particular value for the enum
+* Create an instance method that can be used to change the enum value of an object for all possible values of an enum.
+
+Example:
+class Item < ApplicationRecord
+  enum availability: { in_stock: 0, out_of_stock: 1, discontinued: 2 }
+end
+
+3.3.0 :184 > Item.in_stock
+3.3.0 :185 > 
+  Item Load (0.6ms)  SELECT "items".* FROM "items" WHERE "items"."availability" = $1 /* loading for pp */ LIMIT $2  [["availability", 0], ["LIMIT", 11]]
+ => 
+[#<Item:0x000000012e7b3d40
+  id: 15,
+  name: "Widget A",
+  price: nil,
+  stock: nil,
+  available: nil,
+  created_at: Mon, 29 Jul 2024 11:40:40.326737000 UTC +00:00,
+  updated_at: Mon, 29 Jul 2024 11:40:40.326737000 UTC +00:00,
+  availability: "in_stock">] 
+3.3.0 :186 > Item.out_of_stock
+3.3.0 :187 > 
+  Item Load (0.7ms)  SELECT "items".* FROM "items" WHERE "items"."availability" = $1 /* loading for pp */ LIMIT $2  [["availability", 1], ["LIMIT", 11]]
+ => 
+[#<Item:0x000000012e79e120
+  id: 16,
+  name: "Widget B",
+  price: nil,
+  stock: nil,
+  available: nil,
+  created_at: Mon, 29 Jul 2024 11:40:40.331293000 UTC +00:00,
+  updated_at: Mon, 29 Jul 2024 11:40:40.331293000 UTC +00:00,
+  availability: "out_of_stock">] 
+
+
+
+
+====> UNDERSTANDING METHOD CHAINING
+The Active Record pattern implements Method Chaining, which allow us to use multiple Active Record methods together in a simple and straightforward way.
+
+  1) Retrieving Filtered Data from Multiple Tables
+      Example:
+      3.3.0 :192 > Book.select('authors.author_name, books.title').joins(:author).where('authors.created_at > ?', 2.days.ago)
+        Book Load (1.6ms)  SELECT authors.author_name, books.title FROM "books" INNER JOIN "authors" ON "authors"."id" = "books"."author_id"
+         WHERE (authors.created_at > '2024-07-27 11:47:28.212868') /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+       => [#<Book:0x000000012d2f8e50 id: nil, title: "Sample Book">, #<Book:0x000000012efff148 id: nil, title: "Sample Book">] 
+
+  2) Retrieving Specific Data from Multiple Tables
+      Example:
+      3.3.0 :197 > Book
+      3.3.0 :198 >   .select('authors.author_name, books.title')
+      3.3.0 :199 >   .joins(:author)
+      3.3.0 :200 > .find_by(title: "Algorithms, second edition")
+        Book Load (2.1ms)  SELECT authors.author_name, books.title FROM "books" INNER JOIN "authors" ON "authors"."id" = "books"."author_id" WHERE "books"."title" = $1 LIMIT $2  [["title", "Algorithms, second edition"], ["LIMIT", 1]]
+       => #<Book:0x000000012f038358 id: nil, title: "Algorithms, second edition"> 
+
+
+
+=====> FIND OR BUILD A NEW OBJECT
+
+  1) find_or_create_by -> The find_or_create_by method checks whether a record with the specified attributes exists. If it doesnt, then create is called.
+      Example:
+      3.3.0 :202 > Item.find_or_create_by(name: "Book")
+        Item Load (0.5ms)  SELECT "items".* FROM "items" WHERE "items"."name" = $1 LIMIT $2  [["name", "Book"], ["LIMIT", 1]]
+        TRANSACTION (0.2ms)  BEGIN
+        Item Create (1.3ms)  INSERT INTO "items" ("name", "price", "stock", "available", "created_at", "updated_at", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["name", "Book"], ["price", nil], ["stock", nil], ["available", nil], ["created_at", "2024-07-29 11:51:43.930173"], ["updated_at", "2024-07-29 11:51:43.930173"], ["availability", 0]]
+        TRANSACTION (1.4ms)  COMMIT
+       => 
+      #<Item:0x000000012f030f18
+       id: 17,
+       name: "Book",
+       price: nil,
+       stock: nil,
+       available: nil,
+       created_at: Mon, 29 Jul 2024 11:51:43.930173000 UTC +00:00,
+       updated_at: Mon, 29 Jul 2024 11:51:43.930173000 UTC +00:00,
+       availability: "in_stock"> 
+
+  2) find_or_create_by! -> We can also use find_or_create_by! to raise an exception if the new record is invalid.
+
+  3) find_or_initialize_by -> The find_or_initialize_by method will work just like find_or_create_by but it will call new instead of create. 
+                              This means that a new model instance will be created in memory but wont be saved to the database.
+        Example:
+        3.3.0 :205 > Item.find_or_initialize_by(name: "Book")
+          Item Load (0.4ms)  SELECT "items".* FROM "items" WHERE "items"."name" = $1 LIMIT $2  [["name", "Book"], ["LIMIT", 1]]
+          => 
+        #<Item:0x000000012f030f18
+         id: 17,
+         name: "Book",
+         price: nil,
+         stock: nil,
+         available: nil,
+         created_at: Mon, 29 Jul 2024 11:51:43.930173000 UTC +00:00,
+         updated_at: Mon, 29 Jul 2024 11:51:43.930173000 UTC +00:00,
+         availability: "in_stock">
+
+

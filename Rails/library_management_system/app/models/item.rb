@@ -15,6 +15,9 @@ class Item < ApplicationRecord
   # scope :in_stock_above, ->(quantity) { where("stock > ?", quantity) if quantity.present? }
   # default_scope { where(available: true).where("stock > ?", 10) }
 
+  enum availability: { in_stock: 0, out_of_stock: 1, discontinued: 2 }
+
+
 
 
   def apply_discount
