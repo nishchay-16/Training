@@ -705,3 +705,189 @@ You can use limit to specify the number of records to be retrieved, and use offs
       available_quantity: nil,
       author_id: 10,
       genre_id: 1>] 
+
+
+
+
+====> GROUPING 
+To apply a GROUP BY clause to the SQL fired by the finder, you can use the group method.
+Example:
+  3.3.0 :575 > Book.select("author_id").group("author_id")
+  Book Load (0.9ms)  SELECT "books"."author_id" FROM "books" GROUP BY "books"."author_id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+ => 
+[#<Book:0x00000001219d6698 id: nil, author_id: 10>,
+ #<Book:0x00000001219d6558 id: nil, author_id: 12>,
+ #<Book:0x00000001219d6418 id: nil, author_id: 13>] 
+
+    1) Total of Grouped Items ->
+      To get the total of grouped items on a single query, call count after the group.
+        Example:
+        * 3.3.0 :576 > Book.group("author_id").count
+          Book Count (1.8ms)  SELECT COUNT(*) AS "count_all", "books"."author_id" AS "books_author_id" FROM "books" GROUP BY "books"."author_id"
+         => {10=>5, 13=>2, 12=>1} 
+        
+    2) HAVING Conditions ->
+    SQL uses the HAVING clause to specify conditions on the GROUP BY fields. 
+    We can add the HAVING clause to the SQL fired by the Model.find by adding the having method to the find.
+      Example:
+      * 3.3.0 :623 > min_total_quantity = 3
+          => 3 
+         3.3.0 :624 > authors_with_big_book_quantities = Book.select("author_id, sum(quantity) as total_quantity")
+         3.3.0 :625 >                                        .group("author_id")
+         3.3.0 :626 >                                        .having("sum(quantity) > ?", min_total_quantity)
+           Book Load (1.3ms)  SELECT author_id, sum(quantity) as total_quantity FROM "books" GROUP BY "books"."author_id" HAVING (sum(quantity) > 3) /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+          => [#<Book:0x00000001219de398 id: nil, author_id: 13>] 
+
+
+
+====> OVERRIDING CONDITIONS
+  
+  1) unscope -> You can specify certain conditions to be removed using the unscope method.
+      Example:
+      3.3.0 :637 > books = Book.where(available_quantity: 10).order(:title).unscope(:order)
+        Book Load (0.6ms)  SELECT "books".* FROM "books" WHERE "books"."available_quantity" = $1 /* loading for pp */ LIMIT $2  [["available_quantity", 10], ["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121afcbd0
+      ... 
+      3.3.0 :638 > books
+        Book Load (0.6ms)  SELECT "books".* FROM "books" WHERE "books"."available_quantity" = $1 /* loading for pp */ LIMIT $2  [["available_quantity", 10], ["LIMIT", 11]]
+       => 
+      [#<Book:0x00000001219d4ed8
+        id: 13,
+        isbn: "0987654321",
+        title: "Book Two",
+        quantity: 10,
+        created_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+        updated_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+        available_quantity: 10,
+        author_id: 13,
+        genre_id: 1>] 
+
+
+  2) only -> You can also override conditions using the only method.
+      Example:
+      3.3.0 :639 > books = Book.where(available_quantity: 10).order(:title).only(:where)
+        Book Load (2.1ms)  SELECT "books".* FROM "books" WHERE "books"."available_quantity" = $1 /* loading for pp */ LIMIT $2  [["available_quantity", 10], ["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121b57800
+      ... 
+      3.3.0 :640 > books
+        Book Load (0.7ms)  SELECT "books".* FROM "books" WHERE "books"."available_quantity" = $1 /* loading for pp */ LIMIT $2  [["available_quantity", 10], ["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121b3b560
+        id: 13,
+        isbn: "0987654321",
+        title: "Book Two",
+        quantity: 10,
+        created_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+        updated_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+        available_quantity: 10,
+        author_id: 13,
+        genre_id: 1>] 
+
+
+  3) reselect -> The reselect method overrides an existing select statement. 
+      Example:
+      3.3.0 :641 > books = Book.select(:title, :quantity).reselect(:isbn, :author_id)
+        Book Load (0.5ms)  SELECT "books"."isbn", "books"."author_id" FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121afe4d0 id: nil, isbn: nil, author_id: 12>,
+      ... 
+      3.3.0 :642 > books
+        Book Load (0.5ms)  SELECT "books"."isbn", "books"."author_id" FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121ad5788 id: nil, isbn: nil, author_id: 12>,
+       #<Book:0x0000000121ad5648 id: nil, isbn: nil, author_id: 10>,
+       #<Book:0x0000000121ad5508 id: nil, isbn: nil, author_id: 10>,
+       #<Book:0x0000000121ad53c8 id: nil, isbn: nil, author_id: 10>,
+       #<Book:0x0000000121ad5288 id: nil, isbn: nil, author_id: 10>,
+       #<Book:0x0000000121ad5148 id: nil, isbn: nil, author_id: 10>,
+       #<Book:0x0000000121ad5008 id: nil, isbn: "1234567890", author_id: 13>,
+       #<Book:0x0000000121ad4ec8 id: nil, isbn: "0987654321", author_id: 13>] 
+
+
+  4) reorder -> The reorder method overrides the default scope order. 
+      Example:
+      3.3.0 :647 > genres = Genre.order(:genre_name).reorder(:created_at)
+        Genre Load (0.5ms)  SELECT "genres".* FROM "genres" /* loading for pp */ ORDER BY "genres"."created_at" ASC LIMIT $1  [["LIMIT", 11]]
+       => 
+      [#<Genre:0x00000001219dbb98
+      ... 
+      3.3.0 :648 > genres
+        Genre Load (0.6ms)  SELECT "genres".* FROM "genres" /* loading for pp */ ORDER BY "genres"."created_at" ASC LIMIT $1  [["LIMIT", 11]]
+       => 
+      [#<Genre:0x00000001219d26d8
+        id: 1,
+        genre_name: "horror",
+        created_at: Tue, 23 Jul 2024 11:45:37.705157000 UTC +00:00,
+        updated_at: Sat, 27 Jul 2024 10:48:15.987849000 UTC +00:00>,
+       #<Genre:0x00000001219d2598
+        id: 2,
+        genre_name: "fantasy",
+        created_at: Tue, 23 Jul 2024 12:11:57.817350000 UTC +00:00,
+        updated_at: Tue, 23 Jul 2024 12:11:57.817350000 UTC +00:00>] 
+
+
+  5) reverse_order -> The reverse_order method reverses the ordering clause if specified.
+      Example:
+      3.3.0 :649 > genres = Genre.order(:genre_name).reverse_order
+        Genre Load (1.0ms)  SELECT "genres".* FROM "genres" /* loading for pp */ ORDER BY "genres"."genre_name" DESC LIMIT $1  [["LIMIT", 11]]
+       => 
+      [#<Genre:0x00000001219d8d58
+      ... 
+
+          
+  6) rewhere -> The rewhere method overrides an existing, named where condition.
+      Example:
+      3.3.0 :651 > books = Book.where(available_quantity: 10).rewhere(available_quantity: 5)
+        Book Load (2.0ms)  SELECT "books".* FROM "books" WHERE "books"."available_quantity" = $1 /* loading for pp */ LIMIT $2  [["available_quantity", 5], ["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121b71688
+      ... 
+      3.3.0 :652 > books
+        Book Load (0.6ms)  SELECT "books".* FROM "books" WHERE "books"."available_quantity" = $1 /* loading for pp */ LIMIT $2  [["available_quantity", 5], ["LIMIT", 11]]
+       => 
+      [#<Book:0x0000000121b58d40
+        id: 12,
+        isbn: "1234567890",
+        title: "Book One",
+        quantity: 5,
+        created_at: Sat, 27 Jul 2024 10:48:15.978257000 UTC +00:00,
+        updated_at: Sat, 27 Jul 2024 10:48:15.978257000 UTC +00:00,
+        available_quantity: 5,
+        author_id: 13,
+        genre_id: 1>] 
+
+
+  7) regroup -> The regroup method overrides an existing, named group condition. 
+      Example:
+      3.3.0 :653 > books = Book.select("genre_id, sum(quantity) as total_quantity")
+      3.3.0 :654 >             .group(:genre_id)
+      3.3.0 :655 >             .regroup(:author_id)
+        Book Load (4.3ms)  SELECT genre_id, sum(quantity) as total_quantity FROM "books" GROUP BY "books"."author_id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+              
+
+
+====> NULL RELATION
+The none method returns a chainable relation with no records. 
+Any subsequent conditions chained to the returned relation will continue generating empty relations. 
+This is useful in scenarios where you need a chainable response to a method or a scope that could return zero results.
+  Example:
+    3.3.0 :658 > Book.none
+      => [] 
+
+
+  
+====> READONLY OBJECTS
+Active Record provides the readonly method on a relation to explicitly disallow modification of any of the returned objects. 
+Any attempt to alter a readonly record will not succeed, raising an ActiveRecord::ReadOnlyRecord exception.
+  Example:
+  3.3.0 :662 > book = Book.readonly.last
+    Book Load (0.4ms)  SELECT "books".* FROM "books" ORDER BY "books"."id" DESC LIMIT $1  [["LIMIT", 1]]
+   => 
+  #<Book:0x00000001219d5018
+  ... 
+  3.3.0 :663 > book.available_quantity += 1
+   => 11 
+  3.3.0 :664 > book.save
+  (irb):664:in `<main>': Book is marked as readonly (ActiveRecord::ReadOnlyRecord)
