@@ -1807,3 +1807,59 @@ This section uses count as an example method in this preamble, but the options d
         3.3.0 :232 > Item.sum("stock")
         Item Sum (1.4ms)  SELECT SUM("items"."stock") FROM "items"
        => 180 
+
+
+
+
+====> RUNNING EXPLAIN
+You can run explain on a relation. EXPLAIN output varies for each database.
+EXPLAIN command and analyze the query performance in Rails, you can use the following methods. 
+This command helps you understand how SQL queries are executed and can be useful for optimizing performance.
+
+Example:
+3.3.0 :234 > Book.select("author_id").group("author_id").explain
+  Book Load (2.4ms)  SELECT "books"."author_id" FROM "books" GROUP BY "books"."author_id"
+ => 
+EXPLAIN SELECT "books"."author_id" FROM "books" GROUP BY "books"."author_id"
+                          QUERY PLAN
+--------------------------------------------------------------
+ HashAggregate  (cost=17.25..19.25 rows=200 width=8)
+   Group Key: author_id
+   ->  Seq Scan on books  (cost=0.00..15.80 rows=580 width=8)
+(3 rows)
+
+
+3.3.0 :238 > Author.joins(:books).where(books: { author: author }).explain(:analyze)
+  Author Load (0.9ms)  SELECT "authors".* FROM "authors" INNER JOIN "books" ON "books"."author_id" = "authors"."id" WHERE "books"."author_id" = $1  [["author_id", 15]]
+ => 
+EXPLAIN (ANALYZE) SELECT "authors".* FROM "authors" INNER JOIN "books" ON "books"."author_id" = "authors"."id" WHERE "books"."author_id" = $1 [["author_id", 15]]
+                                                              QUERY PLAN
+---------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=4.32..19.48 rows=3 width=96) (actual time=0.046..0.047 rows=1 loops=1)
+   ->  Index Scan using authors_pkey on authors  (cost=0.15..8.17 rows=1 width=96) (actual time=0.038..0.039 rows=1 loops=1)
+         Index Cond: (id = '15'::bigint)
+   ->  Bitmap Heap Scan on books  (cost=4.17..11.28 rows=3 width=8) (actual time=0.004..0.004 rows=1 loops=1)
+         Recheck Cond: (author_id = '15'::bigint)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on index_books_on_author_id  (cost=0.00..4.17 rows=3 width=0) (actual time=0.002..0.002 rows=1 loops=1)
+               Index Cond: (author_id = '15'::bigint)
+ Planning Time: 0.106 ms
+ Execution Time: 0.107 ms
+(10 rows)
+
+
+3.3.0 :235 > Book.select("author_id").group("author_id").explain(:analyze, :verbose)
+  Book Load (0.6ms)  SELECT "books"."author_id" FROM "books" GROUP BY "books"."author_id"
+ => 
+EXPLAIN (ANALYZE, VERBOSE) SELECT "books"."author_id" FROM "books" GROUP BY "books"."author_id"
+                                                   QUERY PLAN
+----------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=17.25..19.25 rows=200 width=8) (actual time=0.030..0.033 rows=5 loops=1)
+   Output: author_id
+   Group Key: books.author_id
+   Batches: 1  Memory Usage: 40kB
+   ->  Seq Scan on public.books  (cost=0.00..15.80 rows=580 width=8) (actual time=0.012..0.014 rows=10 loops=1)
+         Output: id, isbn, title, quantity, created_at, updated_at, available_quantity, author_id, genre_id
+ Planning Time: 0.091 ms
+ Execution Time: 0.071 ms
+(8 rows)
