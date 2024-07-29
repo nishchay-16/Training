@@ -394,7 +394,35 @@ Conditions can either be specified as a string, array, or hash.
           genre_id: 1>] 
         
 
-    b) Subset Conditions -> If you want to find records using the IN expression you can pass an array to the conditions hash:
+    b) Range Conditions
+        Example:
+      * 3.3.0 :552 > Book.where(created_at: (Time.now.midnight - 2.day)..Time.now.midnight)
+          Book Load (0.8ms)  SELECT "books".* FROM "books" WHERE "books"."created_at" BETWEEN $1 AND $2 /* loading for pp */ LIMIT $3  [["created_at", "2024-07-26 18:30:00"], ["created_at", "2024-07-28 18:30:00"], ["LIMIT", 11]]
+         => 
+        [#<Book:0x000000012147adc0
+          id: 12,
+          isbn: "1234567890",
+          title: "Book One",
+          quantity: 5,
+          created_at: Sat, 27 Jul 2024 10:48:15.978257000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 10:48:15.978257000 UTC +00:00,
+          available_quantity: 5,
+          author_id: 13,
+          genre_id: 1>,
+         #<Book:0x000000012147ac80
+          id: 13,
+          isbn: "0987654321",
+          title: "Book Two",
+          quantity: 10,
+          created_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 10:48:15.986145000 UTC +00:00,
+          available_quantity: 10,
+          author_id: 13,
+          genre_id: 1>] 
+        
+
+    c) Subset Conditions    
+     If you want to find records using the IN expression you can pass an array to the conditions hash:
         Example:
       * 3.3.0 :548 > Author.where(books_count: [1,3,5])
           Author Load (1.4ms)  SELECT "authors".* FROM "authors" WHERE "authors"."books_count" IN ($1, $2, $3) /* loading for pp */ LIMIT $4  [["books_count", 1], ["books_count", 3], ["books_count", 5], ["LIMIT", 11]]
@@ -414,3 +442,86 @@ Conditions can either be specified as a string, array, or hash.
           updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
           books_count: 1>] 
          
+
+  4) NOT Conditions ->
+      Example:
+    * 3.3.0 :553 > Author.where.not(books_count: [1,3,5])
+        Author Load (1.8ms)  SELECT "authors".* FROM "authors" WHERE "authors"."books_count" NOT IN ($1, $2, $3) /* loading for pp */ LIMIT $4  [["books_count", 1], ["books_count", 3], ["books_count", 5], ["LIMIT", 11]]
+       => 
+      [#<Author:0x00000001219d0798
+        id: 8,
+        author_name: "Nishchay",
+        nationality: "Indian",
+        created_at: Fri, 19 Jul 2024 13:12:53.713149000 UTC +00:00,
+        updated_at: Fri, 19 Jul 2024 13:12:53.713149000 UTC +00:00,
+        books_count: 0>,
+       #<Author:0x00000001219d0658
+        id: 9,
+        author_name: "Naman",
+        nationality: "British",
+        created_at: Fri, 19 Jul 2024 13:12:53.715259000 UTC +00:00,
+        updated_at: Fri, 19 Jul 2024 13:12:53.715259000 UTC +00:00,
+        books_count: 0>,
+       #<Author:0x00000001219d0518
+        id: 11,
+        author_name: "HC Verma",
+        nationality: "Indian",
+        created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+        updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+        books_count: 0>,
+       #<Author:0x00000001219d03d8
+        id: 13,
+        author_name: "John Doe",
+        nationality: "American",
+        created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+        updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+        books_count: 2>] 
+
+    
+  5) OR Conditions ->
+      Example:
+    * 3.3.0 :556 > Author.where(nationality: "Indian").or(Author.where(books_count: [1,3,5]))
+      Author Load (2.8ms)  SELECT "authors".* FROM "authors" WHERE ("authors"."nationality" = $1 OR "authors"."books_count" IN ($2, $3, $4)) /* loading for pp */ LIMIT $5  [["nationality", "Indian"], ["books_count", 1], ["books_count", 3], ["books_count", 5], ["LIMIT", 11]]
+       => 
+     #<Author:0x0000000121b7ac88
+      id: 8,
+      author_name: "Nishchay",
+      nationality: "Indian",
+      created_at: Fri, 19 Jul 2024 13:12:53.713149000 UTC +00:00,
+      updated_at: Fri, 19 Jul 2024 13:12:53.713149000 UTC +00:00,
+      books_count: 0>,
+     #<Author:0x0000000121b7ab48
+      id: 11,
+      author_name: "HC Verma",
+      nationality: "Indian",
+      created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+      books_count: 0>,
+     #<Author:0x0000000121b7aa08
+      id: 10,
+      author_name: "J.K. Rowling",
+      nationality: "British",
+      created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+      updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+      books_count: 5>,
+     #<Author:0x0000000121b7a8c8
+      id: 12,
+      author_name: "MS chauhan",
+      nationality: "Indian",
+      created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+      books_count: 1>]
+
+
+  6) AND Conditions ->
+      Example:
+    * 3.3.0 :557 > Author.where(nationality: "Indian").where(books_count: [1,3,5])
+        Author Load (1.0ms)  SELECT "authors".* FROM "authors" WHERE "authors"."nationality" = $1 AND "authors"."books_count" IN ($2, $3, $4) /* loading for pp */ LIMIT $5  [["nationality", "Indian"], ["books_count", 1], ["books_count", 3], ["books_count", 5], ["LIMIT", 11]]
+       => 
+      [#<Author:0x0000000120d3a290
+        id: 12,
+        author_name: "MS chauhan",
+        nationality: "Indian",
+        created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+        updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+        books_count: 1>] 
