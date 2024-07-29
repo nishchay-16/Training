@@ -1673,3 +1673,137 @@ The Active Record pattern implements Method Chaining, which allow us to use mult
          availability: "in_stock">
 
 
+
+
+
+=====> FINDING BY SQL
+If we like to use our own SQL to find records in a table you can use find_by_sql. 
+The find_by_sql method will return an array of objects even if the underlying query returns just a single record. 
+
+Example:
+3.3.0 :212 > Item.find_by_sql("SELECT * FROM items WHERE price > 100 ORDER BY created_at DESC")
+3.3.0 :213 > 
+  Item Load (0.8ms)  SELECT * FROM items WHERE price > 100 ORDER BY created_at DESC
+ => 
+[#<Item:0x000000012e7d8d48
+  id: 20,
+  name: "Item C",
+  price: 0.2e3,
+  stock: 10,
+  available: false,
+  created_at: Mon, 29 Jul 2024 12:01:26.499490000 UTC +00:00,
+  updated_at: Mon, 29 Jul 2024 12:01:26.499490000 UTC +00:00,
+  availability: "in_stock">,
+ #<Item:0x000000012e7d8c08
+  id: 18,
+  name: "Item A",
+  price: 0.15e3,
+  stock: 20,
+  available: true,
+  created_at: Mon, 29 Jul 2024 12:01:26.492495000 UTC +00:00,
+  updated_at: Mon, 29 Jul 2024 12:01:26.492495000 UTC +00:00,
+  availability: "in_stock">]
+
+    1) Select_all ->
+    * Item.connection.select_all: Executes a raw SQL query on the items table.
+    * "SELECT name, price, stock, available FROM items WHERE available = true": The SQL query string, selecting columns and applying a condition.
+    * .to_a: Converts the result to an array of hashes. Each hash represents a row with column names as keys and their corresponding values.  
+
+        Example:
+        3.3.0 :214 > results = Item.connection.select_all("SELECT name, price, stock, available FROM items WHERE available = true").to_a
+          (1.8ms)  SELECT name, price, stock, available FROM items WHERE available = true
+        => 
+       [{"name"=>"Item A", "price"=>0.15e3, "stock"=>20, "available"=>true},
+       ... 
+       3.3.0 :215 > results
+        => 
+       [{"name"=>"Item A", "price"=>0.15e3, "stock"=>20, "available"=>true},
+        {"name"=>"Item B", "price"=>0.75e2, "stock"=>50, "available"=>true},
+        {"name"=>"Item D", "price"=>0.5e2, "stock"=>100, "available"=>true}] 
+
+    
+    2) pluck -> pluck is a powerful and efficient method for retrieving specific columns from your database. 
+                It directly queries the database and returns an array of values or arrays of values for the 
+                specified columns, bypassing the need to instantiate ActiveRecord objects.
+          Example:
+          3.3.0 :216 > item_names = Item.pluck(:name)
+          3.3.0 :217 > 
+            Item Pluck (1.7ms)  SELECT "items"."name" FROM "items"
+           => ["Widget A", "Widget B", "Book", "Item A", "Item B", "Item C", "Item D"] 
+          3.3.0 :218 > available_items = Item.where(available: true).pluck(:name, :price)
+            Item Pluck (0.3ms)  SELECT "items"."name", "items"."price" FROM "items" WHERE "items"."available" = $1  [["available", true]]
+           => [["Item A", 0.15e3], ["Item B", 0.75e2], ["Item D", 0.5e2]] 
+          3.3.0 :219 > availability_statuses = Item.distinct.pluck(:available)
+            Item Pluck (2.1ms)  SELECT DISTINCT "items"."available" FROM "items"
+           => [false, nil, true] 
+
+      
+    3) pick -> pick can be used to pick the value(s) from the named column(s) in the current relation.
+               It accepts a list of column names as an argument and returns the first row of the specified column values with corresponding data type.
+          Example:
+            3.3.0 :221 > Item.where(id: 15).pick(:id)
+            Item Pluck (1.4ms)  SELECT "items"."id" FROM "items" WHERE "items"."id" = $1 LIMIT $2  [["id", 15], ["LIMIT", 1]]
+           => 15 
+
+
+    4) ids -> ids can be used to pluck all the IDs for the relation using the tables primary key.
+        Example:
+          3.3.0 :222 > Item.ids
+          Item Ids (1.7ms)  SELECT "items"."id" FROM "items"
+         => [15, 16, 17, 18, 19, 20, 21] 
+
+
+
+
+====> EXISTANCE OF OBJECTS
+If we simply want to check for the existence of the object theres a method called exists?. 
+This method will query the database using the same query as find, but instead of returning an object or collection of objects it will return either true or false.
+
+Example:
+3.3.0 :223 > Item.exists?(1)
+  Item Exists? (2.2ms)  SELECT 1 AS one FROM "items" WHERE "items"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+ => false 
+
+3.3.0 :224 > Item.exists?(15)
+  Item Exists? (1.0ms)  SELECT 1 AS one FROM "items" WHERE "items"."id" = $1 LIMIT $2  [["id", 15], ["LIMIT", 1]]
+ => true 
+
+3.3.0 :226 > Item.where(name:"Item D").exists?
+  Item Exists? (2.0ms)  SELECT 1 AS one FROM "items" WHERE "items"."name" = $1 LIMIT $2  [["name", "Item D"], ["LIMIT", 1]]
+ => true 
+
+
+
+
+====> CALCULATIONS
+This section uses count as an example method in this preamble, but the options described apply to all sub-sections.
+
+  1) Count
+      Example:
+        3.3.0 :227 > Item.count(:name)
+        Item Count (1.6ms)  SELECT COUNT("items"."name") FROM "items"
+       => 7 
+      
+  2) Average
+      Example:
+        3.3.0 :229 > Item.average("price")
+        Item Average (2.1ms)  SELECT AVG("items"."price") FROM "items"
+       => 0.11875e3 
+
+  3) Minimum
+      Example:
+        3.3.0 :230 > Item.minimum("stock")
+        Item Minimum (3.8ms)  SELECT MIN("items"."stock") FROM "items"
+       => 10 
+
+  4) Maximum
+      Example:
+        3.3.0 :230 > Item.minimum("stock")
+        Item Minimum (3.8ms)  SELECT MIN("items"."stock") FROM "items"
+       => 10 
+
+  5) Sum
+      Example:
+        3.3.0 :232 > Item.sum("stock")
+        Item Sum (1.4ms)  SELECT SUM("items"."stock") FROM "items"
+       => 180 
