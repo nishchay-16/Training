@@ -890,4 +890,299 @@ Any attempt to alter a readonly record will not succeed, raising an ActiveRecord
   3.3.0 :663 > book.available_quantity += 1
    => 11 
   3.3.0 :664 > book.save
-  (irb):664:in `<main>': Book is marked as readonly (ActiveRecord::ReadOnlyRecord)
+  (irb):664:in `<main>`: Book is marked as readonly (ActiveRecord::ReadOnlyRecord)
+
+
+
+
+====> LOCKING RECORDS FOR UPDATE
+Locking is helpful for preventing race conditions when updating records in the database and ensuring atomic updates.
+Active Record provides two locking mechanisms:
+  1) Optimistic Locking ->
+     Optimistic locking allows multiple users to access the same record for edits, and assumes a minimum of conflicts with the data. 
+     It does this by checking whether another process has made changes to a record since it was opened.
+        a) Optimistic locking column
+            Example:
+            3.3.0 :719 > a1.author_name = "Nishu"
+            3.3.0 :720 > a1.save
+            3.3.0 :721 > 
+              TRANSACTION (0.4ms)  BEGIN
+              Author Update (1.6ms)  UPDATE "authors" SET "author_name" = $1, "updated_at" = $2, "lock_version" = $3 WHERE "authors"."id" = $4 AND "authors"."lock_version" = $5  [["author_name", "Nishu"], ["updated_at", "2024-07-29 09:43:57.658739"], ["lock_version", 3], ["id", 8], ["lock_version", 2]]
+              TRANSACTION (1.8ms)  COMMIT
+             => true 
+            3.3.0 :725 > puts "a1.lock_version: #{a1.lock_version}"  
+            a1.lock_version: 3
+             => nil 
+            3.3.0 :726 > a2.author_name = "Vaibhav"
+            3.3.0 :727 > begin
+            3.3.0 :728 >   a2.save
+            3.3.0 :729 > rescue ActiveRecord::StaleObjectError => e
+            3.3.0 :730 >   puts "Attempt to update stale object: #{e.message}"
+            3.3.0 :731 > end
+             => true 
+            3.3.0 :732 > a1.reload
+            3.3.0 :733 > puts "a1.lock_version after reload: #{a1.lock_version}"
+            3.3.0 :734 > 
+              Author Load (0.4ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 8], ["LIMIT", 1]]
+            a1.lock_version after reload: 3
+             => nil 
+            
+  2) Pessimistic Locking ->
+      Pessimistic locking uses a locking mechanism provided by the underlying database. 
+      Using lock when building a relation obtains an exclusive lock on the selected rows. Relations using lock are usually wrapped inside a transaction for preventing deadlock conditions.
+
+        Example:
+          3.3.0 :735 > Book.transaction do
+          3.3.0 :736 >   book = Book.lock.first
+          3.3.0 :737 >   book.title = 'Algorithms, second edition'
+          3.3.0 :738 >   book.save!
+          3.3.0 :739 > end
+            TRANSACTION (0.4ms)  BEGIN
+            Book Load (0.9ms)  SELECT "books".* FROM "books" ORDER BY "books"."id" ASC LIMIT $1 FOR UPDATE  [["LIMIT", 1]]
+            Book Update (1.7ms)  UPDATE "books" SET "title" = $1, "updated_at" = $2 WHERE "books"."id" = $3  [["title", "Algorithms, second edition"], ["updated_at", "2024-07-29 09:45:27.027350"], ["id", 2]]
+            Genre Load (0.3ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" = $1 LIMIT $2  [["id", 2], ["LIMIT", 1]]
+            Author Load (0.2ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 12], ["LIMIT", 1]]
+            Book Count (0.4ms)  SELECT COUNT(*) FROM "books" WHERE "books"."author_id" = $1  [["author_id", 12]]
+            Genre Update (0.4ms)  UPDATE "genres" SET "updated_at" = $1 WHERE "genres"."id" = $2  [["updated_at", "2024-07-29 09:45:27.040296"], ["id", 2]]
+          Book/Genre was touched
+            TRANSACTION (1.3ms)  COMMIT
+           => true 
+          
+
+
+====> JOINING TABLES  
+Active Record provides two finder methods for specifying JOIN clauses on the resulting SQL: joins and left_outer_joins. 
+While joins should be used for INNER JOIN or custom queries, left_outer_joins is used for queries using LEFT OUTER JOIN.
+
+    1) Joins -> There are multiple ways to use the joins method.
+        a) Using a String SQL Fragment :-> You can just supply the raw SQL specifying the JOIN clause to joins.
+          Example:
+          3.3.0 :767 > Author.joins("INNER JOIN books ON books.author_id = authors.id AND books.id > 5")
+            Author Load (1.8ms)  SELECT "authors".* FROM "authors" INNER JOIN books ON books.author_id = authors.id AND books.id > 5
+             /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+           => 
+          [#<Author:0x0000000121b70788
+            id: 10,
+            author_name: "J.K. Rowling",
+            nationality: "British",
+            created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            books_count: 5,
+            lock_version: 0>,
+           #<Author:0x0000000121b70648
+            id: 10,
+            author_name: "J.K. Rowling",
+            nationality: "British",
+            created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            books_count: 5,
+            lock_version: 0>,
+           #<Author:0x0000000121b70508
+            id: 10,
+            author_name: "J.K. Rowling",
+            nationality: "British",
+            created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            books_count: 5,
+            lock_version: 0>,
+           #<Author:0x0000000121b703c8
+            id: 10,
+            author_name: "J.K. Rowling",
+            nationality: "British",
+            created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            books_count: 5,
+            lock_version: 0>,
+           #<Author:0x0000000121b70288
+            id: 10,
+            author_name: "J.K. Rowling",
+            nationality: "British",
+            created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+            books_count: 5,
+            lock_version: 0>,
+           #<Author:0x0000000121b70148
+            id: 13,
+            author_name: "John Doe",
+            nationality: "American",
+            created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+            updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+            books_count: 2,
+            lock_version: 0>,
+           #<Author:0x0000000121b70008
+            id: 13,
+            author_name: "John Doe",
+            nationality: "American",
+            created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+            updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+            books_count: 2,
+            lock_version: 0>] 
+
+        b) Using Array/Hash of Named Associations :-> 
+            Example:
+            3.3.0 :769 > Book.joins(:author)
+            Book Load (3.8ms)  SELECT "books".* FROM "books" INNER JOIN "authors" ON "authors"."id" = "books"."author_id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+
+        c) Joining Multiple Associations
+            Example:
+            3.3.0 :771 > Book.joins(:author, :genre)
+            Book Load (2.4ms)  SELECT "books".* FROM "books" INNER JOIN "authors" ON "authors"."id" = "books"."author_id" INNER JOIN 
+            "genres" ON "genres"."id" = "books"."genre_id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+
+            * Joining Nested Associations (Single Level)
+              Example:
+              3.3.0 :055 > Transaction.joins(book: :author)
+              3.3.0 :056 > 
+                Transaction Load (2.6ms)  SELECT "transactions".* FROM "transactions" INNER JOIN "books" ON "books"."id" = "transactions"."book_id" 
+                INNER JOIN "authors" ON "authors"."id" = "books"."author_id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+               => 
+              [#<Transaction:0x000000012d757be0
+                id: 10,
+                member_id: 2,
+                isbn: "1234567890",
+                issuedate: Mon, 29 Jul 2024,
+                returndate: Mon, 12 Aug 2024,
+                created_at: Mon, 29 Jul 2024 10:14:42.834489000 UTC +00:00,
+                updated_at: Mon, 29 Jul 2024 10:14:42.834489000 UTC +00:00,
+                book_id: 15,
+                librarian_id: 16>]
+
+            * Joining Nested Associations (Multiple Level)
+              Example:
+              3.3.0 :065 > transactions = Transaction.joins(book: [:author, :genre])
+              3.3.0 :066 >                           .joins(:member)
+              3.3.0 :067 >                           .joins(:librarian)
+              3.3.0 :068 >                           .select(
+              3.3.0 :069'>                             'transactions.*, 
+              3.3.0 :070'>                              books.title AS book_title, 
+              3.3.0 :071'>                              authors.author_name AS author_name, 
+              3.3.0 :072'>                              genres.genre_name AS genre_name, 
+              3.3.0 :073'>                              members.member_name AS member_name, 
+              3.3.0 :074 >                              librarians.librarian_name AS librarian_name
+              3.3.0 :075 >                           )
+                Transaction Load (8.2ms)  SELECT transactions.*, 
+                                           books.title AS book_title, 
+                                           authors.author_name AS author_name, 
+                                           genres.genre_name AS genre_name, 
+                                           members.member_name AS member_name, 
+                                           librarians.librarian_name AS librarian_name FROM "transactions" INNER JOIN "books" ON "books"."id" = "transactions"."book_id" 
+                                           INNER JOIN "authors" ON "authors"."id" = "books"."author_id" INNER JOIN "genres" ON "genres"."id" = "books"."genre_id" INNER JOIN 
+                                           "members" ON "members"."id" = "transactions"."member_id" INNER JOIN "librarians" ON "librarians"."id" = "transactions"."librarian_id"
+                                            /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+               => 
+              [#<Transaction:0x00000001029b08e0
+
+        d) Specifying Conditions on the Joined Tables
+            Example:      
+            3.3.0 :087 >  transactions = Transaction.joins(:book).where(created_at: time_range).select('transactions.*, books.title AS book_title').distinct
+            3.3.0 :088 > 
+              Transaction Load (24.5ms)  SELECT DISTINCT transactions.*, books.title AS book_title FROM "transactions" INNER JOIN "books" ON 
+                                         "books"."id" = "transactions"."book_id" WHERE "transactions"."created_at" BETWEEN $1 AND $2 /* loading 
+                                         for pp */ LIMIT $3  [["created_at", "2024-07-27 18:30:00"], ["created_at", "2024-07-28 18:30:00"], ["LIMIT", 11]]
+              
+    
+    2) Left_outer_joins -> 
+        Example:
+        3.3.0 :092 > Author.left_outer_joins(:books).select('authors.*, COUNT(books.id) AS books_count').group('authors.id')
+          Author Load (2.8ms)  SELECT authors.*, COUNT(books.id) AS books_count FROM "authors" LEFT OUTER JOIN "books" ON 
+                              "books"."author_id" = "authors"."id" GROUP BY "authors"."id" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+         => 
+        [#<Author:0x000000012e7bd980
+          id: 8,
+          author_name: "Nishu",
+          nationality: "Indian",
+          created_at: Fri, 19 Jul 2024 13:12:53.713149000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 09:43:57.658739000 UTC +00:00,
+          books_count: 0,
+          lock_version: 3>,
+         #<Author:0x000000012e7bd840
+          id: 9,
+          author_name: "Naman",
+          nationality: "British",
+          created_at: Fri, 19 Jul 2024 13:12:53.715259000 UTC +00:00,
+          updated_at: Fri, 19 Jul 2024 13:12:53.715259000 UTC +00:00,
+          books_count: 0,
+          lock_version: 0>,
+         #<Author:0x000000012e7bd700
+          id: 10,
+          author_name: "J.K. Rowling",
+          nationality: "British",
+          created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+          updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+          books_count: 5,
+          lock_version: 0>,
+         #<Author:0x000000012e7bd5c0
+          id: 11,
+          author_name: "HC Verma",
+          nationality: "Indian",
+          created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+          updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+          books_count: 0,
+          lock_version: 0>,
+         #<Author:0x000000012e7bd480
+          id: 12,
+          author_name: "MS chauhan",
+          nationality: "Indian",
+          created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+          updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+          books_count: 1,
+          lock_version: 0>,
+         #<Author:0x000000012e7bd340
+          id: 13,
+          author_name: "John Doe",
+          nationality: "American",
+          created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+          books_count: 2,
+          lock_version: 0>,
+         #<Author:0x000000012e7bd200
+          id: 14,
+          author_name: "Sample Author",
+          nationality: "Sample Nationality",
+          created_at: Mon, 29 Jul 2024 10:09:06.078369000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 10:09:06.078369000 UTC +00:00,
+          books_count: 1,
+          lock_version: 1>,
+         #<Author:0x000000012e7bd0c0
+          id: 15,
+          author_name: "Sample Author",
+          nationality: "Sample Nationality",
+          created_at: Mon, 29 Jul 2024 10:13:45.535694000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 10:13:45.535694000 UTC +00:00,
+          books_count: 1,
+          lock_version: 1>] 
+
+    3) Where.associated and where.missing
+        Example:
+        3.3.0 :096 > Genre.where.associated(:books)
+          Genre Load (0.8ms)  SELECT "genres".* FROM "genres" INNER JOIN "books" ON "books"."genre_id" = "genres"."id" WHERE "books"."id" IS NOT NULL /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+         => 
+        [#<Genre:0x000000012e7fd210
+          id: 1,
+          genre_name: "horror",
+          created_at: Tue, 23 Jul 2024 11:45:37.705157000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 10:13:49.388465000 UTC +00:00>,
+         #<Genre:0x000000012e7fd0d0
+          id: 1,
+          genre_name: "horror",
+          created_at: Tue, 23 Jul 2024 11:45:37.705157000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 10:13:49.388465000 UTC +00:00>,
+         #<Genre:0x000000012e7fcf90
+          id: 1,
+          genre_name: "horror",
+          created_at: Tue, 23 Jul 2024 11:45:37.705157000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 10:13:49.388465000 UTC +00:00>,
+         #<Genre:0x000000012e7fc810
+          id: 2,
+          genre_name: "fantasy",
+          created_at: Tue, 23 Jul 2024 12:11:57.817350000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 09:45:27.040296000 UTC +00:00>,
+         #<Genre:0x000000012e7fc590
+          id: 2,
+          genre_name: "fantasy",
+          created_at: Tue, 23 Jul 2024 12:11:57.817350000 UTC +00:00,
+          updated_at: Mon, 29 Jul 2024 09:45:27.040296000 UTC +00:00>] 
+
+
+
+ 
