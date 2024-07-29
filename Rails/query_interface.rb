@@ -1185,4 +1185,180 @@ While joins should be used for INNER JOIN or custom queries, left_outer_joins is
 
 
 
+
+=====> EAGER LOADING ASSOCIATIONS
+Eager loading is the mechanism for loading the associated records of the objects returned by Model.find using as few queries as possible.
+  
+  1) N + 1 Queries Problem
+      Example:
+      3.3.0 :097 > books = Book.limit(4)
+      3.3.0 :098 > 
+        Book Load (1.9ms)  SELECT "books".* FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 4]]
+       => 
+      [#<Book:0x000000012e7ff650
+      ... 
+      3.3.0 :099 > books.each do |book|
+      3.3.0 :100 >   puts book.author.author_name
+      3.3.0 :101 > end
+        Book Load (0.4ms)  SELECT "books".* FROM "books" LIMIT $1  [["LIMIT", 4]]
+        Author Load (0.3ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+      J.K. Rowling
+        Author Load (0.2ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+      J.K. Rowling
+        Author Load (0.1ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+      J.K. Rowling
+        Author Load (0.1ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 LIMIT $2  [["id", 10], ["LIMIT", 1]]
+      J.K. Rowling
+
+
+  2) includes -> With includes, Active Record ensures that all of the specified associations are loaded using the minimum possible number of queries.
+      Example:
+      3.3.0 :102 > books = Book.includes(:author).limit(4)
+        Book Load (1.7ms)  SELECT "books".* FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 4]]
+        Author Load (0.7ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1  [["id", 10]]
+       => 
+      [#<Book:0x000000012e7d5788
+      ... 
+      3.3.0 :103 > books.each do |book|
+      3.3.0 :104 >   puts book.author.author_name
+      3.3.0 :105 > end
+        Book Load (0.7ms)  SELECT "books".* FROM "books" LIMIT $1  [["LIMIT", 4]]
+        Author Load (0.2ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1  [["id", 10]]
+      J.K. Rowling
+      J.K. Rowling
+      J.K. Rowling
+      J.K. Rowling
+
+          a) Eager Loading Multiple Associations
+              Example:
+              3.3.0 :108 > Book.includes(:genre, :author)
+              Book Load (0.9ms)  SELECT "books".* FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+              Genre Load (1.4ms)  SELECT "genres".* FROM "genres" WHERE "genres"."id" IN ($1, $2)  [["id", 2], ["id", 1]]
+              Author Load (0.6ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" IN ($1, $2, $3, $4, $5)  [["id", 10], ["id", 13], ["id", 12], ["id", 14], ["id", 15]]
+
+          b) Specifying Conditions on Eager Loaded Associations
+              Example:
+              3.3.0 :110 > Author.includes(:books).where(books: {quantity: nil})
+                SQL (2.0ms)  SELECT DISTINCT "authors"."id" FROM "authors" LEFT OUTER JOIN "books" ON "books"."author_id" = "authors"."id" WHERE "books"."quantity" IS NULL /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+                SQL (1.1ms)  SELECT "authors"."id" AS t0_r0, "authors"."author_name" AS t0_r1, "authors"."nationality" AS t0_r2,
+                 "authors"."created_at" AS t0_r3, "authors"."updated_at" AS t0_r4, "authors"."books_count" AS t0_r5, "authors"."lock_version"
+                  AS t0_r6, "books"."id" AS t1_r0, "books"."isbn" AS t1_r1, "books"."title" AS t1_r2, "books"."quantity" AS t1_r3, "books"."created_at" 
+                  AS t1_r4, "books"."updated_at" AS t1_r5, "books"."available_quantity" AS t1_r6, "books"."author_id" AS t1_r7, "books"."genre_id" AS
+                   t1_r8 FROM "authors" LEFT OUTER JOIN "books" ON "books"."author_id" = "authors"."id" WHERE "books"."quantity" IS NULL AND "authors"."id" 
+                   IN ($1, $2, $3, $4, $5) /* loading for pp */  [["id", 8], ["id", 9], ["id", 10], ["id", 11], ["id", 12]]
+               => 
+              [#<Author:0x000000012e7f8490
+                id: 10,
+                author_name: "J.K. Rowling",
+                nationality: "British",
+                created_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+                updated_at: Wed, 24 Jul 2024 06:00:42.555280000 UTC +00:00,
+                books_count: 5,
+                lock_version: 0>,
+               #<Author:0x000000012e7f7d10
+                id: 12,
+                author_name: "MS chauhan",
+                nationality: "Indian",
+                created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+                updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+                books_count: 1,
+                lock_version: 0>,
+               #<Author:0x000000012e7f7a90
+                id: 11,
+                author_name: "HC Verma",
+                nationality: "Indian",
+                created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+                updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+                books_count: 0,
+                lock_version: 0>,
+               #<Author:0x000000012e7f7950
+                id: 8,
+                author_name: "Nishu",
+                nationality: "Indian",
+                created_at: Fri, 19 Jul 2024 13:12:53.713149000 UTC +00:00,
+                updated_at: Mon, 29 Jul 2024 09:43:57.658739000 UTC +00:00,
+                books_count: 0,
+                lock_version: 3>,
+               #<Author:0x000000012e7f7810
+                id: 9,
+                author_name: "Naman",
+                nationality: "British",
+                created_at: Fri, 19 Jul 2024 13:12:53.715259000 UTC +00:00,
+                updated_at: Fri, 19 Jul 2024 13:12:53.715259000 UTC +00:00,
+                books_count: 0,
+                lock_version: 0>]
+                                 
+      
+  3) preload -> With preload, Active Record loads each specified association using one query per association.
+      Example:
+      3.3.0 :111 > books = Book.preload(:author).limit(4)
+        Book Load (1.1ms)  SELECT "books".* FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 4]]
+        Author Load (0.8ms)  SELECT "authors".* FROM "authors" WHERE "authors"."id" = $1  [["id", 10]]
+       => 
+      [#<Book:0x000000012e7fdfd0
+      3.3.0 :116 > books.each do |book|
+        3.3.0 :117 >   puts book.author.author_name
+        3.3.0 :118 > end
+        J.K. Rowling
+        J.K. Rowling
+        J.K. Rowling
+        J.K. Rowling
+
+
+  4) eager_load -> With eager_load, Active Record loads all specified associations using a LEFT OUTER JOIN.
+      Example:
+        3.3.0 :119 > books = Book.eager_load(:author).limit(4)
+        3.3.0 :121 > books.each do |book|
+        3.3.0 :122 >   puts book.author.author_name
+        3.3.0 :123 > end
+            SQL (1.3ms)  SELECT "books"."id" AS t0_r0, "books"."isbn" AS t0_r1, "books"."title" AS t0_r2, "books"."quantity" AS t0_r3, "books"."created_at" 
+            AS t0_r4, "books"."updated_at" AS t0_r5, "books"."available_quantity" AS t0_r6, "books"."author_id" AS t0_r7, "books"."genre_id" AS t0_r8,
+             "authors"."id" AS t1_r0, "authors"."author_name" AS t1_r1, "authors"."nationality" AS t1_r2, "authors"."created_at" AS t1_r3, "authors"."updated_at" 
+             AS t1_r4, "authors"."books_count" AS t1_r5, "authors"."lock_version" AS t1_r6 FROM "books" LEFT OUTER JOIN "authors" ON
+              "authors"."id" = "books"."author_id" LIMIT $1  [["LIMIT", 4]]
+          J.K. Rowling
+          J.K. Rowling
+          J.K. Rowling
+          J.K. Rowling
  
+
+  5) strict_loading ->
+    Eager loading can prevent N + 1 queries but you might still be lazy loading some associations. 
+    To make sure no associations are lazy loaded you can enable strict_loading.
+    By enabling strict loading mode on a relation, an ActiveRecord::StrictLoadingViolationError will be raised if the record tries to lazily load any association:
+        Example:
+          3.3.0 :124 > genre = Genre.strict_loading.first
+          Genre Load (1.0ms)  SELECT "genres".* FROM "genres" ORDER BY "genres"."id" ASC LIMIT $1  [["LIMIT", 1]]
+           => 
+            #<Genre:0x000000012e7df3c8
+          3.3.0 :128 > genre.books.first
+          (irb):128:in `<main>`: `Genre` is marked for strict_loading. The Book association named `:books` cannot be lazily loaded. (ActiveRecord::StrictLoadingViolationError) 
+                                       
+                    
+  6) strict_loading! ->
+    We can also enable strict loading on the record itself by calling strict_loading!:
+      Example:
+      3.3.0 :131 > genre = Genre.first
+        Genre Load (0.8ms)  SELECT "genres".* FROM "genres" ORDER BY "genres"."id" ASC LIMIT $1  [["LIMIT", 1]]
+       => 
+      #<Genre:0x000000012e7d3d48
+      ... 
+      3.3.0 :132 > genre.strict_loading!
+       => true 
+      3.3.0 :133 > genre.books.first
+      (irb):133:in `<main>`: `Genre` is marked for strict_loading. The Book association named `:books` cannot be lazily loaded. (ActiveRecord::StrictLoadingViolationError)
+    
+    strict_loading! also takes a :mode argument. Setting it to :n_plus_one_only will only raise an error if an association that will lead to an N + 1 query is lazily loaded:
+      Example:
+      3.3.0 :131 > genre = Genre.first
+      Genre Load (0.8ms)  SELECT "genres".* FROM "genres" ORDER BY "genres"."id" ASC LIMIT $1  [["LIMIT", 1]]
+       => 
+      #<Genre:0x000000012e7d3d48
+      ... 
+      3.3.0 :134 > genre.strict_loading!(mode: :n_plus_one_only)
+      3.3.0 :135 > 
+       => true 
+      3.3.0 :136 > genre.books.first
+        Book Load (1.0ms)  SELECT "books".* FROM "books" WHERE "books"."genre_id" = $1  [["genre_id", 1]]
+       => 
+      #<Book:0x000000012e7f8d5
