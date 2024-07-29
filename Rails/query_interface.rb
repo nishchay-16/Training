@@ -525,3 +525,183 @@ Conditions can either be specified as a string, array, or hash.
         created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
         updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
         books_count: 1>] 
+
+
+
+====> ORDERING 
+To retrieve records from the database in a specific order, you can use the order method.
+
+      Example:
+    * 3.3.0 :563 > Author.order(created_at: :desc)         # Author.order("created_at DESC")
+      Author Load (0.9ms)  SELECT "authors".* FROM "authors" /* loading for pp */ ORDER BY "authors"."created_at" DESC LIMIT $1  [["LIMIT", 11]]
+     => 
+    [#<Author:0x0000000121b58fc0
+      id: 13,
+      author_name: "John Doe",
+      nationality: "American",
+      created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+      updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+      books_count: 2>,
+     #<Author:0x0000000121b58e80
+      id: 12,
+      author_name: "MS chauhan",
+      nationality: "Indian",
+      created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+      books_count: 1>,
+     #<Author:0x0000000121b58d40
+      id: 11,
+      author_name: "HC Verma",
+      nationality: "Indian",
+      created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+      books_count: 0>]
+
+    * 3.3.0 :564 > Author.order(created_at: :asc)        # Author.order("created_at ASC")
+      Author Load (0.4ms)  SELECT "authors".* FROM "authors" /* loading for pp */ ORDER BY "authors"."created_at" ASC LIMIT $1  [["LIMIT", 11]]
+     => 
+     #<Author:0x0000000121b7bcc8
+      id: 11,
+      author_name: "HC Verma",
+      nationality: "Indian",
+      created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+      books_count: 0>,
+     #<Author:0x0000000121b7bb88
+      id: 12,
+      author_name: "MS chauhan",
+      nationality: "Indian",
+      created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+      books_count: 1>,
+     #<Author:0x0000000121b7ba48
+      id: 13,
+      author_name: "John Doe",
+      nationality: "American",
+      created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+      updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+      books_count: 2>] 
+
+    * 3.3.0 :565 > Author.order("author_name ASC, created_at DESC")       # Author.order(author_name: :asc, created_at: :desc)
+      3.3.0 :566 > 
+        Author Load (1.1ms)  SELECT "authors".* FROM "authors" /* loading for pp */ ORDER BY author_name ASC, created_at DESC LIMIT $1  [["LIMIT", 11]]
+       => 
+      [#<Author:0x0000000121b7bcc8
+        id: 11,
+        author_name: "HC Verma",
+        nationality: "Indian",
+        created_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+        updated_at: Thu, 25 Jul 2024 10:18:32.629404000 UTC +00:00,
+        books_count: 0>,
+       #<Author:0x0000000121b7ba48
+        id: 13,
+        author_name: "John Doe",
+        nationality: "American",
+        created_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+        updated_at: Sat, 27 Jul 2024 10:47:49.391915000 UTC +00:00,
+        books_count: 2>,
+       #<Author:0x0000000121b7b908
+        id: 12,
+        author_name: "MS chauhan",
+        nationality: "Indian",
+        created_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+        updated_at: Thu, 25 Jul 2024 10:23:50.376919000 UTC +00:00,
+        books_count: 1>]
+
+      
+
+===> SELECTING SPECIFIC FIELDS 
+By default, Model.find selects all the fields from the result set using select *.
+To select only a subset of fields from the result set, you can specify the subset via the select method.
+
+  Example:
+  * 3.3.0 :568 > Book.select(:id, :title)
+      Book Load (0.4ms)  SELECT "books"."id", "books"."title" FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+     => 
+    [#<Book:0x0000000121b7bb88 id: 2, title: "Fundamental of physics">,
+     #<Book:0x0000000121b7ba48 id: 6, title: "Harry Potter and the Chamber of Secrets">,
+     #<Book:0x0000000121b7b908 id: 7, title: "Harry Potter and the Philosopher's Stone">,
+     #<Book:0x0000000121b7b7c8 id: 8, title: "Harry Potter and the Prisoner of Azkaban">,
+     #<Book:0x0000000121b7b688 id: 9, title: "The Casual Vacancy">,
+     #<Book:0x0000000121b7b548 id: 10, title: "The Shining">,
+     #<Book:0x0000000121b7b408 id: 12, title: "Book One">,
+     #<Book:0x0000000121b7b2c8 id: 13, title: "Book Two">]
+                      
+  * 3.3.0 :569 > Book.select(:id, :title).last(2)
+     Book Load (0.5ms)  SELECT "books"."id", "books"."title" FROM "books" ORDER BY "books"."id" DESC LIMIT $1  [["LIMIT", 2]]
+    => [#<Book:0x00000001219da3d8 id: 12, title: "Book One">, #<Book:0x00000001219da518 id: 13, title: "Book Two">] 
+
+
+
+===> LIMIT AND OFFSET
+To apply LIMIT to the SQL fired by the Model.find, you can specify the LIMIT using limit and offset methods on the relation.
+You can use limit to specify the number of records to be retrieved, and use offset to specify the number of records to skip before starting to return the records.
+
+  Example:
+  * 3.3.0 :570 > Book.limit(3)
+      Book Load (1.5ms)  SELECT "books".* FROM "books" /* loading for pp */ LIMIT $1  [["LIMIT", 3]]
+     => 
+    [#<Book:0x0000000121b50780
+      id: 2,
+      isbn: nil,
+      title: "Fundamental of physics",
+      quantity: nil,
+      created_at: Thu, 25 Jul 2024 06:07:12.476305000 UTC +00:00,
+      updated_at: Thu, 25 Jul 2024 10:27:46.230403000 UTC +00:00,
+      available_quantity: nil,
+      author_id: 12,
+      genre_id: 2>,
+     #<Book:0x0000000121b50640
+      id: 6,
+      isbn: nil,
+      title: "Harry Potter and the Chamber of Secrets",
+      quantity: nil,
+      created_at: Fri, 26 Jul 2024 09:32:11.673499000 UTC +00:00,
+      updated_at: Fri, 26 Jul 2024 09:32:11.673499000 UTC +00:00,
+      available_quantity: nil,
+      author_id: 10,
+      genre_id: 2>,
+     #<Book:0x0000000121b50500
+      id: 7,
+      isbn: nil,
+      title: "Harry Potter and the Philosopher's Stone",
+      quantity: nil,
+      created_at: Fri, 26 Jul 2024 09:32:36.509940000 UTC +00:00,
+      updated_at: Fri, 26 Jul 2024 09:32:36.509940000 UTC +00:00,
+      available_quantity: nil,
+      author_id: 10,
+      genre_id: 2>] 
+
+  * 3.3.0 :574 > Book.limit(3).offset(2)
+      Book Load (0.6ms)  SELECT "books".* FROM "books" /* loading for pp */ LIMIT $1 OFFSET $2  [["LIMIT", 3], ["OFFSET", 2]]
+     => 
+    [#<Book:0x00000001219d1558
+      id: 7,
+      isbn: nil,
+      title: "Harry Potter and the Philosopher's Stone",
+      quantity: nil,
+      created_at: Fri, 26 Jul 2024 09:32:36.509940000 UTC +00:00,
+      updated_at: Fri, 26 Jul 2024 09:32:36.509940000 UTC +00:00,
+      available_quantity: nil,
+      author_id: 10,
+      genre_id: 2>,
+     #<Book:0x00000001219d1418
+      id: 8,
+      isbn: nil,
+      title: "Harry Potter and the Prisoner of Azkaban",
+      quantity: nil,
+      created_at: Fri, 26 Jul 2024 09:32:51.669190000 UTC +00:00,
+      updated_at: Fri, 26 Jul 2024 09:32:51.669190000 UTC +00:00,
+      available_quantity: nil,
+      author_id: 10,
+      genre_id: 2>,
+     #<Book:0x00000001219d12d8
+      id: 9,
+      isbn: nil,
+      title: "The Casual Vacancy",
+      quantity: nil,
+      created_at: Fri, 26 Jul 2024 09:46:40.502867000 UTC +00:00,
+      updated_at: Fri, 26 Jul 2024 09:46:40.502867000 UTC +00:00,
+      available_quantity: nil,
+      author_id: 10,
+      genre_id: 1>] 
