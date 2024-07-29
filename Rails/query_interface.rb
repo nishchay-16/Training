@@ -1362,3 +1362,207 @@ Eager loading is the mechanism for loading the associated records of the objects
         Book Load (1.0ms)  SELECT "books".* FROM "books" WHERE "books"."genre_id" = $1  [["genre_id", 1]]
        => 
       #<Book:0x000000012e7f8d5
+
+
+
+
+====> SCOPES
+Scoping allows you to specify commonly-used queries which can be referenced as method calls on the association objects or models. 
+With these scopes, you can use every method previously covered such as where, joins and includes. 
+All scope bodies should return an ActiveRecord::Relation or nil to allow for further methods (such as other scopes) to be called on it.
+
+Example:
+class Item < ApplicationRecord
+  scope :out_of_stock, -> { where(stock: 0) }
+end
+
+3.3.0 :146 > Item.out_of_stock
+  Item Load (0.4ms)  SELECT "items".* FROM "items" WHERE "items"."stock" = $1 /* loading for pp */ LIMIT $2  [["stock", 0], ["LIMIT", 11]]
+ => 
+[#<Item:0x000000012e91d4d8
+  id: 7,
+  name: "High-End Item",
+  price: 0.14e3,
+  stock: 0,
+  available: true,
+  created_at: Sat, 27 Jul 2024 11:22:40.614121000 UTC +00:00,
+  updated_at: Sat, 27 Jul 2024 11:22:40.614121000 UTC +00:00>,
+ #<Item:0x000000012e798ae0
+  id: 9,
+  name: "Standard Item",
+  price: 0.9e2,
+  stock: 0,
+  available: true,
+  created_at: Sat, 27 Jul 2024 11:22:48.996696000 UTC +00:00,
+  updated_at: Sat, 27 Jul 2024 11:22:48.996696000 UTC +00:00>] 
+
+
+    a) Passing in Arguments -> 
+          Example:
+          class Item < ApplicationRecord
+            scope :costs_more_than, ->(amount) { where("price > ?", amount) }
+          end
+
+          3.3.0 :150 > Item.costs_more_than(50)
+          Item Load (1.8ms)  SELECT "items".* FROM "items" WHERE (price > 50) /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+         => 
+        [#<Item:0x000000012ea98790
+          id: 1,
+          name: "Luxury Item",
+          price: 0.11e3,
+          stock: 5,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:15:13.510127000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:15:13.510127000 UTC +00:00>,
+         #<Item:0x000000012e7ba640
+          id: 3,
+          name: "Expensive Item",
+          price: 0.11e3,
+          stock: 5,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:17:33.303071000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:17:33.303071000 UTC +00:00>,
+         #<Item:0x000000012e7ba500
+          id: 4,
+          name: "[FILTERED] Luxury Item",
+          price: 0.12e3,
+          stock: 5,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:20:21.395820000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:20:21.395820000 UTC +00:00>,
+
+
+    b) Using Conditionals -> 
+          Example:
+          class Item < ApplicationRecord
+            scope :in_stock_above, ->(quantity) { where("stock > ?", quantity) if quantity.present? }
+          end
+
+          3.3.0 :152 > Item.in_stock_above(10)
+          3.3.0 :153 > 
+            Item Load (2.9ms)  SELECT "items".* FROM "items" WHERE (stock > 10) /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+           => 
+          [#<Item:0x000000012e459cf8
+            id: 6,
+            name: "Regular Item",
+            price: 0.7e2,
+            stock: 15,
+            available: true,
+            created_at: Sat, 27 Jul 2024 11:20:30.581363000 UTC +00:00,
+            updated_at: Sat, 27 Jul 2024 11:20:30.581363000 UTC +00:00>,
+           #<Item:0x000000012e7d8488
+            id: 10,
+            name: "Item 1",
+            price: 0.1999e2,
+            stock: 100,
+            available: true,
+            created_at: Mon, 29 Jul 2024 11:07:50.601898000 UTC +00:00,
+            updated_at: Mon, 29 Jul 2024 11:07:50.601898000 UTC +00:00>,
+           #<Item:0x000000012e7d8348
+            id: 11,
+            name: "Item 2",
+            price: 0.2999e2,
+            stock: 200,
+            available: false,
+            created_at: Mon, 29 Jul 2024 11:07:50.623788000 UTC +00:00,
+            updated_at: Mon, 29 Jul 2024 11:07:50.623788000 UTC +00:00>,
+           #<Item:0x000000012e7d8208
+            id: 12,
+            name: "Item 3",
+            price: 0.3999e2,
+            stock: 150,
+            available: true,
+            created_at: Mon, 29 Jul 2024 11:07:50.624944000 UTC +00:00,
+            updated_at: Mon, 29 Jul 2024 11:07:50.624944000 UTC +00:00>] 
+          
+
+    c) Applying a Default Scope -> 
+          Example:
+          class Item < ApplicationRecord
+            default_scope { where(available: true).where("stock > ?", 0) }
+          end
+
+          3.3.0 :165 > Item.all
+            Item Load (0.5ms)  SELECT "items".* FROM "items" WHERE "items"."available" = $1 AND (stock > 10) /* loading for pp */ LIMIT $2  [["available", true], ["LIMIT", 11]]
+          3.3.0 :166 > Item.unscoped.all
+          3.3.0 :167 > 
+            Item Load (0.6ms)  SELECT "items".* FROM "items" /* loading for pp */ LIMIT $1  [["LIMIT", 11]]
+
+
+    d) Merging of Scopes -> 
+        Example:
+        3.3.0 :171 > Item.available.in_stock.expensive(50)
+          Item Load (0.7ms)  SELECT "items".* FROM "items" WHERE "items"."available" = $1 AND (stock > 0) AND (price > 50) /* loading for pp */ LIMIT $2  [["available", true], ["LIMIT", 11]]
+         => 
+        [#<Item:0x000000012eabc938
+          id: 1,
+          name: "Luxury Item",
+          price: 0.11e3,
+          stock: 5,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:15:13.510127000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:15:13.510127000 UTC +00:00>,
+         #<Item:0x000000012e7b4c40
+          id: 3,
+          name: "Expensive Item",
+          price: 0.11e3,
+          stock: 5,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:17:33.303071000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:17:33.303071000 UTC +00:00>,
+         #<Item:0x000000012e7b4b00
+          id: 4,
+          name: "[FILTERED] Luxury Item",
+          price: 0.12e3,
+          stock: 5,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:20:21.395820000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:20:21.395820000 UTC +00:00>,
+         #<Item:0x000000012e7b49c0
+          id: 6,
+          name: "Regular Item",
+          price: 0.7e2,
+          stock: 15,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:20:30.581363000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:20:30.581363000 UTC +00:00>,
+         #<Item:0x000000012e7b4880
+          id: 8,
+          name: "High-End Item in Stock",
+          price: 0.12e3,
+          stock: 10,
+          available: true,
+          created_at: Sat, 27 Jul 2024 11:22:44.942192000 UTC +00:00,
+          updated_at: Sat, 27 Jul 2024 11:22:44.942192000 UTC +00:00>] 
+
+
+    e) Removing All Scoping -> 
+        Example:
+          3.3.0 :172 > Item.unscoped.load
+          Item Load (1.2ms)  SELECT "items".* FROM "items"
+
+
+
+
+====> DYNAMIC FINDERS
+For every field (also known as an attribute) you define in your table, Active Record provides a finder method. 
+If you have a field called first_name on your Customer model for example, you get the instance method find_by_first_name for free from Active Record. 
+If you also have a locked field on the Customer model, you also get find_by_locked method.
+
+Example:
+* 3.3.0 :173 > Item.find_by_stock(100)
+    Item Load (0.6ms)  SELECT "items".* FROM "items" WHERE "items"."stock" = $1 LIMIT $2  [["stock", 100], ["LIMIT", 1]]
+   => 
+  #<Item:0x000000012e7f4b10
+   id: 10,
+   name: "Item 1",
+   price: 0.1999e2,
+   stock: 100,
+   available: true,
+   created_at: Mon, 29 Jul 2024 11:07:50.601898000 UTC +00:00,
+   updated_at: Mon, 29 Jul 2024 11:07:50.601898000 UTC +00:00> 
+
+* 3.3.0 :174 > Item.find_by_stock_and_price(100,0.9e2)
+    Item Load (0.8ms)  SELECT "items".* FROM "items" WHERE "items"."stock" = $1 AND "items"."price" = $2 LIMIT $3  [["stock", 100], ["price", "90.0"], ["LIMIT", 1]]
+   => nil 
+
