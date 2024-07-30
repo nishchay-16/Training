@@ -9,7 +9,7 @@
 
 
 
-===> Controller Naming Convention
+===> Controller Naming Convention <===
 * Singular Form for Model-Specific Controllers:-> 
     Use the singular form of the model name for the controller name. 
     For example, if you have a Book model, the controller should be named BooksController.
@@ -38,7 +38,7 @@ IMPORTANT:-> The controller naming convention differs from the naming convention
 
 
 
-====> Creating a Controller
+====> Creating a Controller <====
 
 $ rails generate controller Books
           or
@@ -50,3 +50,12 @@ This will create:
 * A helper file app/helpers/books_helper.rb
 * Routes in config/routes.rb if specified during generation.
 
+
+
+
+=====> Creating Responses <=====
+From the controllers point of view, there are three ways to create an HTTP response:
+
+* Call render to create a full response to send back to the browser
+* Call redirect_to to send an HTTP redirect status code to the browser
+* Call head to create a response consisting solely of HTTP headers to send back to the browser
