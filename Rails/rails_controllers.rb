@@ -38,3 +38,15 @@ IMPORTANT:-> The controller naming convention differs from the naming convention
 
 
 
+====> Creating a Controller
+
+$ rails generate controller Books
+          or
+$ rails g controller Books
+
+This will create:
+* A new file app/controllers/books_controller.rb
+* A folder app/views/books/ with view files for actions like new, create, etc.
+* A helper file app/helpers/books_helper.rb
+* Routes in config/routes.rb if specified during generation.
+
