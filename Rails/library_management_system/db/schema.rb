@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_29_113916) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_30_065740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -93,6 +93,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_29_113916) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "email_contacts", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "fines", force: :cascade do |t|
     t.decimal "fine_amount"
     t.date "fine_date"
@@ -148,6 +156,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_29_113916) do
 
   create_table "parts", force: :cascade do |t|
     t.string "part_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.integer "age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
