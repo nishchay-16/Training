@@ -52,6 +52,65 @@ This will create:
 
 
 
+=====> Controller Methods <=====
+* index: Typically used to list all records of a particular model.
+  Example:
+    def index             # GET /books
+      @books = Book.all
+    end
+
+* show: Used to display a single record.
+  Example:
+    def show             # GET /books/1
+      @book = Book.find(params[:id])
+    end
+
+* new: Provides a form for creating a new record.
+    Example:
+    def new              # GET /books/new
+      @book = Book.new
+    end
+  
+    
+* create: Processes the form submission from the new action to create a new record.
+  Example:
+    def create           # POST /books
+      @book = Book.new(book_params)
+      if @book.save
+        redirect_to @book
+      else
+        render :new
+      end
+    end
+    
+* edit: Provides a form for editing an existing record.
+  Example:
+    def edit             # GET /books/1/edit
+      @book = Book.find(params[:id])
+    end
+    
+* update: Processes the form submission from the edit action to update an existing record.
+  Example:
+    def update           # PATCH/PUT /books/1
+      @book = Book.find(params[:id])
+      if @book.update(book_params)
+        redirect_to @book
+      else
+        render :edit
+      end
+    end
+    
+* destroy: Deletes a record.
+  Example:
+    def destroy          # DELETE /books/1
+      @book = Book.find(params[:id])
+      @book.destroy
+      redirect_to books_url
+    end
+    
+
+
+
 
 =====> Creating Responses <=====
 From the controllers point of view, there are three ways to create an HTTP response:
