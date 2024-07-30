@@ -32,11 +32,68 @@ Active Model is a library containing various modules used in developing classes 
 
 2) Attribute Methods -> The ActiveModel::AttributeMethods module can add custom prefixes and suffixes on methods of a class. 
                         It is used by defining the prefixes and suffixes and which methods on the object will use them.
+      Example:
+        class Person
+          include ActiveModel::AttributeMethods
+        
+          attribute_method_prefix 'reset_'
+          attribute_method_suffix '_highest?'
+          define_attribute_methods 'age'
+        
+          attr_accessor :age
+        
+          private
+            def reset_attribute(attribute)
+              send("#{attribute}=", 0)
+            end
+        
+            def attribute_highest?(attribute)
+              send(attribute) > 100
+            end
+        end
+        
+       3.3.0 :327 > person = Person.new
+        => #<Person:0x000000012ecf1b90 id: nil, name: nil, email: nil, age: nil, created_at: nil, updated_at: nil, password_digest: nil, recovery_password_digest: nil> 
+       3.3.0 :328 > person.age = 105
+        => 105 
+       3.3.0 :329 > person.age_highest?
+       3.3.0 :330 > 
+        => true 
+       3.3.0 :331 > person.reset_age
+        => 0 
+       3.3.0 :332 > person.age_highest?
+        => false 
 
 
 3) Callbacks -> ActiveModel::Callbacks gives Active Record style callbacks.
                 This provides an ability to define callbacks which run at appropriate times.
                 After defining callbacks, you can wrap them with before, after, and around custom methods.
+      Example:
+      class Person
+        extend ActiveModel::Callbacks
+      
+        define_model_callbacks :update
+      
+        before_update :reset_me
+      
+        def update
+          run_callbacks(:update) do
+            puts "Updating the person..."
+          end
+        end
+
+        def reset_me
+          puts "Resetting before update..."
+        end
+      end
+      
+      3.3.0 :334 > person = Person.new
+      3.3.0 :335 > 
+       => #<Person:0x000000012e4f9c08 id: nil, name: nil, email: nil, age: nil, created_at: nil, updated_at: nil, password_digest: nil, recovery_password_digest: nil> 
+      3.3.0 :336 > person.update
+      Resetting before update...
+      Updating the person...
+       => nil 
 
 
 4) Conversion ->  If a class defines persisted? and id methods, then you can include the ActiveModel::Conversion module in that class,
@@ -96,3 +153,89 @@ Active Model is a library containing various modules used in developing classes 
       => "me@vishnuatrai.com" 
      3.3.0 :299 > person.valid?
       => true 
+
+
+7) Naming ->  ActiveModel::Naming adds several class methods which make naming and routing easier to manage. 
+              The module defines the model_name class method which will define several accessors using some ActiveSupport::Inflector methods.
+    Example:
+      class Person
+        include ActiveModel::Naming
+      end
+
+     3.3.0 :301 > Person.model_name.name
+      => "Person" 
+     3.3.0 :302 > Person.model_name.singular
+      => "person" 
+     3.3.0 :303 > Person.model_name.plural
+      => "people" 
+     3.3.0 :304 > Person.model_name.element
+      => "person" 
+     3.3.0 :305 > Person.model_name.human
+      => "Person" 
+     3.3.0 :306 > Person.model_name.collection
+      => "people" 
+     3.3.0 :307 > Person.model_name.param_key
+      => "person" 
+     3.3.0 :308 > Person.model_name.i18n_key
+      => :person 
+     3.3.0 :309 > Person.model_name.route_key
+      => "people" 
+     3.3.0 :310 > Person.model_name.singular_route_key
+      => "person" 
+
+
+8) Model -> ActiveModel::Model allows implementing models similar to ActiveRecord::Base.
+            When including ActiveModel::Model we get all the features from ActiveModel::API.
+
+
+9) Serialization -> ActiveModel::Serialization provides basic serialization for your object. 
+                    You need to declare an attributes Hash which contains the attributes you want to serialize. 
+                    Attributes must be strings, not symbols.
+      Example:
+    * class Person
+        include ActiveModel::Serialization
+      
+        attr_accessor :name
+      
+        def attributes
+          { 'name' => nil }
+        end
+      end
+
+     3.3.0 :312 > person = Person.new
+      => #<Person:0x000000012e4b2380 id: nil, name: nil, email: nil, age: nil, created_at: nil, updated_at: nil> 
+     3.3.0 :313 > person.serializable_hash
+      => {"id"=>nil, "name"=>nil, "email"=>nil, "age"=>nil, "created_at"=>nil, "updated_at"=>nil} 
+     3.3.0 :314 > person.name = "Nishhh"
+      => "Nishhh" 
+     3.3.0 :315 > person.serializable_hash
+      => {"id"=>nil, "name"=>"Nishhh", "email"=>nil, "age"=>nil, "created_at"=>nil, "updated_at"=>nil} 
+
+    * class Person
+        include ActiveModel::Serializers::JSON
+      
+        attr_accessor :name
+      
+        def attributes
+          { 'name' => nil }
+        end
+      end
+
+     3.3.0 :317 > person = Person.new
+      => #<Person:0x000000012e4db190 id: nil, name: nil, email: nil, age: nil, created_at: nil, updated_at: nil> 
+     3.3.0 :318 > person.as_json
+      => {"id"=>nil, "name"=>nil, "email"=>nil, "age"=>nil, "created_at"=>nil, "updated_at"=>nil} 
+     3.3.0 :319 > person.name = "vaibhav"
+      => "vaibhav" 
+     3.3.0 :320 > person.as_json
+      => {"id"=>nil, "name"=>"vaibhav", "email"=>nil, "age"=>nil, "created_at"=>nil, "updated_at"=>nil} 
+
+
+10) Translation -> ActiveModel::Translation provides integration between your object and the Rails internationalization (i18n) framework.
+11) Lint Tests -> ActiveModel::Lint::Tests allows you to test whether an object is compliant with the Active Model API.
+12) SecurePassword -> ActiveModel::SecurePassword provides a way to securely store any password in an encrypted form. 
+                      When you include this module, a has_secure_password class method is provided which defines a password accessor with certain validations on it by default.
+                      It needs gem file bycrypt.
+
+
+

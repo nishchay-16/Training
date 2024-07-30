@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_30_065740) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_30_080904) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -166,6 +166,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_065740) do
     t.integer "age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_digest"
+    t.string "recovery_password_digest"
   end
 
   create_table "picture_files", force: :cascade do |t|
