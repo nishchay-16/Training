@@ -1,5 +1,6 @@
-                                                 ====> ACTIVE MODEL <=====
-
+                                                =====> ACTIVE MODEL <=====
+Active Model allows you to create plain Ruby objects that integrate with Action Pack, but dont need Active Record for database persistence. 
+Active Model also helps build custom ORMs for use outside of the Rails framework. 
 Active Model is a library containing various modules used in developing classes that need some features present on Active Record.
 
 1) API -> ActiveModel::API adds the ability for a class to work with Action Pack and Action View right out of the box.
@@ -86,7 +87,7 @@ Active Model is a library containing various modules used in developing classes 
           puts "Resetting before update..."
         end
       end
-      
+
       3.3.0 :334 > person = Person.new
       3.3.0 :335 > 
        => #<Person:0x000000012e4f9c08 id: nil, name: nil, email: nil, age: nil, created_at: nil, updated_at: nil, password_digest: nil, recovery_password_digest: nil> 
