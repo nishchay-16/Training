@@ -1,0 +1,6 @@
+<h1><%= @book.title %></h1>
+<p><%= @book.quantity %></p>
+
+<%= link_to 'Edit', edit_book_path(@book) %> |
+<%= link_to 'Back', books_path %> |
+<%= link_to 'Destroy', @book, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
