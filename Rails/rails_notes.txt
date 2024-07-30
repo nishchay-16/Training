@@ -245,3 +245,30 @@ Runs the db/seeds.rb file to populate the database with initial data.
 
 8) rails db:version    ->
 Displays the current version number of the schema.
+
+
+
+
+
+======> $ bin/rails generate scaffold article
+The command $ bin/rails generate scaffold article is used to quickly generate a complete set of files for a new resource in a Rails application. 
+Here's a breakdown of what this command does:
+
+1. Model:->
+Generates a model file (app/models/article.rb) with attributes defined in the command (though in this case, no specific attributes are provided).
+
+2. Migration:->
+Creates a migration file (db/migrate/[timestamp]_create_articles.rb) to create the articles table in the database with default columns (like id, created_at, updated_at). You can then add or modify columns in this migration file.
+
+3. Controller:->
+Generates a controller file (app/controllers/articles_controller.rb) with standard actions (index, show, new, create, edit, update, destroy) and their corresponding view files.
+
+4. Views:->
+Creates view files for each of the standard actions in the app/views/articles directory:
+index.html.erb: List all articles.
+show.html.erb: Display a single article.
+new.html.erb: Form to create a new article.
+edit.html.erb: Form to edit an existing article.
+
+5. Routes:->
+Updates the config/routes.rb file to include RESTful routes for the articles resource.
