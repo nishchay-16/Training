@@ -2,20 +2,22 @@
 <table class="table-container">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Author</th>
-      <th>Genre</th>  
-      <th>Quantity</th>
+      <th> Title </th>
+      <th> Author </th>
+      <th> Genre </th>  
+      <th> Quantity </th>
     </tr>
   </thead>
   <tbody>
-    <% @books.each do |book| %>
+    <% for book in @books %>
       <tr>
         <td><%= book.title %></td>
         <td><%= book.author %></td>
         <td><%= book.genre %></td>
-        <td style="text-align: center;"><%= book.quantity %></td>
+        <td style="text-align: center"><%= book.quantity %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<a href="/books/new"> Add New Book</a> <br/><br/>
+<a href="/"> Go Back</a> 
