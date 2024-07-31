@@ -30,7 +30,8 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      redirect_to books_path
+      redirect_to show_book_path
+      puts "Book updated successfully"
     else
       render :edit
     end
