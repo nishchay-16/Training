@@ -1,5 +1,6 @@
 class BooksController < ApplicationController
   def index
+    @books = Book.all
   end
 
   def new
@@ -30,7 +31,7 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      redirect_to show_book_path
+      redirect_to show_books_path
       puts "Book updated successfully"
     else
       render :edit
@@ -38,7 +39,6 @@ class BooksController < ApplicationController
   end
 
   def show
-    @books = Book.all
   end
 
 end

@@ -1,29 +1,9 @@
-<h2 style="margin-left: 10px">Books</h2>
-<table class="table-container">
-  <thead>
-    <tr>
-      <th> Title </th>
-      <th> Author </th>
-      <th> Genre </th>  
-      <th> Quantity </th>
-      <th> Edit </th>
-    </tr>
-  </thead>
-  <tbody>
-    <% for book in @books %>
-      <tr>
-        <td><%= book.title %></td>
-        <td><%= book.author %></td>
-        <td><%= book.genre %></td>
-        <td style="text-align: center"><%= book.quantity %></td>
-        <td style="text-align: center">
-          <a href="/books/<%= book.id %>/edit">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </a>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<a style="margin-left: 10px" href="/books/new"> Add New Book</a> <br/><br/>
-<a style="margin-left: 10px" href="/"> Go Back</a> 
+<br/>
+<div class="button-group">
+  <a href="/books/new" class="button-link">
+    <button class="button">Add New Book</button>
+  </a>
+  <a href="/books/index" class="button-link">
+    <button class="button">View All Books</button>
+  </a>
+</div>
