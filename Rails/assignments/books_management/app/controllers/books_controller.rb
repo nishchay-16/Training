@@ -3,7 +3,10 @@ class BooksController < ApplicationController
   end
 
   def new
-    @book = Book.new
+  end
+
+  def edit
+    @book = Book.find(params[:id])
   end
 
   def create
@@ -17,6 +20,19 @@ class BooksController < ApplicationController
       puts "Book saved successfully"
     else
       render :new
+    end
+  end
+
+  def update
+    @book = Book.find(params[:id])
+    @book.title = params[:title]
+    @book.author = params[:author]
+    @book.genre = params[:genre]
+    @book.quantity = params[:quantity]
+    if @book.save
+      redirect_to books_path
+    else
+      render :edit
     end
   end
 

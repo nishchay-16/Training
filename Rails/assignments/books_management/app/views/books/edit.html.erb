@@ -1,0 +1,27 @@
+<div class="container">
+  <h2>Update Book</h2>
+  <form action="/books/<%= @book.id %>" method="put" class="book-form">
+    <div class="form-group">
+      <label for="title"> Title: </label>
+      <input type="text" id="title" name="title" required>
+    </div>
+
+    <div class="form-group">
+      <label for="author"> Author: </label>
+      <input type="text" id="author" name="author" required>
+    </div>
+
+    <div class="form-group">
+      <label for="genre"> Genre: </label>
+      <input type="text" id="genre" name="genre" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity"> Quantity:</label>
+      <input type="text" id="quantity" name="quantity" required>
+    </div>
+
+    <button type="submit" class="submit-btn"> Update </button>
+  </form>
+</div>
+<a href="/books/show"> Back </a>

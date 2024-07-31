@@ -6,6 +6,7 @@
       <th> Author </th>
       <th> Genre </th>  
       <th> Quantity </th>
+      <th> Edit </th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,11 @@
         <td><%= book.author %></td>
         <td><%= book.genre %></td>
         <td style="text-align: center"><%= book.quantity %></td>
+        <td style="text-align: center">
+          <a href="/books/<%= book.id %>/edit">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+        </td>
       </tr>
     <% end %>
   </tbody>
