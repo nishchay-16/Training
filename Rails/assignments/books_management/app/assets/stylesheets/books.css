@@ -1,0 +1,31 @@
+.table-container {
+  width: 50%;
+  margin: 20px 0;
+  border-collapse: collapse;
+}
+
+.table-container th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  background-color: darkcyan;
+  color: #fffefe;
+}
+
+.table-container td {
+  border: 1px solid #fffdfd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table-container tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-container tr:nth-child(odd) {
+  background-color: #e0e0e0; 
+}
+
+.table-container tr:hover {
+  background-color: #d1e7dd;
+}
