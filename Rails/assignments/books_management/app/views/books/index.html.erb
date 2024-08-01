@@ -10,14 +10,15 @@
     </tr>
   </thead>
   <tbody>
-    <% for book in @books %>
+    <% @books.each do |book| %>
       <tr>
         <td><%= book.title %></td>
         <td><%= book.author %></td>
         <td><%= book.genre %></td>
         <td style="text-align: center"><%= book.quantity %></td>
         <td style="text-align: center">
-          <a href="/books/<%= book.id %>/edit">
+          <a href ="/books/<%= book.id %>/edit">
+          <%= link_to "Edit", books_edit_path(book.id) %>
             <i class="fa-solid fa-pen-to-square"></i>
           </a>
         </td>
