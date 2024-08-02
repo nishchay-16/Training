@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   get '/books/edit/:id', to: 'books#edit', as: 'books_edit'
   put '/books/:id', to: 'books#update'
 
-  get '/rails/books', to: 'books#index' ,as: 'rails_books'
+  get '/rails/books/index', to: 'books#index' ,as: 'rails_books_index'
   get '/rails/books/new', to: 'books#new' , as: 'rails_new_books'
   post '/rails/books', to: 'books#create' , as: 'rails_books_create'
   get '/rails/books/:id/edit', to: 'books#edit' ,as: 'rails_books_edit'
