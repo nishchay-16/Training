@@ -4,6 +4,7 @@ class BooksController < ApplicationController
   end
 
   def new
+    @book = Book.new
   end
 
   def edit
@@ -47,4 +48,6 @@ class BooksController < ApplicationController
     redirect_to show_books_path
   end
 
+  def profile
+  end
 end
