@@ -1,73 +1,49 @@
-<div class="container">
-  <h2>Update Book</h2>
-  <form action="/books/<%= @book.id %>" method="put" class="book-form">
-    <div class="form-group">
-      <label for="title"> Title: </label>
-      <input type="text" id="title" name="title" value="<%= @book.title %>" required>
-    </div>
+<div style="display: flex">
+  <div class="container">
+    <h2>Update Book</h2>
+    <form action="/books/<%= @book.id %>" method="put" class="book-form">
+      <div class="form-group">
+        <label for="title"> Title: </label>
+        <input type="text" id="title" name="title" value="<%= @book.title %>" required>
+      </div>
+      <div class="form-group">
+        <label for="author"> Author: </label>
+        <input type="text" id="author" name="author" value="<%= @book.author %>" required>
+      </div>
+      <div class="form-group">
+        <label for="genre"> Genre: </label>
+        <input type="text" id="genre" name="genre"  value="<%= @book.genre %>" required>
+      </div>
+      <div class="form-group">
+        <label for="quantity"> Quantity:</label>
+        <input type="text" id="quantity" name="quantity" value="<%= @book.quantity %>" required>
+      </div>
+      <button type="submit" class="submit-btn"> Update </button>
+    </form>
+    <a style="margin-left: 10px" href="/books/index"> Back </a>
+  </div>
 
-    <div class="form-group">
-      <label for="author"> Author: </label>
-      <input type="text" id="author" name="author" value="<%= @book.author %>" required>
-    </div>
-
-    <div class="form-group">
-      <label for="genre"> Genre: </label>
-      <input type="text" id="genre" name="genre"  value="<%= @book.genre %>" required>
-    </div>
-
-    <div class="form-group">
-      <label for="quantity"> Quantity:</label>
-      <input type="text" id="quantity" name="quantity" value="<%= @book.quantity %>" required>
-    </div>
-
-    <button type="submit" class="submit-btn"> Update </button>
-  </form>
-</div>
-<a style="margin-left: 10px" href="/books/index"> Back </a>
-
-<%= form_with url: "/books/12" ,method: :put do |form| %>
-  <%= form.label :title, "Search for:" %>
-  <%= form.text_field :title %>
-  <%= form.submit "Search" %> <br/>
-
-  <%= form.check_box :pet_dog %>
-  <%= form.label :pet_dog, "I own a dog" %>
-  <%= form.check_box :pet_cat %>
-  <%= form.label :pet_cat, "I own a cat" %> <br/>
-
-  <%= form.radio_button :age ,"child" %>
-  <%= form.label :age_child, "I am a younger than 20" %>
-  <%= form.radio_button :age ,"adult" %>
-  <%= form.label :age_adult, "I am an older than 20" %> <br/>
-
-  <%= form.text_area :message, size: "70x5" %> <br/>
-  <%= form.hidden_field :parent_id, value: "foo" %> <br/>
-  <%= form.password_field :password %> <br/>
-  <%= form.number_field :price, in: 1.0..20.0, step: 0.5 %> <br/>
-  <%= form.range_field :discount, in: 1..100 %> <br/>
-  <%= form.date_field :born_on %> <br/>
-  <%= form.time_field :started_at %> <br/>
-  <%= form.datetime_local_field :graduation_day %> <br/>
-  <%= form.month_field :birthday_month %> <br/>
-  <%= form.week_field :birthday_week %> <br/>
-  <%= form.search_field :name %> <br/>
-  <%= form.email_field :address %> <br/>
-  <br/>
-  <%= link_to "Back", "/books/index" %>
-  <%= form.telephone_field :phone %> <br/>
-  <%= form.url_field :homepage %> <br/>
-  <%= form.color_field :favorite_color %> <br/>
-
-  <%= phone_to "9588169118" , country_code: "91" do %>
-    <strong>Phone me:</strong> <span>9588169118</span>
-  <% end %> <br/>
-
-  <%= mail_to "nishchay.gupta@berylsystems.com" do %>
-    <strong>Email me:</strong> <span>nishchay.gupta@berylsystems.com</span>
-  <% end %> <br/>
-
-  <%= sms_to "9588169118" do %>
-    <strong>Text me:</strong> <span>9588169118</span>
-  <% end %>
-<% end %>
+  <div class="container">
+    <h2>Update Book (Rails form)</h2>
+    <%= form_with url: rails_books_update_path(@book.id), method: :put, class: "book-form" do |form| %>
+      <div class="form-group">
+        <%= form.label :title, "Title:" %>
+        <%= form.text_field :title %>
+      </div>
+      <div class="form-group">
+        <%= form.label :author, "Author:" %>
+        <%= form.text_field :author %>
+      </div>
+      <div class="form-group">
+        <%= form.label :genre, "Genre:" %>
+        <%= form.text_field :genre %>
+      </div>
+      <div class="form-group">
+        <%= form.label :quantity, "Quantity:" %>
+        <%= form.text_field :quantity %>
+      </div>
+      <%= form.submit "Save" ,class: "submit-btn" %>
+    <% end %>
+    <%= link_to "Back" , rails_books_index_path, style: "margin-left: 10px"%>
+  </div>
+<div>
