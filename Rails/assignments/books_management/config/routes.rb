@@ -20,4 +20,6 @@ Rails.application.routes.draw do
   get '/rails/books/:id/edit', to: 'books#edit' ,as: 'rails_books_edit'
   put '/rails/books/:id', to: 'books#update' ,as: 'rails_books_update'
   delete '/rails/books/:id', to: 'books#destroy' ,as: 'rails_books_destroy'
+  
+  get '/profile', to: "books#profile"
 end

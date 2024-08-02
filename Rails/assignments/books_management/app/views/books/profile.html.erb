@@ -1,0 +1,86 @@
+<div class="container">
+  <h2>Tesing Inputs in Form</h2>
+  <%= form_with url: "/books/12", method: :put, class: "book-form" do |form| %>
+    <div class="form-group">
+      <%= form.label :title, "Book Title:" %>
+      <%= form.text_field :title %>
+    </div>
+    <div class="form-group">
+      <%= form.check_box :pet_dog %>
+      <%= form.label :pet_dog, "I own a dog" %>
+      <%= form.check_box :pet_cat %>
+      <%= form.label :pet_cat, "I own a cat" %>
+    </div>
+    <div class="form-group">
+      <%= form.radio_button :age, "child" %>
+      <%= form.label :age_child, "I am younger than 20" %>
+      <%= form.radio_button :age, "adult" %>
+      <%= form.label :age_adult, "I am older than 20" %>
+    </div>
+    <div class="form-group">
+      <%= form.label :message, "Message:" %>
+      <%= form.text_area :message, size: "70x5" %>
+    </div>
+    <div class="form-group">
+      <%= form.hidden_field :parent_id, value: "foo" %>
+    </div>
+    <div class="form-group">
+      <%= form.label :password, "Password:" %>
+      <%= form.password_field :password %>
+    </div>
+    <div class="form-group">
+      <%= form.label :price, "Price:" %>
+      <%= form.number_field :price, in: 1.0..20.0, step: 0.5 %>
+    </div>
+    <div class="form-group">
+      <%= form.label :discount, "Discount:" %>
+      <%= form.range_field :discount, in: 1..100 %>
+    </div>
+    <div class="form-group">
+      <%= form.label :born_on, "Born On:" %>
+      <%= form.date_field :born_on %>
+    </div>
+    <div class="form-group">
+      <%= form.label :started_at, "Started At:" %>
+      <%= form.time_field :started_at %>
+    </div>
+    <div class="form-group">
+      <%= form.label :graduation_day, "Graduation Day:" %>
+      <%= form.datetime_local_field :graduation_day %>
+    </div>
+    <div class="form-group">
+      <%= form.label :birthday_month, "Birthday Month:" %>
+      <%= form.month_field :birthday_month %>
+    </div>
+    <div class="form-group">
+      <%= form.label :birthday_week, "Birthday Week:" %>
+      <%= form.week_field :birthday_week %>
+    </div>
+    <div class="form-group">
+      <%= form.label :name, "Search Name:" %>
+      <%= form.search_field :name %>
+    </div>
+    <div class="form-group">
+      <%= form.label :address, "Email Address:" %>
+      <%= form.email_field :address %>
+    </div>
+    <div class="form-group">
+      <%= form.label :phone, "Phone Number:" %>
+      <%= form.telephone_field :phone %>
+    </div>
+    <div class="form-group">
+      <%= form.label :homepage, "Homepage URL:" %>
+      <%= form.url_field :homepage %>
+    </div>
+    <div class="form-group">
+      <%= form.label :favorite_color, "Favorite Color:" %>
+      <%= form.color_field :favorite_color %>
+    </div>
+    <div class="form-group">
+      <%= form.submit "Save", class: "submit-btn" %>
+    </div>
+    <div>
+      <%= link_to "Back", "/" %>
+    </div>
+  <% end %>
+</div>
