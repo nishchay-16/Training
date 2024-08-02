@@ -6,9 +6,25 @@
   <a href="/books/index" class="button-link">
     <button class="button">View All Books</button>
   </a>
-</div>
-<br/>
+</div><br/>
+
 <div class="button-group">
   <%= button_to "New" , rails_new_books_path , method: :get, class: "button-link" %>
   <%= button_to "View All" , rails_books_index_path , method: :get , class: "button-link"%>
+</div><br/>
+
+<div>
+  <%= link_to "tel:+919588169118" do %>
+    <strong>Phone me:</strong> <span>9588169118</span>
+  <% end %>
+</div>
+<div>
+  <%= link_to "sms:+919588169118" do %>
+    <strong>Text me:</strong> <span>9588169118</span>
+  <% end %>
+</div>
+<div>
+  <%= mail_to "nishchay.gupta@berylsystems.com" do %>
+    <strong>Email me:</strong> <span>nishchay.gupta@berylsystems.com</span>
+  <% end %>
 </div>

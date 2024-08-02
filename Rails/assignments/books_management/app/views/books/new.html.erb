@@ -28,7 +28,7 @@
   </div>
 
   <div class="container">
-    <h2>Add New Book (Ruby form)</h2>
+    <h2>Add New Book (Rails form)</h2>
     <%= form_with url: "/rails/books", method: :post, class: "book-form" do |form| %>
       <div class="form-group">
         <%= form.label :title, "Title:" %>
@@ -48,6 +48,6 @@
       </div>
       <%= form.submit "Save" ,class: "submit-btn" %>
     <% end %>
-    <a style="margin-left: 10px" href="/"> Back </a>
+    <%= link_to "Back" , root_path , style: "margin-left: 10px"%>
   </div>
 <div>
