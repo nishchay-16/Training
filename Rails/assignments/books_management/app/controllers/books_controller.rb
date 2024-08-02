@@ -19,7 +19,7 @@ class BooksController < ApplicationController
     @book.quantity = params[:quantity]
     if @book.save
       redirect_to books_path
-      puts "Book saved successfully"
+      puts "Book saved successfully" , status: 201
     else
       render :new
     end
@@ -32,8 +32,8 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      redirect_to show_books_path
-      puts "Book updated successfully"
+      redirect_to show_books_path 
+      puts "Book updated successfully" , status: 302
     else
       render :edit
     end
