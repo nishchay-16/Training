@@ -9,8 +9,15 @@ Rails.application.routes.draw do
   # root "posts#index"
   root "books#show"
   get '/books/index', to: 'books#index' ,as: 'show_books'
-  get '/books/new', to: 'books#new'
+  get '/books/new', to: 'books#new' , as: 'new_books'
   post '/books', to: 'books#create'
   get '/books/edit/:id', to: 'books#edit', as: 'books_edit'
   put '/books/:id', to: 'books#update'
+
+  get '/rails/books', to: 'books#index' ,as: 'rails_books'
+  get '/rails/books/new', to: 'books#new' , as: 'rails_new_books'
+  post '/rails/books', to: 'books#create' , as: 'rails_books_create'
+  get '/rails/books/:id/edit', to: 'books#edit' ,as: 'rails_books_edit'
+  put '/rails/books/:id', to: 'books#update' ,as: 'rails_books_update'
+  delete '/rails/books/:id', to: 'books#destroy' ,as: 'rails_books_destroy'
 end
