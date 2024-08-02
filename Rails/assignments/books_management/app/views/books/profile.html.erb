@@ -69,12 +69,38 @@
       <%= form.telephone_field :phone %>
     </div>
     <div class="form-group">
+      <%= form.label :favorite_color, "Favorite Color:" %>
+      <%= form.color_field :favorite_color %>
+    </div>
+    <div class="form-group">
       <%= form.label :homepage, "Homepage URL:" %>
       <%= form.url_field :homepage %>
     </div>
     <div class="form-group">
-      <%= form.label :favorite_color, "Favorite Color:" %>
-      <%= form.color_field :favorite_color %>
+      <%= form.label :city, "City:" %>
+      <%= form.select :city, [["Berlin", "BE"], ["Chicago", "CHI"], ["Madrid", "MD"]]%>
+      <%= form.select :city,
+      {
+        "Europe" => [ ["Berlin", "BE"], ["Madrid", "MD"] ],
+        "North America" => [ ["Chicago", "CHI"] ],
+      },
+      selected: "CHI" %>
+    </div>
+    <div class="form-group">
+      <%= form.label :time_zone, "Time Zone:" %>
+      <%= form.time_zone_select :time_zone %>
+    </div>
+    <div class="form-group">
+      <%= form.label :birth_date, "Birth Date:" %>
+      <%= form.date_select :birth_date %>
+    </div>
+    <div class="form-group">
+      <%= form.label :birth_year, "Birth Year:" %>
+      <%= select_year 1999, prefix: "party" %>
+    </div>
+    <div class="form-group">
+      <%= form.label :picture, "Picture:" %>
+      <%= form.file_field :picture %>
     </div>
     <div class="form-group">
       <%= form.submit "Save", class: "submit-btn" %>
@@ -84,3 +110,4 @@
     </div>
   <% end %>
 </div>
+
