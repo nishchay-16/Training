@@ -6,7 +6,9 @@
       <th> Author </th>
       <th> Genre </th>  
       <th> Quantity </th>
-      <th> Edit </th>
+      <th> Edit (normal) </th>
+      <th> Edit (rails) </th>
+      <th> Delete </th>
     </tr>
   </thead>
   <tbody>
@@ -17,14 +19,21 @@
         <td><%= book.genre %></td>
         <td style="text-align: center"><%= book.quantity %></td>
         <td style="text-align: center">
-          <a href ="/books/<%= book.id %>/edit">
-          <%= link_to "Edit", books_edit_path(book.id) %>
-            <i class="fa-solid fa-pen-to-square"></i>
-          </a>
+            <%= link_to "Edit", books_edit_path(book.id) %>
+        </td>
+        <td style="text-align: center">
+          <%= link_to "Edit", rails_books_edit_path(book.id) %>
+        </td>
+        <td style="text-align: center">
+          <%= link_to "Delete", rails_books_destroy_path(book.id), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<a style="margin-left: 10px" href="/books/new"> Add New Book</a> <br/><br/>
-<a style="margin-left: 10px" href="/"> Go Back</a> 
+
+<a style="margin-left: 10px" href="/books/new"> Add New Book</a>
+<a style="margin-left: 10px" href="/"> Go Back</a>  <br/>
+
+<%= link_to "+ Add New book", rails_new_books_path , style: "margin-left: 10px" %>
+<%= link_to "Go Back", root_path , style: "margin-left: 10px" %>
