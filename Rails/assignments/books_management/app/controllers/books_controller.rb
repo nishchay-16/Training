@@ -18,10 +18,13 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      redirect_to books_path
-      puts "Book saved successfully" , status: 201
+      # redirect_to books_path
+      # puts "Book saved successfully" , status: 201
+      render json: @book
+      
     else
-      render :new
+      render xml: @book
+      # render :new
     end
   end
 
@@ -34,7 +37,9 @@ class BooksController < ApplicationController
     if @book.save
       # redirect_to show_books_path 
       # puts "Book updated successfully" , status: 302
-      render plain: "OK"
+      # render plain: "OK"
+      # render html: helpers.tag.strong('Not Found')
+      # render js: "alert('Hello Rails');"
     else
       # render :edit
       render plain: "Failed to update the book.", status: :unprocessable_entity
