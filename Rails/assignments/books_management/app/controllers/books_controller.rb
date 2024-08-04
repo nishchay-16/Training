@@ -35,7 +35,7 @@ class BooksController < ApplicationController
     @book.quantity = params[:quantity]
     if @book.save
       # redirect_to show_books_path 
-      # puts "Book updated successfully" , status: 302
+      puts "Book updated successfully" , status: 200
       # render plain: "OK"
       # render html: helpers.tag.strong('Not Found')
       # render js: "alert('Hello Rails');"
@@ -45,16 +45,25 @@ class BooksController < ApplicationController
       # render plain: "Hello, world!", content_type: "text/plain"     # :content_type option for render
       # render :show, layout: "special_layout"                        # :layout option for render
       # render :show, layout: false
-      render xml: photo, location: photo_url(photo)                   # :location option for render
+      # render xml: photo, location: photo_url(photo)                   # :location option for render
 
+      # render action: "empty_list" 
     else
-      # render :edit
-      render plain: "Failed to update the book.", status: :unprocessable_entity
+      render :edit
+      # render plain: "Failed to update the book.", status: :unprocessable_entity
     end
   end
 
+
   def show
+    @book = Book.find_by(id: params[:id])
+    if @book.nil?
+      @books = Book.all
+      flash.now[:alert] = "Your book was not found"
+      render "index"
+    end
   end
+  
 
   def destroy
     @book = Book.find(params[:id])
