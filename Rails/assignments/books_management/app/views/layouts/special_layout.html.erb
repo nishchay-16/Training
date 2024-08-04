@@ -1,0 +1,22 @@
+<!-- app/views/layouts/special_layout.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Special Layout</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
+<body>
+  <header>
+    <h1>This is the Special Layout</h1>
+  </header>
+  
+  <%= yield %>
+
+  <footer>
+    <p>Special footer content</p>
+  </footer>
+</body>
+</html>

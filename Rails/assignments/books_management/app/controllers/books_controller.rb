@@ -1,4 +1,6 @@
 class BooksController < ApplicationController
+  layout "special_layout", only: [:special_action, :another_action]
+
   def index
     @books = Book.all
   end
@@ -18,13 +20,10 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      # redirect_to books_path
-      # puts "Book saved successfully" , status: 201
-      render json: @book
-      
+      redirect_to books_path
+      puts "Book saved successfully" , status: 201
     else
-      render xml: @book
-      # render :new
+      render :new
     end
   end
 
@@ -40,6 +39,14 @@ class BooksController < ApplicationController
       # render plain: "OK"
       # render html: helpers.tag.strong('Not Found')
       # render js: "alert('Hello Rails');"
+      # render json: @book
+      # render xml: @book
+
+      # render plain: "Hello, world!", content_type: "text/plain"     # :content_type option for render
+      # render :show, layout: "special_layout"                        # :layout option for render
+      # render :show, layout: false
+      render xml: photo, location: photo_url(photo)                   # :location option for render
+
     else
       # render :edit
       render plain: "Failed to update the book.", status: :unprocessable_entity
