@@ -22,9 +22,9 @@
             <%= link_to "Edit", books_edit_path(book.id) %>
         </td>
         <td style="text-align: center">
-          <%= link_to_if(book.quantity < 20, "Edit", rails_books_edit_path(book.id)) %>
+          <%# link_to_if(book.quantity < 20, "Edit", rails_books_edit_path(book.id)) %>
           <%# link_to_unless(book.quantity == 14, "Edit", rails_books_edit_path(book.id)) %>
-          <%# link_to "Edit", rails_books_edit_path(book.id) %>
+          <%= link_to "Edit", rails_books_edit_path(book.id) %>
         </td>
         <td style="text-align: center">
           <%= link_to "Delete", rails_books_destroy_path(book.id), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>

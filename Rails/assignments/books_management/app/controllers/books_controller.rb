@@ -32,10 +32,12 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      redirect_to show_books_path 
-      puts "Book updated successfully" , status: 302
+      # redirect_to show_books_path 
+      # puts "Book updated successfully" , status: 302
+      render plain: "OK"
     else
-      render :edit
+      # render :edit
+      render plain: "Failed to update the book.", status: :unprocessable_entity
     end
   end
 
