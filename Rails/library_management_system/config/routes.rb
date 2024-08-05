@@ -12,7 +12,19 @@ Rails.application.routes.draw do
   #   resources :books
   # end
 
-  scope :rails do
-    resources :books
-  end
+  # scope :rails do
+  #   resources :books
+  # end
+
+  # resources :books, path: '/rails/books'
+
+  # shallow do 
+  #   resources :books
+  # end
+
+  # scope shallow_path: "sekret" do
+  #   resources :books , shallow: true
+  # end
+
+  
 end
