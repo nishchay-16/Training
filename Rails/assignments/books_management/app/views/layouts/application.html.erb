@@ -19,9 +19,15 @@
         <h1>Books Management</h1>
       </div>
       <div class="navbar-links">
-        <a href="/">Home</a>
-        <a href="/books/index">Books</a>
-        <a href="/profile"> Profile</a>
+        <%= link_to "Home", root_path %>
+        <%= link_to "Books" , rails_books_index_path %>
+        <%= link_to "Profile" , profile_path %>
+        <%= link_to "Log In", user_session_path %>
+
+        <% if user_signed_in? %>
+          <%= link_to "Log Out", destroy_user_session_path, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+        <% end %>
+
       </div>
     </div>
     <%= yield %>

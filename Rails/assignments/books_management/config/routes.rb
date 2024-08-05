@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   put '/rails/books/:id', to: 'books#update' ,as: 'rails_books_update'
   delete '/rails/books/:id', to: 'books#destroy' ,as: 'rails_books_destroy'
   
-  get '/profile', to: "books#profile"
+  get '/profile', to: "books#profile" , as: 'profile'
 
   # scope :rails do
   #   resources :books
