@@ -22,4 +22,8 @@ Rails.application.routes.draw do
   delete '/rails/books/:id', to: 'books#destroy' ,as: 'rails_books_destroy'
   
   get '/profile', to: "books#profile"
+
+  scope :rails do
+    resources :books
+  end
 end

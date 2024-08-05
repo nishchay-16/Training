@@ -7,5 +7,12 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # namespace :rails do
+  #   resources :books
+  # end
+
+  scope :rails do
     resources :books
+  end
 end

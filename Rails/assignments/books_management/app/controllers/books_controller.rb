@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  layout "special_layout", only: [:special_action, :another_action]
+  # layout "special_layout", only: [:special_action, :another_action]
 
   def index
     @books = Book.all
@@ -56,12 +56,12 @@ class BooksController < ApplicationController
 
 
   def show
-    @book = Book.find_by(id: params[:id])
-    if @book.nil?
-      @books = Book.all
-      flash.now[:alert] = "Your book was not found"
-      render "index"
-    end
+    # @book = Book.find_by(id: params[:id])
+    # if @book.nil?
+    #   @books = Book.all
+    #   flash.now[:alert] = "Your book was not found"
+    #   render "index"
+    # end
   end
   
 
