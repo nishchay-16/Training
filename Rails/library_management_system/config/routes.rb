@@ -26,5 +26,21 @@ Rails.application.routes.draw do
   #   resources :books , shallow: true
   # end
 
+  # resources :books do
+  #   member do
+  #     get 'preview' => 'books#show'
+  #   end
+  # end
+
+  resources :books do
+    get 'preview', on: :member
+  end
+  
+  
+  # resources :books do
+  #   collection do
+  #     get 'preview' => 'books#index'
+  #   end
+  # end
   
 end

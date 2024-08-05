@@ -39,6 +39,10 @@ class BooksController < ApplicationController
     redirect_to books_url
   end
 
+  def preview
+    @book = Book.find(params[:id])
+  end
+
   private
 
   # Only allow a list of trusted parameters through.
