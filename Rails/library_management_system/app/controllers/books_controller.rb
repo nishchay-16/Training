@@ -15,6 +15,7 @@ class BooksController < ApplicationController
     @book = Book.new(book_params)
     if @book.save
       redirect_to @book
+      WelcomeMailer.welcome_email.deliver_now
     else
       render :new
     end

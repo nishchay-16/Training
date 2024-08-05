@@ -39,13 +39,15 @@ Rails.application.routes.draw do
   # resources :books
   # resolve ("copy") {[:books]}
 
-  scope(path_names: { new: 'neu', edit: 'bearbeiten' }) do
-    resources :books, path: 'bookies'
-  end
+  # scope(path_names: { new: 'neu', edit: 'bearbeiten' }) do
+  #   resources :books, path: 'bookies'
+  # end
   
   direct :homepage do
     "https://rubyonrails.org"
   end  
+
+  resources :books
   
   # resources :books do
   #   collection do
