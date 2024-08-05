@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   
   get '/profile', to: "books#profile"
 
-  scope :rails do
-    resources :books
-  end
+  # scope :rails do
+  #   resources :books
+  # end
 end
