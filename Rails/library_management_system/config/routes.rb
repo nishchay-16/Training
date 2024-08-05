@@ -36,6 +36,9 @@ Rails.application.routes.draw do
     get 'preview', on: :member
   end
   
+  direct :homepage do
+    "https://rubyonrails.org"
+  end  
   
   # resources :books do
   #   collection do
