@@ -34,7 +34,7 @@ class BooksController < ApplicationController
     @book.genre = params[:genre]
     @book.quantity = params[:quantity]
     if @book.save
-      # redirect_to show_books_path 
+      redirect_to show_books_path 
       puts "Book updated successfully" , status: 200
       # render plain: "OK"
       # render html: helpers.tag.strong('Not Found')
