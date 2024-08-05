@@ -32,8 +32,15 @@ Rails.application.routes.draw do
   #   end
   # end
 
-  resources :books do
-    get 'preview', on: :member
+  # resources :books do
+  #   get 'preview', on: :member
+  # end
+
+  # resources :books
+  # resolve ("copy") {[:books]}
+
+  scope(path_names: { new: 'neu', edit: 'bearbeiten' }) do
+    resources :books, path: 'bookies'
   end
   
   direct :homepage do
