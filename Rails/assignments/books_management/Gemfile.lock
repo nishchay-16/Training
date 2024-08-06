@@ -106,6 +106,9 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise_invitable (2.0.9)
+      actionmailer (>= 5.0)
+      devise (>= 4.6)
     drb (2.2.1)
     erubi (1.13.0)
     globalid (1.2.1)
@@ -275,6 +278,7 @@ DEPENDENCIES
   capybara
   debug
   devise (~> 4.9)
+  devise_invitable (~> 2.0.0)
   importmap-rails
   jbuilder
   pg (~> 1.1)
@@ -292,4 +296,4 @@ RUBY VERSION
    ruby 3.3.0p0
 
 BUNDLED WITH
-   2.5.15
+   2.5.17
