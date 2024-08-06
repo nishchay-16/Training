@@ -2,15 +2,21 @@
   <h2>Change Profile Picture</h2>
   <%= form_for(:user, url: update_avatar_path, html: { method: :patch, multipart: true }) do |f| %>
     <div class="form-group" style="margin-left: 50px">
-    <%= image_tag rails_storage_proxy_path(current_user.avatar), class: "profile-pic-edit" %>
+      <% if current_user.avatar.attached? %>
+        <%= image_tag rails_storage_proxy_path(current_user.avatar), class: "profile-pic-edit" %>
+      <% end %>
       <div style="margin-left: 50px">
         <%= f.label :avatar, "Change Profile Picture:-" %><br/>
         <%= f.file_field :avatar %>
       </div>
     </div>
-    <div class="actions" style="margin-left: 300px">
+    <div class="actions" style="margin-left: 480px; margin-top: -50px; margin-bottom: 50px">
       <%= f.submit "Update Profile Picture" %>
     </div>
+  <% end %>
+   <% if current_user.avatar.attached? %>
+      <%= button_to "Remove Profile Picture", remove_avatar_path, method: :delete, style: "margin-left: 70px", 
+      data: { confirm: "Are you sure you want to remove your profile picture?" } %>
   <% end %>
 </div>
 
@@ -66,7 +72,8 @@
   <h2>Cancel My Account</h2><br/>
   <div class="form-group">
     <div>Are you sure you want to cancel your account? </div>
-    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %>
+    <%= button_to "Cancel my account", registration_path(resource_name), style: "margin-left: 10px",
+    data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %>
   </div>
 </div><br/>
 

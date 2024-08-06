@@ -10,6 +10,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def remove_avatar
+    current_user.avatar.purge
+    redirect_to edit_user_registration_path, notice: 'Profile picture removed successfully.'
+  end
+
   private
 
   def avatar_params

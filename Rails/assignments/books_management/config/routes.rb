@@ -8,6 +8,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # scope :rails do
+  #  resources :books
+  # end
+
   root "books#show"
   get '/books/index', to: 'books#index' ,as: 'show_books'
   get '/books/new', to: 'books#new' , as: 'new_books'
@@ -23,10 +28,7 @@ Rails.application.routes.draw do
   delete '/rails/books/:id', to: 'books#destroy' ,as: 'rails_books_destroy'
   
   get '/profile', to: "books#profile" , as: 'profile'
+
   patch 'users/update_avatar', to: 'users#update_avatar', as: :update_avatar
-
-
-  # scope :rails do
-  #   resources :books
-  # end
+  delete 'users/remove_avatar', to: 'users#remove_avatar', as: :remove_avatar
 end
