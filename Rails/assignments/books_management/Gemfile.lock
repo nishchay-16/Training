@@ -292,7 +292,7 @@ DEPENDENCIES
   debug
   devise (~> 4.9)
   devise_invitable (~> 2.0.0)
-  image_processing (>= 1.2)
+  image_processing (~> 1.2)
   importmap-rails
   jbuilder
   pg (~> 1.1)
