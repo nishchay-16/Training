@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   delete '/rails/books/:id', to: 'books#destroy' ,as: 'rails_books_destroy'
   
   get '/profile', to: "books#profile" , as: 'profile'
+  patch 'users/update_avatar', to: 'users#update_avatar', as: :update_avatar
+
 
   # scope :rails do
   #   resources :books
