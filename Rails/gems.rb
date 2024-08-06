@@ -1,6 +1,6 @@
                                        GEMS
                           
-1) DEVISE:- (gem 'devise')
+===> DEVISE :- (gem 'devise')
 Devise is a flexible authentication solution for Rails based on Warden. 
 It:
 * Is Rack based;
@@ -41,5 +41,51 @@ INSTALLATION:-
 4) rails generate devise <model_name>
 5) rails db:migrate
 6) rails generate devise:views <model_name>                  => (set config.scoped_views = true inside the config/initializers/devise.rb)
+
+
+
+
+===> DEVISE-INVITABLE :- (gem 'devise_invitable')
+It adds support for send invitations by email (it requires to be authenticated) and accept the invitation by setting a password.
+
+INSTALLATIONL:-
+1) bundle add devise_invitable
+2) rails generate devise_invitable:install
+3) rails generate devise_invitable <model_name>             (if not created devise)
+4) adding column using migration in model_name
+		def change
+			add_column :users, :invitation_token, :string
+			add_column :users, :invitation_created_at, :datetime
+			add_column :users, :invitation_sent_at, :datetime
+			add_column :users, :invitation_accepted_at, :datetime
+			add_column :users, :invitation_limit, :integer
+			add_column :users, :invited_by_id, :integer
+			add_column :users, :invited_by_type, :string
+			add_index :users, :invitation_token, unique: true
+		end
+5) rails db:migrate
+6) rails generate devise_invitable:views <model_name>                     => set config.scoped_views = true
+
+
+
+To add a custom parameter or field 
+1) rails generate migration add_name_to_users name:string
+2) rails db:migrate
+3) In model add validation if required
+4) In application_controller.rb
+			class ApplicationController < ActionController::Base
+				before_action :configure_permitted_parameters, if: :devise_controller?
+
+				protected
+
+				def configure_permitted_parameters
+					devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+					devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+					devise_parameter_sanitizer.permit(:invite, keys: [:name])
+				end
+			end
+5) Add the new field in forms you want.
+
+
 
 
