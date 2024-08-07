@@ -14,7 +14,7 @@
 </div><br/>
 
 
-<% if current_user.avatar.attached? %>
+<% if current_user && current_user.avatar.attached? %>
   <%= image_tag current_user.avatar.variant(resize_to_fit: [100, 100]).processed %>
   <%= image_tag current_user.avatar.variant(resize_to_limit: [100, 100], rotate: 90).processed %> 
   <%= image_tag current_user.avatar.variant(resize_and_pad: [100, 100], rotate: 180).processed %>
@@ -35,4 +35,19 @@
   <%= mail_to "nishchay.gupta@berylsystems.com" do %>
     <strong>Email me:</strong> <span>nishchay.gupta@berylsystems.com</span>
   <% end %>
-</div>
+</div><br/>
+
+
+<%= form_for current_user, url: save_attachments_user_path, html: { multipart: true, method: :post } do |f| %>
+
+  <%= f.label :attachments, "Upload Attachments" %><br/>
+  <%= f.file_field :attachments, multiple: true %><br/>
+
+  <%= f.submit "Upload Attachments" %>
+<% end %>
+
+<% if current_user.attachments.any? %>
+  <% current_user.attachments.each do |attachment| %>
+    <%= image_tag attachment.url if attachment.present? %>
+  <% end %>
+<% end %>
