@@ -9,5 +9,4 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   mount_uploaders :attachments, AttachmentUploader
-  serialize :attachments, JSON
 end

@@ -15,9 +15,26 @@ class UsersController < ApplicationController
     redirect_to edit_user_registration_path, notice: 'Profile picture removed successfully.'
   end
 
+  def upload_attachments
+    @user = current_user
+  end
+
+  def save_attachments
+    @user = current_user
+    if @user.update(attachments_params)
+      redirect_to upload_attachments_user_path(@user), notice: 'Attachments uploaded successfully.'
+    else
+      render :upload_attachments
+    end
+  end
+
   private
 
   def avatar_params
     params.require(:user).permit(:avatar)
+  end
+
+  def attachments_params
+    params.require(:user).permit(attachments: [])
   end
 end
