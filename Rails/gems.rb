@@ -89,3 +89,34 @@ To add a custom parameter or field
 
 
 
+====> ACTIVE STORAGE :- (gem 'image_processing')
+* Active Storage facilitates uploading files to a cloud storage service like Amazon S3, Google Cloud Storage, 
+	or Microsoft Azure Storage and attaching those files to Active Record objects. 
+* It comes with a local disk-based service for development and testing and supports mirroring files to subordinate 
+	services for backups and migrations.
+* Using Active Storage, an application can transform image uploads or generate image representations of non-image 
+	uploads like PDFs and videos, and extract metadata from arbitrary files.
+
+Requirements:-
+* libvips v8.6+ or ImageMagick for image analysis and transformations
+* ffmpeg v3.4+ for video previews and ffprobe for video/audio analysis
+* poppler or muPDF for PDF previews
+
+Installation:-
+1) bundle add image_processing
+2) rails active_storage:install
+3) rails db:migrate
+4) config.active_storage.service = :local              # Store files locally.
+	 config.active_storage.service = :amazon						 # Store files in Amazon S3.
+	 config.active_storage.service = :test    					 # Store uploaded files on the local file system in a temporary directory.
+5) Declare a Disk service in config/storage.yml:-
+		local:																
+	 		service: Disk
+	 		root: <%= Rails.root.join("storage") %>		
+6) has_one_attached :avatar		
+7)  <div class="form-group">                          # form to upload attachment
+      <%= f.label :avatar , "Profile Picture" %><br />
+      <%= f.file_field :avatar %>
+    </div>		
+7) <%= image_tag rails_storage_proxy_path(current_user.avatar)%>      #display attached profile picture
+

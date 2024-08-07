@@ -38,12 +38,5 @@
 <a style="margin-left: 10px" href="/"> Go Back</a>  <br/>
 
 <%= link_to "+ Add New book", rails_new_books_path , style: "margin-left: 10px" %>
-<%= link_to "Go Back", root_path , style: "margin-left: 10px" %><br/><br/>
-
-<% if current_user.avatar.attached? %>
-  <%= image_tag current_user.avatar.variant(resize_to_fit: [100, 100]).processed %>
-  <%= image_tag current_user.avatar.variant(resize_to_limit: [100, 100], rotate: 90).processed %> 
-  <%= image_tag current_user.avatar.variant(resize_and_pad: [100, 100], rotate: 180).processed %>
-  <%= image_tag current_user.avatar.variant(resize_to_fill: [100, 100], rotate: 270).processed %>
-<% end %>
+<%= link_to "Go Back", root_path , style: "margin-left: 10px" %>
 

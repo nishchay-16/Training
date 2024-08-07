@@ -13,6 +13,14 @@
   <%= button_to "View All" , rails_books_index_path , method: :get , class: "button-link"%>
 </div><br/>
 
+
+<% if current_user.avatar.attached? %>
+  <%= image_tag current_user.avatar.variant(resize_to_fit: [100, 100]).processed %>
+  <%= image_tag current_user.avatar.variant(resize_to_limit: [100, 100], rotate: 90).processed %> 
+  <%= image_tag current_user.avatar.variant(resize_and_pad: [100, 100], rotate: 180).processed %>
+  <%= image_tag current_user.avatar.variant(resize_to_fill: [100, 100], rotate: 270).processed %>
+<% end %><br/>
+
 <div>
   <%= link_to "tel:+919588169118" do %>
     <strong>Phone me:</strong> <span>9588169118</span>
