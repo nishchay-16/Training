@@ -41,7 +41,7 @@
 <%= form_for current_user, url: save_attachments_user_path, html: { multipart: true, method: :post } do |f| %>
 
   <%= f.label :attachments, "Upload Attachments" %><br/>
-  <%= f.file_field :attachments, multiple: true %><br/>
+  <%= f.file_field :attachments, multiple: true ,required: true%><br/>
 
   <%= f.submit "Upload Attachments" %>
 <% end %>

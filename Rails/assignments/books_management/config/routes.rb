@@ -32,6 +32,5 @@ Rails.application.routes.draw do
   patch 'users/update_avatar', to: 'users#update_avatar', as: :update_avatar
   delete 'users/remove_avatar', to: 'users#remove_avatar', as: :remove_avatar
 
-  get 'users/upload_attachments', to: 'users#upload_attachments', as: :upload_attachments_user
   post 'users/save_attachments', to: 'users#save_attachments', as: :save_attachments_user
 end

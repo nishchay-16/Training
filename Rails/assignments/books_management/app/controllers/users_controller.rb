@@ -15,16 +15,13 @@ class UsersController < ApplicationController
     redirect_to edit_user_registration_path, notice: 'Profile picture removed successfully.'
   end
 
-  def upload_attachments
-    @user = current_user
-  end
-
   def save_attachments
     @user = current_user
     if @user.update(attachments_params)
-      redirect_to upload_attachments_user_path(@user), notice: 'Attachments uploaded successfully.'
+      redirect_to root_path, notice: 'Attachments uploaded successfully.'
     else
-      render :upload_attachments
+      flash[:alert] = @user.errors.full_messages.to_sentence
+      redirect_to root_path
     end
   end
 
