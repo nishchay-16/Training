@@ -33,4 +33,5 @@ Rails.application.routes.draw do
   delete 'users/remove_avatar', to: 'users#remove_avatar', as: :remove_avatar
 
   post 'users/save_attachments', to: 'users#save_attachments', as: :save_attachments_user
+  delete 'users/remove_attachments', to: 'users#remove_attachments', as: :remove_attachments_user
 end

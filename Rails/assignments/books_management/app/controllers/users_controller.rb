@@ -16,7 +16,11 @@ class UsersController < ApplicationController
   end
 
   def save_attachments
-    if current_user.update(attachments_params)
+    @user = current_user
+    existing_attachments = @user.attachments
+    new_attachments = params[:user][:attachments] || []
+    if current_user.update(attachments: existing_attachments + new_attachments)
+    # if current_user.update(attachments_params)
       redirect_to root_path, notice: 'Attachments uploaded successfully.'
     else
       flash[:alert] = current_user.errors.full_messages.to_sentence
@@ -24,6 +28,23 @@ class UsersController < ApplicationController
     end
   end
 
+
+def remove_attachments
+  attachment_identifiers = params[:user][:remove_attachments] || [] 
+
+  attachment_identifiers.each do |identifier|
+    attachment = current_user.attachments.find { |att| att.identifier == identifier }
+    if attachment
+      attachment.remove! 
+    end
+  end
+  current_user.save
+
+  flash[:notice] = 'Selected attachments successfully removed.'
+  redirect_to root_path
+end
+
+  
   private
 
   def avatar_params

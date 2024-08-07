@@ -37,15 +37,22 @@
   <% end %>
 </div><br/>
 
-
-<%= form_for current_user, url: save_attachments_user_path, html: { multipart: true, method: :post } do |f| %>
-  <%= f.label :attachments, "Upload Attachments" %><br/>
-  <%= f.file_field :attachments, multiple: true ,required: true%><br/>
-  <%= f.submit "Upload Attachments" %>
+<% if current_user %>
+  <%= form_for current_user, url: save_attachments_user_path, html: { multipart: true, method: :post } do |f| %>
+    <%= f.label :attachments, "Upload Attachments" %><br/>
+    <%= f.file_field :attachments, multiple: true ,required: true%><br/>
+    <%= f.submit "Upload Attachments" %>
+  <% end %>
 <% end %>
 
-<% if current_user.attachments.any? %>
+<%= form_with model: current_user, url: remove_attachments_user_path, method: :delete do |f| %>
+  <h3>Your Attachments:</h3>
   <% current_user.attachments.each do |attachment| %>
-    <%= image_tag attachment.url if attachment.present? %>
-  <% end %>
+    <% if attachment.present? %>
+      <%= image_tag attachment.url %><br/>
+      <%= f.check_box :remove_attachments, { multiple: true, value: attachment.identifier } %>
+      <%= f.label :remove_attachments, "Remove #{attachment.identifier}" %>
+    <% end %>
+  <% end %><br/><br/>
+  <%= f.submit 'Remove Selected Attachments' %>
 <% end %>
