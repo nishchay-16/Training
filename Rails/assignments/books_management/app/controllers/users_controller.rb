@@ -16,11 +16,10 @@ class UsersController < ApplicationController
   end
 
   def save_attachments
-    @user = current_user
-    if @user.update(attachments_params)
+    if current_user.update(attachments_params)
       redirect_to root_path, notice: 'Attachments uploaded successfully.'
     else
-      flash[:alert] = @user.errors.full_messages.to_sentence
+      flash[:alert] = current_user.errors.full_messages.to_sentence
       redirect_to root_path
     end
   end
