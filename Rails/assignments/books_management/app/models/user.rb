@@ -7,4 +7,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   has_one_attached :avatar
+
+  mount_uploaders :attachments, AttachmentUploader
+  serialize :attachments, JSON
 end
