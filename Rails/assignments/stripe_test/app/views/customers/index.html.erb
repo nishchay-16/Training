@@ -1,14 +1,21 @@
-<p style="color: green"><%= notice %></p>
+  <div style="width: 80%; margin: auto; overflow: hidden; padding: 20px;">
+    <p style="color: green; text-align: center; font-weight: bold; margin-bottom: 20px;"><%= notice %></p>
 
-<h1>Customers</h1>
+    <h1 style="color: #333; text-align: center; margin-bottom: 20px;">Customers</h1>
 
-<div id="customers">
-  <% @customers.each do |customer| %>
-    <%= render customer %>
-    <p>
-      <%= link_to "Show this customer", customer %>
-    </p>
-  <% end %>
-</div>
+    <div id="customers" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+      <% @customers.each do |customer| %>
+        <div style="background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 20px; width: 300px; text-align: center;">
+          <%= render customer %>
+          <p style="margin: 10px 0;">
+            <%= link_to "Show this customer", customer, style: "color: #007bff; text-decoration: none;" %>
+          </p>
+        </div>
+      <% end %>
+    </div>
 
-<%= link_to "New customer", new_customer_path %>
+    <div style="display: block; text-align: center; margin: 20px 0;">
+      <%= link_to "New customer", new_customer_path, style: "color: #007bff; text-decoration: none;" %>
+    </div>
+  </div>
+
