@@ -1,2 +1,0 @@
-class Fine < ApplicationRecord
-end
