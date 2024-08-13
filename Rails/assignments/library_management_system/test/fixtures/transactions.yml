@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  member: one
+  isbn: MyString
+  issuedate: 2024-07-19
+  returndate: 2024-07-19
+
+two:
+  member: two
+  isbn: MyString
+  issuedate: 2024-07-19
+  returndate: 2024-07-19

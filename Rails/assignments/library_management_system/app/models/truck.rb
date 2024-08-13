@@ -1,0 +1,2 @@
+class Truck < Vehicle
+end

@@ -1,0 +1,2 @@
+class Fine < ApplicationRecord
+end
