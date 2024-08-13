@@ -17,6 +17,7 @@
         <%= link_to "Home", root_path, style: "color: white; text-decoration: none; margin-right: 20px;" %>
         <%= link_to "Customers", customers_path, style: "color: white; text-decoration: none; margin-right: 20px;" %>
         <%= link_to "Payments", new_payment_path, style: "color: white; text-decoration: none; margin-right: 20px;" %>
+        <a href="<%= subscriptions_path %>" style="color: white;">Your Subscriptions</a>
         <% if user_signed_in? %>
           <%= link_to "LogOut", destroy_user_session_path, method: :delete, redirect_to: user_session_path ,
               data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, style: "color: white; text-decoration: none; float: right;" %>

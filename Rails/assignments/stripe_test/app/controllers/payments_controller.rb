@@ -1,11 +1,14 @@
 class PaymentsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token
 
   def new
     @user_email = current_user.email if user_signed_in?
   end
 
-  def create
+  def success
+  end
+
+  def one_time_payment
     begin
       customer = Stripe::Customer.create({
         email: params[:stripeEmail],
@@ -14,8 +17,8 @@ class PaymentsController < ApplicationController
 
       charge = Stripe::Charge.create({
         customer: customer.id,
-        amount: 50000,
-        description: 'Description of your product',
+        amount: 5000,
+        description: 'One time Payment Plan',
         currency: 'usd'
       })
 
@@ -34,6 +37,41 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def success
+
+  def recurring_payment
+    begin
+      customer = Stripe::Customer.create({
+        email: params[:stripeEmail],
+        source: params[:stripeToken]
+      })
+
+      subscription = Stripe::Subscription.create({
+        customer: customer.id,
+        items: [
+          {
+            price: 'price_1PnKETA9XPncjDJ6Hpf1ouqq', 
+          },
+        ],
+        expand: ['latest_invoice.payment_intent'],
+      })
+
+      flash[:success] = "Payment successful!"
+      redirect_to success_path
+
+    rescue Stripe::CardError => e
+      flash[:error] = e.message
+      redirect_to new_payment_path
+    rescue Stripe::StripeError => e
+      flash[:error] = "Stripe error: #{e.message}"
+      redirect_to new_payment_path
+    rescue => e
+      flash[:error] = "An error occurred: #{e.message}"
+      redirect_to new_payment_path
+    end
   end
+
+  def index
+    @subscriptions = Stripe::Subscription.list(customer: current_user.stripe_customer_id)
+  end
+
 end

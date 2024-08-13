@@ -10,6 +10,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   root 'payments#new'
-  resources :payments, only: [:new, :create]
-  get '/success', to: 'payments#success'
+  get 'payments/new', to: 'payments#new', as: 'new_payment'
+  post 'payments/one_time_payment', to: 'payments#one_time_payment', as: 'one_time_payment'
+  post 'payments/recurring_payment', to: 'payments#recurring_payment', as: 'recurring_payment'
+  get 'payments/success', to: 'payments#success', as: 'success'
+  get 'payments/index', to: 'payments#index', as: 'subscriptions'
+
+  get '/create_product', to: 'payments#create_product'
 end

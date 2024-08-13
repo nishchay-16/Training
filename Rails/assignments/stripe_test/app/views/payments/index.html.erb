@@ -1,0 +1,16 @@
+<h1>Your Subscriptions</h1>
+
+<% if @subscriptions.data.any? %>
+  <ul>
+    <% @subscriptions.data.each do |subscription| %>
+      <li>
+        Subscription ID: <%= subscription.id %><br>
+        Status: <%= subscription.status %><br>
+        Current Period Start: <%= Time.at(subscription.current_period_start).strftime("%Y-%m-%d") %><br>
+        Current Period End: <%= Time.at(subscription.current_period_end).strftime("%Y-%m-%d") %><br>
+      </li><br/>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No active subscriptions found.</p>
+<% end %>
