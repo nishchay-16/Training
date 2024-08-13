@@ -1,19 +1,20 @@
-<h1>Payment Options</h1>
-    <% if flash[:error].present? %>
-      <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 20px;">
-        <strong>Payment failed:</strong> <%= flash[:error] %>
-      </div>
-    <% end %>
+<h1 style="font-size: 28px; color: #333; margin-bottom: 20px;">Payment Options</h1>
 
-<%= link_to "One-Time Payment", new_payment_path(payment_type: 'one_time'), class: 'btn btn-primary' %><br/><br/>
-<%= link_to "Recurring Payment", new_payment_path(payment_type: 'recurring'), class: 'btn btn-primary' %>
+<% if flash[:error].present? %>
+  <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 20px; background-color: #fdd;">
+    <strong>Payment failed:</strong> <%= flash[:error] %>
+  </div>
+<% end %>
+
+<%= link_to "One-Time Payment", new_payment_path(payment_type: 'one_time'), class: 'btn btn-primary', style: 'display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; border: none; border-radius: 5px; text-decoration: none; text-align: center;' %>
+<%= link_to "Recurring Payment", new_payment_path(payment_type: 'recurring'), class: 'btn btn-primary', style: 'display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; border: none; border-radius: 5px; text-decoration: none; text-align: center;' %>
 
 <% if params[:payment_type] == 'one_time' %>
-  <h2>One-Time Payment Form</h2>
+  <h2 style="font-size: 24px; color: #333; margin-top: 20px;">One-Time Payment Form</h2>
   <%= render 'one_time_payment_form' %>
 <% elsif params[:payment_type] == 'recurring' %>
-  <h2>Recurring Payment Form</h2>
+  <h2 style="font-size: 24px; color: #333; margin-top: 20px;">Recurring Payment Form</h2>
   <%= render 'recurring_payment_form' %>
 <% else %>
-  <p>Please select a payment option above.</p>
+  <p style="font-size: 18px; color: #666; margin-top: 20px;">Please select a payment option above.</p>
 <% end %>

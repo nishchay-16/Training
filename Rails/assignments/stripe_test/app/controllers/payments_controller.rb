@@ -71,7 +71,11 @@ class PaymentsController < ApplicationController
   end
 
   def index
-    @subscriptions = Stripe::Subscription.list(customer: current_user.stripe_customer_id)
+    @subscriptions = Stripe::Subscription.list(customer: current_user.stripe_customer_id, expand: ['data.items.data.price'])
+  end
+
+  def payment_index
+    @charges = Stripe::Charge.list(customer: current_user.stripe_customer_id)
   end
 
 end

@@ -1,0 +1,28 @@
+<h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">Your Payments</h1>
+
+<% if @charges.data.any? %>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <thead>
+      <tr>
+        <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Charge ID</th>
+        <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Amount</th>
+        <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Currency</th>
+        <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Status</th>
+        <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @charges.data.each do |charge| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= charge.id %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= number_to_currency(charge.amount / 100.0, unit: charge.currency.upcase) %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= charge.currency.upcase %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= charge.status.capitalize %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= Time.at(charge.created).strftime("%Y-%m-%d %H:%M:%S") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p style="color: #ff0000; font-weight: bold;">No payments found.</p>
+<% end %>

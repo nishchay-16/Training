@@ -1,16 +1,30 @@
-<h1>Your Subscriptions</h1>
+<h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">Your Subscriptions</h1>
 
 <% if @subscriptions.data.any? %>
-  <ul>
-    <% @subscriptions.data.each do |subscription| %>
-      <li>
-        Subscription ID: <%= subscription.id %><br>
-        Status: <%= subscription.status %><br>
-        Current Period Start: <%= Time.at(subscription.current_period_start).strftime("%Y-%m-%d") %><br>
-        Current Period End: <%= Time.at(subscription.current_period_end).strftime("%Y-%m-%d") %><br>
-      </li><br/>
-    <% end %>
-  </ul>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Subscription ID</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Status</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Current Period Start</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Current Period End</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @subscriptions.data.each do |subscription| %>
+        <% subscription.items.data.each do |item| %>
+          <tr>
+            <td style="border: 1px solid #ddd; padding: 10px;"><%= subscription.id %></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><%= subscription.status.capitalize %></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><%= Time.at(subscription.current_period_start).strftime("%Y-%m-%d") %></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><%= Time.at(subscription.current_period_end).strftime("%Y-%m-%d") %></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><%= number_to_currency(item.price.unit_amount / 100.0, unit: item.price.currency.upcase) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
 <% else %>
-  <p>No active subscriptions found.</p>
+  <p style="color: #ff0000; font-weight: bold; margin-top: 20px;">No active subscriptions found.</p>
 <% end %>
