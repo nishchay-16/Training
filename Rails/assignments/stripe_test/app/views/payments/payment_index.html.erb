@@ -17,7 +17,9 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><%= charge.id %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= number_to_currency(charge.amount / 100.0, unit: charge.currency.upcase) %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= charge.currency.upcase %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= charge.status.capitalize %></td>
+          <td style="border: 1px solid #ddd; padding: 8px; color: <%= charge.status == 'succeeded' ? 'green' : 'red' %>;">
+            <%= charge.status.capitalize %>
+          </td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= Time.at(charge.created).strftime("%Y-%m-%d %H:%M:%S") %></td>
         </tr>
       <% end %>

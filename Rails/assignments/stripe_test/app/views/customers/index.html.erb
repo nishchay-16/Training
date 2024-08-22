@@ -19,3 +19,22 @@
     </div>
   </div>
 
+<button id="btn">Generate sign-up form</button>
+
+<div id="signup-form"></div>
+
+<script>
+var button = document.getElementById("btn");
+
+button.addEventListener("click", function(e){
+  
+if (RH) {
+  var form = RH.generate.form();
+  var div = document.getElementById("signup-form");
+  div.appendChild(form) 
+}
+  
+})
+</script>
+
+
