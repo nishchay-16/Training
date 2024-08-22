@@ -19,21 +19,21 @@
     </div>
   </div>
 
-<button id="btn">Generate sign-up form</button>
-
-<div id="signup-form"></div>
+<div id="form"></div>
 
 <script>
-var button = document.getElementById("btn");
+var form = document.getElementById('form');
+form.addEventListener("submit", function(e){
 
-button.addEventListener("click", function(e){
-  
-if (RH) {
-  var form = RH.generate.form();
-  var div = document.getElementById("signup-form");
-  div.appendChild(form) 
-}
-  
+    var data = {
+      name: form.querySelector('#name'),
+      email: form.querySelector('#email'),
+    }
+    
+    if (RH_MF1d51603ef5) {
+      RH_MF1d51603ef5.form.submit(data);
+    }
+
 })
 </script>
 
