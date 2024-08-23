@@ -124,12 +124,10 @@
       callbacks: {
             ready: function() {
                 var data = {
-                    email: "nsnsn@test.com",
-                    name: "new user",
-                    category: "upgrade",
-                    transaction_id: 'AJGJY87782h8h'
+                    name: 'Dev Test',
+                    email: 'dev@gmail.com'
                 }
-                RH_MF1d51603ef5.trackReferral(data.email , data)
+                RH_MF1d51603ef5.pendingReferral(data)
             }
         } 
   }
