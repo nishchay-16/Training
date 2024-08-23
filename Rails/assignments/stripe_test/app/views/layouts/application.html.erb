@@ -124,9 +124,12 @@
       callbacks: {
             ready: function() {
                 var data = {
-                    email: "track1@gmail.com"
+                    email: "nsnsn@test.com",
+                    name: "new user",
+                    category: "upgrade",
+                    transaction_id: 'AJGJY87782h8h'
                 }
-                RH_MF1d51603ef5.trackReferral(data.email)
+                RH_MF1d51603ef5.trackReferral(data.email , data)
             }
         } 
   }
