@@ -24,25 +24,21 @@
     window.RH_MF1d51603ef5_Config = {
         callbacks: {
             ready: function() {
-                    // Assuming the form is already submitted and data is captured
                     var form = document.getElementById('form');
 
                     form.addEventListener("submit", function(e){
-                        e.preventDefault(); // Prevent the default form submission
+                        e.preventDefault(); 
 
-                        // Get the name and email values from the form
                         var name = form.querySelector('#name').value;
                         var email = form.querySelector('#email').value;
 
-                        // Create the data object
                         var data = {
                             name: name,
                             email: email
                         };
 
-                        // Pass the form data to the organicTrackReferral method
                         if (RH_MF1d51603ef5) {
-                            RH_MF1d51603ef5.form.submit(data);
+                            RH_MF1d51603ef5.organicTrackReferral(data);
                         }
                     });
             }

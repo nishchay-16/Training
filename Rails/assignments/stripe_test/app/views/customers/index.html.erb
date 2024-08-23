@@ -8,7 +8,17 @@
         <button type="submit">Submit</button>
     </form>
 
-<div id="form"></div>
-<div style="border: 1px solid #ddd;" id="sharing-screen"></div>
 
+<button id="btn">Open sharing screen</button>
+
+<script>
+var button = document.getElementById("btn");
+
+button.addEventListener("click", function(e){
+  if (RH_MF1d51603ef5) {
+    var sharing_screen = RH_MF1d51603ef5.generate.sharing_screen();
+    RH_MF1d51603ef5.generate.popup(sharing_screen);
+  }
+})
+</script>
 
