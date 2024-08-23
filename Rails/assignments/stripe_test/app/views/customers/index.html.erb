@@ -1,41 +1,14 @@
-  <div style="width: 80%; margin: auto; overflow: hidden; padding: 20px;">
-    <p style="color: green; text-align: center; font-weight: bold; margin-bottom: 20px;"><%= notice %></p>
+<form id="form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
 
-    <h1 style="color: #333; text-align: center; margin-bottom: 20px;">Customers</h1>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-    <div id="customers" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-      <% @customers.each do |customer| %>
-        <div style="background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 20px; width: 300px; text-align: center;">
-          <%= render customer %>
-          <p style="margin: 10px 0;">
-            <%= link_to "Show this customer", customer, style: "color: #007bff; text-decoration: none;" %>
-          </p>
-        </div>
-      <% end %>
-    </div>
-
-    <div style="display: block; text-align: center; margin: 20px 0;">
-      <%= link_to "New customer", new_customer_path, style: "color: #007bff; text-decoration: none;" %>
-    </div>
-  </div>
+        <button type="submit">Submit</button>
+    </form>
 
 <div id="form"></div>
 <div style="border: 1px solid #ddd;" id="sharing-screen"></div>
-
-
-<script>
-var form = document.getElementById('form');
-form.addEventListener("submit", function(e){
-
-    var data = {
-      name: form.querySelector('#name'),
-      email: form.querySelector('#email'),
-    }
-    
-    if (RH_MF1d51603ef5) {
-      RH_MF1d51603ef5.form.submit(data);
-    }
-})
-</script>
 
 
