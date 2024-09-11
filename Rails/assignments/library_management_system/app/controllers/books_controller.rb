@@ -15,7 +15,7 @@ class BooksController < ApplicationController
     @book = Book.new(book_params)
     if @book.save
       HardJob.perform_at(5.minutes.from_now, @book.title, 5)
-     
+      WelcomeMailer.welcome_email(@book).deliver_later(wait: 5.minutes)
       redirect_to @book
     else
       render :new
