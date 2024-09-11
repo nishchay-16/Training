@@ -16,6 +16,8 @@ class BooksController < ApplicationController
     if @book.save
       HardJob.perform_at(5.minutes.from_now, @book.title, 5)
       WelcomeMailer.welcome_email(@book).deliver_later(wait: 5.minutes)
+      SocialMediaPostJob.perform_at(2.minutes, 'twitter', 'Hello World! Scheduled tweet.')
+
       redirect_to @book
     else
       render :new
