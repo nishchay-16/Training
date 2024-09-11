@@ -14,8 +14,9 @@ class BooksController < ApplicationController
   def create                                     # POST /books
     @book = Book.new(book_params)
     if @book.save
+      HardJob.perform_at(5.minutes.from_now, @book.title, 5)
+     
       redirect_to @book
-      WelcomeMailer.welcome_email.deliver_now
     else
       render :new
     end
