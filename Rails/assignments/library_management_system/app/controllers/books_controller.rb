@@ -31,6 +31,7 @@ class BooksController < ApplicationController
   def update                                      # PATCH/PUT /books/1
     @book = Book.find(params[:id])
     if @book.update(book_params)
+      WelcomeMailer.update_email(@book).deliver_later
       redirect_to @book
     else
       render :edit
