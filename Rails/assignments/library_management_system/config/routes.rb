@@ -52,7 +52,8 @@ Rails.application.routes.draw do
   end  
 
   resources :books
-  
+  resources :admins, only: [:new, :create] 
+
   # resources :books do
   #   collection do
   #     get 'preview' => 'books#index'

@@ -1,0 +1,31 @@
+<h1>New Admin</h1>
+
+<%= form_with model: @admin do |form| %>
+  <div id="emails-container">
+    <%= form.label :emails, "Emails" %><br>
+
+    <!-- Email input fields will go here -->
+    <div class="email-fields">
+      <%= form.text_field :emails, name: "admin[emails][]", placeholder: "Enter email" %>
+    </div>
+  </div>
+
+  <button type="button" id="add-email-button">Add another email</button>
+  <br>
+
+  <%= form.submit "Create Admin" %>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var addEmailButton = document.getElementById("add-email-button");
+    var emailsContainer = document.getElementById("emails-container");
+
+    addEmailButton.addEventListener("click", function() {
+      var newEmailField = document.createElement("div");
+      newEmailField.classList.add("email-fields");
+      newEmailField.innerHTML = '<input type="text" name="admin[emails][]" placeholder="Enter email">';
+      emailsContainer.appendChild(newEmailField);
+    });
+  });
+</script>
