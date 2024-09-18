@@ -1,4 +1,5 @@
 class Admin < ApplicationRecord
+  mount_uploader :csv_file, CsvFileUploader
   after_save :send_welcome_emails
 
   private

@@ -13,18 +13,19 @@ class AdminsController < ApplicationController
   end
 
   def upload_csv
-    csv_file = params[:admin][:csv_file]
-
-    if csv_file.present?
-      csv_content = csv_file.read # Read file content
-
-      # Perform CSV upload in background
-      CsvUploadWorker.perform_async(csv_content) # Pass the file content to Sidekiq worker
-      redirect_to new_admin_path, notice: 'CSV file is being processed.'
-    else
-      render :new, alert: 'Please upload a CSV file.'
+    @admin = Admin.new(admin_params)
+  
+    csv_file = @admin.csv_file.file
+    permanent_file_path = Rails.root.join('public', 'uploads', csv_file.filename.to_s)
+    File.open(permanent_file_path, 'wb') do |file|
+      file.write(csv_file.read) 
     end
+
+    CsvUploadWorker.perform_async(permanent_file_path.to_s)
+  
+    redirect_to new_admin_path, notice: 'CSV file is being processed.'
   end
+  
 
   private
 

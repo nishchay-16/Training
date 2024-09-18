@@ -72,3 +72,4 @@ gem "devise", "~> 4.9"
 gem 'sidekiq'
 gem 'twitter'
 gem 'slack-notifier'
+gem 'carrierwave', '~> 3.0'
