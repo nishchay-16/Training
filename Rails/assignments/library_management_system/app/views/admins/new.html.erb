@@ -1,21 +1,22 @@
 <h1>New Admin</h1>
+<div id="form-container" style="max-width: 600px; margin: 0 auto; padding: 2em; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
 
 <%= form_with model: @admin do |form| %>
   <div id="emails-container">
     <%= form.label :emails, "Emails" %><br>
 
-    <!-- Email input fields will go here -->
     <div class="email-fields">
       <%= form.text_field :emails, name: "admin[emails][]", placeholder: "Enter email" %>
     </div>
-  </div>
 
-  <button type="button" id="add-email-button">Add another email</button>
-  <br>
+    <button type="button" id="add-email-button">Add another email</button>
+  </div><br><br>
+
+  <%= form.label :scheduled_time, "Schedule Email" %><br>
+  <%= form.datetime_field :scheduled_time %><br>
 
   <%= form.submit "Create Admin" %>
 <% end %>
-
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var addEmailButton = document.getElementById("add-email-button");
@@ -29,3 +30,4 @@
     });
   });
 </script>
+</div>

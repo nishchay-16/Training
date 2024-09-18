@@ -37,8 +37,10 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.logger = ActiveSupport::Logger.new($stdout)
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
@@ -70,7 +72,7 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-
+  config.active_job.queue_adapter = :sidekiq
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
   config.action_mailer.delivery_method = :smtp
@@ -82,6 +84,6 @@ Rails.application.configure do
     password:        ENV['SMTP_PASSWORD'],
     authentication:  'plain',
     enable_starttls: true,
-    open_timeout:    5,
-    read_timeout:    5 }
+    open_timeout:    10,
+    read_timeout:    10}
 end

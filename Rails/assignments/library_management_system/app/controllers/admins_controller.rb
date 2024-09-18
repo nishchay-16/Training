@@ -13,6 +13,6 @@ class AdminsController < ApplicationController
   private
 
   def admin_params
-    params.require(:admin).permit(emails: [])
+    params.require(:admin).permit(:scheduled_time, emails: [])
   end
 end
