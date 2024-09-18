@@ -31,3 +31,12 @@
   });
 </script>
 </div>
+
+<div id="form-container" style="max-width: 600px; margin: 0 auto; padding: 2em; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<h1>Upload CSV</h1>
+
+<%= form_with model: @admin, url: upload_csv_admins_path, local: true, multipart: true do |form| %>
+  <%= form.file_field :csv_file, style: "margin-bottom: 1em;" %><br>
+  <%= form.submit "Upload CSV", style: "background-color: #007bff; color: white; border: none; padding: 0.5em; cursor: pointer; width: 100%; box-sizing: border-box;" %>
+<% end %>
+</div>

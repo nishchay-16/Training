@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 
   resources :books
   resources :admins, only: [:new, :create] 
+  post 'admins/upload_csv', to: 'admins#upload_csv', as: :upload_csv_admins
 
   # resources :books do
   #   collection do

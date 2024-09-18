@@ -1,0 +1,59 @@
+/* Styles for the form container */
+#emails-container {
+  margin-bottom: 1em;
+}
+
+.email-fields {
+  margin-bottom: 0.5em;
+}
+
+.email-fields input[type="text"] {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: calc(100% - 2em);
+  box-sizing: border-box;
+}
+
+#add-email-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#add-email-button:hover {
+  background-color: #0056b3;
+}
+
+/* Styles for the form fields */
+form label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="datetime-local"],
+form input[type="submit"] {
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form input[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+  background-color: #0056b3;
+}
