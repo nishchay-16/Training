@@ -32,7 +32,9 @@ class BooksController < ApplicationController
   def update                                      # PATCH/PUT /books/1
     @book = Book.find(params[:id])
     if @book.update(book_params)
-      WelcomeMailer.update_email(@book).deliver_later
+      HighPrioritySlackMessageWorker.perform_async('High priority message book updated')
+      DefaultPrioritySlackMessageWorker.perform_in(1.day,'Default priority message book updated yesterday')
+      LowPrioritySlackMessageWorker.perform_at(2.hours.from_now,'Low priority message book updated 2 hours ago')
       redirect_to @book
     else
       render :edit
