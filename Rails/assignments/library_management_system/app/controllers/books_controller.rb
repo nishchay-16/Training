@@ -14,10 +14,11 @@ class BooksController < ApplicationController
   def create                                     # POST /books
     @book = Book.new(book_params)
     if @book.save
-      HardJob.perform_at(5.minutes.from_now, @book.title, 5)
+      # HardJob.perform_at(5.minutes.from_now, @book.title, 5)
       WelcomeMailer.welcome_email(@book).deliver_later(wait: 5.minutes)
-      SocialMediaPostJob.perform_at(2.minutes, 'twitter', 'Hello World! Scheduled tweet.')
-
+      HighPrioritySlackMessageWorker.perform_async('High priority message')
+      DefaultPrioritySlackMessageWorker.perform_async('Default priority message')
+      LowPrioritySlackMessageWorker.perform_async('Low priority message')
       redirect_to @book
     else
       render :new
