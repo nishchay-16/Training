@@ -60,5 +60,14 @@ Rails.application.routes.draw do
   #     get 'preview' => 'books#index'
   #   end
   # end
+
+  # config/routes.rb
+  
+  namespace :api do
+    namespace :v1 do
+      resources :posts
+    end
+  end
+
   
 end
