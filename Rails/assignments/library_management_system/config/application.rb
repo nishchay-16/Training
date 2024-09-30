@@ -26,5 +26,15 @@ module LibraryManagementSystem
     config.active_job.queue_adapter = :sidekiq
     config.time_zone = 'Kolkata'
     config.active_record.default_timezone = :utc
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'http://localhost:3001' # Allow your React app's URL
+        resource '*',
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          credentials: true 
+      end
+    end
   end
 end
