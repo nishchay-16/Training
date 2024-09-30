@@ -1,6 +1,7 @@
 module Api
   module V1
     class PostsController < ApplicationController
+      skip_before_action :verify_authenticity_token, only: [:create, :update]
       def index              # GET /api/v1/posts
         posts = Post.all
         render json: posts, status: :ok
