@@ -9,14 +9,18 @@ export const fetchPosts = async () => {
 
 export const createPost = async (postData) => {
   try {
+    // Try fetching the CSRF token from the meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
     const response = await axios.post(API_URL, postData, {
       headers: {
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 
+        'X-CSRF-Token': csrfToken || '', // Use an empty string if the token is not found
       },
     });
-    return response.data;
+    return response.data; // Return the new post data
   } catch (error) {
     console.error('Error creating post:', error.response ? error.response.data : error.message);
-    throw error; 
+    throw error; // Rethrow the error for handling in the calling function
   }
 };
+

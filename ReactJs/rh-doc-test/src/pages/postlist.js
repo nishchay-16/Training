@@ -28,7 +28,7 @@ const PostList = () => {
       setTitle('');
       setContent('');
     } catch (error) {
-      console.error(error);
+      console.error('Failed to create post:', error); 
     }
   };
 
